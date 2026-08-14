@@ -8,11 +8,11 @@ Docente: Ing. Yesenia Escobar
 
 ## Grupo G01T
 
-- Mariana Guadalupe Ramírez Lara (RL252957) - líder del proyecto, encargada de cotizaciones y del cronograma
-- Gabriela Vanessa Alberto Escalón (AE252972) - backend: cursos, diplomados, categorías, modalidades y docentes; también seguridad (Spring Security + JWT) y el repo de GitHub
-- Katherine Gissella Garay Alvarado (GA252993) - backend: clientes e inscripciones; documentación con Swagger
-- Samuel Eliezer Rivera De Paz (RD253031) - backend: alquiler de espacios y catering; pruebas con JUnit/Mockito
-- Cristian Josué Torres Reyes (TR240516) - backend: agenda institucional y pagos; manejo de excepciones; JPA
+- Mariana Guadalupe Ramírez Lara (RL252957) 
+- Gabriela Vanessa Alberto Escalón (AE252972) 
+- Katherine Gissella Garay Alvarado (GA252993) 
+- Samuel Eliezer Rivera De Paz (RD253031) 
+- Cristian Josué Torres Reyes (TR240516) 
 
 ## Tecnologías
 
@@ -49,13 +49,6 @@ uca-cfc-connect/
 └── README.md
 ```
 
-## Cómo correrlo local
-
-1. Clonar el repo
-2. Crear la base de datos (MySQL o PostgreSQL, según lo que tengan configurado)
-3. Poner las credenciales en `src/main/resources/application.properties`
-4. `mvn spring-boot:run`
-5. Con el servidor arriba, Swagger queda en `/swagger-ui.html`
 
 ## Ramas
 
