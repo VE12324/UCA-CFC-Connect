@@ -3,9 +3,7 @@
 Proyecto de cátedra para Desarrollo de Aplicaciones con Web Frameworks (DWF404), Ciclo II 2026, Universidad Don Bosco.
 
 La idea es hacer una API REST con Spring Boot para el Centro de Formación Continua (CFC) de la UCA, que les sirva para manejar en un solo sistema los cursos y diplomados, las inscripciones, la parte comercial (cotizaciones, alquiler de espacios, catering), la agenda y los pagos. Ahora mismo todo eso lo llevan medio disperso, entonces el objetivo es centralizarlo.
-
 Docente: Ing. Yesenia Escobar
-
 ## Grupo G01T
 
 - Mariana Guadalupe Ramírez Lara (RL252957) 
