@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de clientes</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+    <div class="aplicacion">
+
+        <aside class="barra-lateral">
+
+           <div class="logo-contenedor">
+               
+                <a href="/clientes" data-th-href="@{/clientes}">
+                    <img class="logo-uca" src="/iconos/logo.png" data-th-src="@{/iconos/logo.png}">
+                </a>
+            </div>
+
+            <nav class="menu-lateral">
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono" src="/iconos/panel.png" data-th-src="@{/iconos/panel.png}">
+                    <span>Panel principal</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/gestion-academica.png"
+                         data-th-src="@{/iconos/gestion-academica.png}">
+                    <span>Gestión académica</span>
+                </a>
+
+                <a class="menu-enlace activo"
+                   href="/clientes"
+                   data-th-href="@{/clientes}">
+                    <img class="menu-icono"
+                         src="/iconos/clientes.png"
+                         data-th-src="@{/iconos/clientes.png}">
+                    <span>Clientes</span>
+                </a>
+
+                <a class="menu-enlace" href="/participantes" data-th-href="@{/participantes}">
+                    <img class="menu-icono" src="/iconos/participantes.png" data-th-src="@{/iconos/participantes.png}">
+                    <span>Participantes</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/inscripcion.png"
+                         data-th-src="@{/iconos/inscripcion.png}">
+                    <span>Inscripciones</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/cotizacion.png"
+                         data-th-src="@{/iconos/cotizacion.png}">
+                    <span>Cotizaciones</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/espacios.png"
+                         data-th-src="@{/iconos/espacios.png}">
+                    <span>Espacios</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/catering.png"
+                         data-th-src="@{/iconos/catering.png}">
+                    <span>Catering</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/agenda.png"
+                         data-th-src="@{/iconos/agenda.png}">
+                    <span>Agenda</span>
+                </a>
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono"
+                         src="/iconos/pagos.png"
+                         data-th-src="@{/iconos/pagos.png}">
+                    <span>Pagos</span>
+                </a>
+
+            </nav>
+
+            <div class="pie-lateral">
+
+                <a class="menu-enlace" href="#">
+                    <img class="menu-icono" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+
+                    <span>Configuración</span>
+                </a>
+
+                <a class="menu-enlace enlace-salir" href="#">
+                    <span class="menu-icono">↪</span>
+                    <span>Cerrar sesión</span>
+                </a>
+
+            </div>
+
+        </aside>
+
+        <section class="area-principal">
+
+           <header class="barra-superior">
+
+                <div class="busqueda-global">
+                    <span>⌕</span>
+
+                    <input type="search"
+                           placeholder="Búsqueda global...">
+                </div>
+
+                <div class="acciones-superiores">
+
+                    <button class="boton-icono"
+                            type="button"
+                            title="Notificaciones">
+
+                        <img class="icono-superior" src="/iconos/notificacion.png" data-th-src="@{/iconos/notificacion.png}">
+                    </button>
+
+                    <a class="boton-icono"
+                       href="#"
+                       title="Configuración">
+
+                        <img class="icono-superior" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+                    </a>
+
+                    <div class="usuario-avatar">
+                        CT
+                    </div>
+
+                </div>
+
+            </header>
+
+            <main class="contenido">
+
+                <div class="encabezado-pagina">
+
+                    <div class="titulo-pagina">
+
+                        <h1>
+                            Gestión de clientes
+                        </h1>
+
+                        <p>
+                            Gestión de empresas y clientes individuales.
+                        </p>
+
+                    </div>
+
+                    <a class="boton-nuevo"
+                       href="/clientes/crear"
+                       data-th-href="@{/clientes/crear}">
+
+                        <span>＋</span>
+
+                        <span>Nuevo cliente</span>
+
+                    </a>
+
+                </div>
+
+                <div class="mensaje mensaje-exito"
+                     data-th-if="${exito}"
+                     data-th-text="${exito}">
+                </div>
+
+                <section class="tarjeta">
+
+                    <div class="filtros">
+
+                        <form class="formulario-busqueda"
+                              method="get"
+                              action="/clientes"
+                              data-th-action="@{/clientes}">
+
+                            <div class="campo-busqueda">
+
+                                <span>⌕</span>
+
+                                <input type="text"
+                                       name="buscar"
+                                       data-th-value="${buscar}"
+                                       placeholder="Buscar por nombre, DUI, NIT o empresa">
+
+                            </div>
+
+                            <button class="boton-buscar"
+                                    type="submit">
+                                Buscar
+                            </button>
+
+                            <a class="boton-limpiar"
+                               href="/clientes"
+                               data-th-href="@{/clientes}">
+                                Limpiar
+                            </a>
+
+                        </form>
+
+                    </div>
+
+                    <div class="tabla-contenedor">
+
+                        <table class="tabla-datos">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>ID</th>
+                                    <th>DUI / NIT</th>
+                                    <th>Nombre</th>
+                                    <th>Empresa</th>
+                                    <th>Correo</th>
+                                    <th>Teléfono</th>
+                                    <th>Acciones</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr data-th-each="cliente : ${paginaClientes.content}">
+
+                                    <td data-th-text="${cliente.idCliente}">
+                                        1
+                                    </td>
+
+                                    <td data-th-text="${cliente.dui}">
+                                        00000000-0
+                                    </td>
+
+                                    <td data-th-text="${cliente.nombre}">
+                                        Nombre del cliente
+                                    </td>
+
+                                    <td data-th-text="${cliente.empresa}">
+                                        Empresa
+                                    </td>
+
+                                    <td data-th-text="${cliente.correo}">
+                                        correo@ejemplo.com
+                                    </td>
+
+                                    <td data-th-text="${cliente.telefono}">
+                                        7000-0000
+                                    </td>
+
+                                    <td>
+
+                                        <div class="acciones-tabla">
+
+                                            <a class="boton-accion boton-consultar"
+                                               href="#"
+                                               data-th-href="@{/clientes/consultar/{id}(id=${cliente.idCliente})}">
+                                                Consultar
+                                            </a>
+
+                                            <a class="boton-accion boton-actualizar"
+                                               href="#"
+                                               data-th-href="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}">
+                                                Actualizar
+                                            </a>
+
+                                            <a class="boton-accion boton-eliminar"
+                                               href="#"
+                                               data-th-href="@{/clientes/eliminar/{id}(id=${cliente.idCliente})}">
+                                                Eliminar
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr data-th-if="${paginaClientes.empty}">
+
+                                    <td class="celda-vacia"
+                                        colspan="7">
+                                        No se encontraron clientes registrados.
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="pie-tabla"
+                         data-th-if="${paginaClientes.totalElements > 0}">
+
+                        <p class="informacion-pagina">
+
+                            Mostrando
+
+                            <span data-th-text="${paginaClientes.numberOfElements}">
+                                1
+                            </span>
+
+                            de
+
+                            <span data-th-text="${paginaClientes.totalElements}">
+                                1
+                            </span>
+
+                            registros
+
+                        </p>
+
+                        <div class="paginacion">
+
+                            <a class="pagina-enlace"
+                               href="#"
+                               data-th-if="${!paginaClientes.first}"
+                               data-th-href="@{/clientes(buscar=${buscar},pagina=${paginaClientes.number - 1})}">
+                                ‹
+                            </a>
+
+                            <span class="pagina-enlace deshabilitada"
+                                  data-th-if="${paginaClientes.first}">
+                                ‹
+                            </span>
+
+                            <span class="pagina-enlace activa"
+                                  data-th-text="${paginaClientes.number + 1}">
+                                1
+                            </span>
+
+                            <a class="pagina-enlace"
+                               href="#"
+                               data-th-if="${!paginaClientes.last}"
+                               data-th-href="@{/clientes(buscar=${buscar},pagina=${paginaClientes.number + 1})}">
+                                ›
+                            </a>
+
+                            <span class="pagina-enlace deshabilitada"
+                                  data-th-if="${paginaClientes.last}">
+                                ›
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </section>
+
+    </div>
+
+</body>
+
+</html>
