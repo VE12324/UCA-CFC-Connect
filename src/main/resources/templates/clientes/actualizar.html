@@ -1,249 +1,291 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
     <title>Actualizar cliente</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-          crossorigin="anonymous">
-
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<div class="aplicacion">
 
-        <div class="container">
+    <aside class="barra-lateral">
 
-            <a class="navbar-brand"
+        <div class="marca">
+            <a class="marca-enlace"
                href="/clientes"
                data-th-href="@{/clientes}">
-                UCA-CFC Connect
+
+                <img class="logo-uca"
+                     src="/iconos/logo.png"
+                     data-th-src="@{/iconos/logo.png}">
+            </a>
+        </div>
+
+        <nav class="menu-lateral">
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/panel.png"
+                     data-th-src="@{/iconos/panel.png}">
+                <span>Panel principal</span>
             </a>
 
-            <div class="navbar-nav">
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/gestion-academica.png"
+                     data-th-src="@{/iconos/gestion-academica.png}">
+                <span>Gestión académica</span>
+            </a>
 
-                <a class="nav-link active"
-                   href="/clientes"
-                   data-th-href="@{/clientes}">
-                    Clientes
-                </a>
+            <a class="menu-enlace activo"
+               href="/clientes"
+               data-th-href="@{/clientes}">
+                <img class="menu-icono"
+                     src="/iconos/clientes.png"
+                     data-th-src="@{/iconos/clientes.png}">
+                <span>Clientes</span>
+            </a>
 
-                <a class="nav-link"
-                   href="/participantes"
-                   data-th-href="@{/participantes}">
-                    Participantes
-                </a>
+            <a class="menu-enlace"
+               href="/participantes"
+               data-th-href="@{/participantes}">
+                <img class="menu-icono"
+                     src="/iconos/participantes.png"
+                     data-th-src="@{/iconos/participantes.png}">
+                <span>Participantes</span>
+            </a>
 
-            </div>
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/inscripcion.png"
+                     data-th-src="@{/iconos/inscripcion.png}">
+                <span>Inscripciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/cotizacion.png"
+                     data-th-src="@{/iconos/cotizacion.png}">
+                <span>Cotizaciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/espacios.png"
+                     data-th-src="@{/iconos/espacios.png}">
+                <span>Espacios</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/catering.png"
+                     data-th-src="@{/iconos/catering.png}">
+                <span>Catering</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/agenda.png"
+                     data-th-src="@{/iconos/agenda.png}">
+                <span>Agenda</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/pagos.png"
+                     data-th-src="@{/iconos/pagos.png}">
+                <span>Pagos</span>
+            </a>
+
+        </nav>
+
+        <div class="pie-lateral">
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/configuracion.png"
+                     data-th-src="@{/iconos/configuracion.png}">
+                <span>Configuración</span>
+            </a>
+
+            <a class="menu-enlace enlace-salir" href="#">
+                <span class="menu-icono">↪</span>
+                <span>Cerrar sesión</span>
+            </a>
 
         </div>
 
-    </nav>
+    </aside>
 
-    <main class="container py-5">
+    <main class="area-principal">
 
-        <div class="row justify-content-center">
+        <header class="barra-superior">
 
-            <div class="col-lg-8">
+            <div class="busqueda-global">
+                <span>⌕</span>
+                <input type="search"
+                       placeholder="Búsqueda global...">
+            </div>
 
-                <div class="card shadow-sm">
+            <div class="acciones-superiores">
 
-                    <div class="card-header bg-dark text-white">
+                <button class="boton-icono"
+                        type="button"
+                        title="Notificaciones">
+                    <img class="icono-superior"
+                         src="/iconos/notificacion.png"
+                         data-th-src="@{/iconos/notificacion.png}">
+                </button>
 
-                        <h1 class="h4 mb-0">
-                            Actualizar cliente
-                        </h1>
+                <a class="boton-icono"
+                   href="#"
+                   title="Configuración">
+                    <img class="icono-superior"
+                         src="/iconos/configuracion.png"
+                         data-th-src="@{/iconos/configuracion.png}">
+                </a>
 
-                    </div>
+                <div class="usuario-avatar">
+                    CT
+                </div>
 
-                    <div class="card-body p-4">
+            </div>
 
-                        <form method="post"
-                              action="/clientes/actualizar"
-                              data-th-action="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}"
-                              data-th-object="${cliente}"
-                              novalidate>
+        </header>
 
-                            <input type="hidden"
-                                   data-th-field="*{idCliente}">
+        <section class="contenido">
 
-                            <div class="row g-3">
+            <div class="formulario-tarjeta">
 
-                                <div class="col-md-6">
+                <div class="tarjeta-encabezado">
+                    <h1>Actualizar cliente</h1>
+                    <p>Modifique la información del cliente seleccionado.</p>
+                </div>
 
-                                    <label for="idCliente"
-                                           class="form-label">
-                                        Identificador
-                                    </label>
+                <div class="tarjeta-cuerpo">
 
-                                    <input type="text"
-                                           id="idCliente"
-                                           class="form-control"
-                                           data-th-value="${cliente.idCliente}"
-                                           disabled>
+                    <form method="post"
+                          data-th-action="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}"
+                          data-th-object="${cliente}">
 
-                                </div>
+                        <input type="hidden"
+                               data-th-field="*{idCliente}">
 
-                                <div class="col-md-6">
+                        <div class="formulario-cuadricula">
 
-                                    <label for="dui"
-                                           class="form-label">
-                                        DUI o NIT
-                                    </label>
+                            <div class="grupo-formulario">
+                                <label for="dui">DUI o NIT</label>
 
-                                    <input type="text"
-                                           id="dui"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('dui')} ? 'is-invalid' : ''"
-                                           data-th-field="*{dui}"
-                                           placeholder="00000000-0">
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="dui"
+                                       maxlength="20"
+                                       data-th-field="*{dui}">
 
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{dui}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6">
-
-                                    <label for="nombre"
-                                           class="form-label">
-                                        Nombre
-                                    </label>
-
-                                    <input type="text"
-                                           id="nombre"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
-                                           data-th-field="*{nombre}"
-                                           placeholder="Nombre del cliente"
-                                           required>
-
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{nombre}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6">
-
-                                    <label for="empresa"
-                                           class="form-label">
-                                        Empresa
-                                    </label>
-
-                                    <input type="text"
-                                           id="empresa"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('empresa')} ? 'is-invalid' : ''"
-                                           data-th-field="*{empresa}"
-                                           placeholder="Nombre de la empresa">
-
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{empresa}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6">
-
-                                    <label for="correo"
-                                           class="form-label">
-                                        Correo electrónico
-                                    </label>
-
-                                    <input type="email"
-                                           id="correo"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('correo')} ? 'is-invalid' : ''"
-                                           data-th-field="*{correo}"
-                                           placeholder="cliente@correo.com">
-
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{correo}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6">
-
-                                    <label for="telefono"
-                                           class="form-label">
-                                        Teléfono
-                                    </label>
-
-                                    <input type="text"
-                                           id="telefono"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('telefono')} ? 'is-invalid' : ''"
-                                           data-th-field="*{telefono}"
-                                           placeholder="7000-0000">
-
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{telefono}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-12">
-
-                                    <label for="direccion"
-                                           class="form-label">
-                                        Dirección
-                                    </label>
-
-                                    <input type="text"
-                                           id="direccion"
-                                           class="form-control"
-                                           data-th-classappend="${#fields.hasErrors('direccion')} ? 'is-invalid' : ''"
-                                           data-th-field="*{direccion}"
-                                           placeholder="Dirección del cliente">
-
-                                    <div class="invalid-feedback"
-                                         data-th-errors="*{direccion}">
-                                    </div>
-
-                                </div>
-
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('dui')}"
+                                      data-th-errors="*{dui}">
+                                </span>
                             </div>
 
-                            <div class="d-flex justify-content-end gap-2 mt-4">
+                            <div class="grupo-formulario">
+                                <label for="nombre">Nombre</label>
 
-                                <a class="btn btn-secondary"
-                                   href="/clientes"
-                                   data-th-href="@{/clientes}">
-                                    Cancelar
-                                </a>
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="nombre"
+                                       maxlength="150"
+                                       data-th-field="*{nombre}"
+                                       required>
 
-                                <button type="submit"
-                                        class="btn btn-warning">
-                                    Actualizar cliente
-                                </button>
-
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('nombre')}"
+                                      data-th-errors="*{nombre}">
+                                </span>
                             </div>
 
-                        </form>
+                            <div class="grupo-formulario">
+                                <label for="empresa">Empresa</label>
 
-                    </div>
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="empresa"
+                                       maxlength="150"
+                                       data-th-field="*{empresa}">
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="correo">Correo electrónico</label>
+
+                                <input class="campo-formulario"
+                                       type="email"
+                                       id="correo"
+                                       maxlength="150"
+                                       data-th-field="*{correo}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('correo')}"
+                                      data-th-errors="*{correo}">
+                                </span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="telefono">Teléfono</label>
+
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="telefono"
+                                       maxlength="30"
+                                       data-th-field="*{telefono}">
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="direccion">Dirección</label>
+
+                                <textarea class="campo-formulario"
+                                          id="direccion"
+                                          maxlength="255"
+                                          data-th-field="*{direccion}">
+                                </textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/clientes"
+                               data-th-href="@{/clientes}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar cambios
+                            </button>
+
+                        </div>
+
+                    </form>
 
                 </div>
 
             </div>
 
-        </div>
+        </section>
 
     </main>
 
-</body>
+</div>
 
+</body>
 </html>
