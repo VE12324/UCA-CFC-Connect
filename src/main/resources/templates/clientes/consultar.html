@@ -1,191 +1,251 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
     <title>Consultar cliente</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-          crossorigin="anonymous">
-
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<div class="aplicacion">
 
-        <div class="container">
+    <aside class="barra-lateral">
 
-            <a class="navbar-brand"
+        <div class="marca">
+            <a class="marca-enlace"
                href="/clientes"
                data-th-href="@{/clientes}">
-                UCA-CFC Connect
+
+                <img class="logo-uca"
+                     src="/iconos/logo.png"
+                     data-th-src="@{/iconos/logo.png}">
+            </a>
+        </div>
+
+        <nav class="menu-lateral">
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/panel.png"
+                     data-th-src="@{/iconos/panel.png}">
+                <span>Panel principal</span>
             </a>
 
-            <div class="navbar-nav">
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/gestion-academica.png"
+                     data-th-src="@{/iconos/gestion-academica.png}">
+                <span>Gestión académica</span>
+            </a>
 
-                <a class="nav-link active"
-                   href="/clientes"
-                   data-th-href="@{/clientes}">
-                    Clientes
-                </a>
+            <a class="menu-enlace activo"
+               href="/clientes"
+               data-th-href="@{/clientes}">
+                <img class="menu-icono"
+                     src="/iconos/clientes.png"
+                     data-th-src="@{/iconos/clientes.png}">
+                <span>Clientes</span>
+            </a>
 
-                <a class="nav-link"
-                   href="/participantes"
-                   data-th-href="@{/participantes}">
-                    Participantes
-                </a>
+            <a class="menu-enlace"
+               href="/participantes"
+               data-th-href="@{/participantes}">
+                <img class="menu-icono"
+                     src="/iconos/participantes.png"
+                     data-th-src="@{/iconos/participantes.png}">
+                <span>Participantes</span>
+            </a>
 
-            </div>
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/inscripcion.png"
+                     data-th-src="@{/iconos/inscripcion.png}">
+                <span>Inscripciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/cotizacion.png"
+                     data-th-src="@{/iconos/cotizacion.png}">
+                <span>Cotizaciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/espacios.png"
+                     data-th-src="@{/iconos/espacios.png}">
+                <span>Espacios</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/catering.png"
+                     data-th-src="@{/iconos/catering.png}">
+                <span>Catering</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/agenda.png"
+                     data-th-src="@{/iconos/agenda.png}">
+                <span>Agenda</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/pagos.png"
+                     data-th-src="@{/iconos/pagos.png}">
+                <span>Pagos</span>
+            </a>
+
+        </nav>
+
+        <div class="pie-lateral">
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono"
+                     src="/iconos/configuracion.png"
+                     data-th-src="@{/iconos/configuracion.png}">
+                <span>Configuración</span>
+            </a>
+
+            <a class="menu-enlace enlace-salir" href="#">
+                <span class="menu-icono">↪</span>
+                <span>Cerrar sesión</span>
+            </a>
 
         </div>
 
-    </nav>
+    </aside>
 
-    <main class="container py-5">
+    <main class="area-principal">
 
-        <div class="row justify-content-center">
+        <header class="barra-superior">
 
-            <div class="col-lg-8">
+            <div class="busqueda-global">
+                <span>⌕</span>
+                <input type="search"
+                       placeholder="Búsqueda global...">
+            </div>
 
-                <div class="card shadow-sm">
+            <div class="acciones-superiores">
 
-                    <div class="card-header bg-dark text-white">
+                <button class="boton-icono"
+                        type="button"
+                        title="Notificaciones">
+                    <img class="icono-superior"
+                         src="/iconos/notificacion.png"
+                         data-th-src="@{/iconos/notificacion.png}">
+                </button>
 
-                        <h1 class="h4 mb-0">
-                            Información del cliente
-                        </h1>
+                <a class="boton-icono"
+                   href="#"
+                   title="Configuración">
+                    <img class="icono-superior"
+                         src="/iconos/configuracion.png"
+                         data-th-src="@{/iconos/configuracion.png}">
+                </a>
+
+                <div class="usuario-avatar">
+                    CT
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="contenido">
+
+            <div class="detalle-tarjeta">
+
+                <div class="tarjeta-encabezado">
+                    <h1>Información del cliente</h1>
+                    <p>Consulte los datos del cliente seleccionado.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">Código</p>
+                            <p class="detalle-valor"
+                               data-th-text="${cliente.idCliente}">
+                                1
+                            </p>
+                        </div>
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">DUI o NIT</p>
+                            <p class="detalle-valor"
+                               data-th-text="${cliente.dui}">
+                                00000000-0
+                            </p>
+                        </div>
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">Nombre</p>
+                            <p class="detalle-valor"
+                               data-th-text="${cliente.nombre}">
+                                Nombre del cliente
+                            </p>
+                        </div>
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">Empresa</p>
+                            <p class="detalle-valor"
+                               data-th-text="${#strings.isEmpty(cliente.empresa) ? 'No registrada' : cliente.empresa}">
+                                Empresa
+                            </p>
+                        </div>
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">Correo electrónico</p>
+                            <p class="detalle-valor"
+                               data-th-text="${#strings.isEmpty(cliente.correo) ? 'No registrado' : cliente.correo}">
+                                correo@ejemplo.com
+                            </p>
+                        </div>
+
+                        <div class="detalle-item">
+                            <p class="detalle-etiqueta">Teléfono</p>
+                            <p class="detalle-valor"
+                               data-th-text="${#strings.isEmpty(cliente.telefono) ? 'No registrado' : cliente.telefono}">
+                                0000-0000
+                            </p>
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+                            <p class="detalle-etiqueta">Dirección</p>
+                            <p class="detalle-valor"
+                               data-th-text="${#strings.isEmpty(cliente.direccion) ? 'No registrada' : cliente.direccion}">
+                                Dirección del cliente
+                            </p>
+                        </div>
 
                     </div>
 
-                    <div class="card-body p-4">
+                    <div class="acciones-formulario">
 
-                        <div class="row g-4">
+                        <a class="boton-secundario"
+                           href="/clientes"
+                           data-th-href="@{/clientes}">
+                            Regresar
+                        </a>
 
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    Identificador
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.idCliente}">
-                                    1
-                                </p>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    DUI o NIT
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.dui}">
-                                    00000000-0
-                                </p>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    Nombre
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.nombre}">
-                                    Nombre del cliente
-                                </p>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    Empresa
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.empresa}">
-                                    Empresa
-                                </p>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    Correo electrónico
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.correo}">
-                                    cliente@correo.com
-                                </p>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <p class="text-secondary mb-1">
-                                    Teléfono
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.telefono}">
-                                    7000-0000
-                                </p>
-
-                            </div>
-
-                            <div class="col-12">
-
-                                <p class="text-secondary mb-1">
-                                    Dirección
-                                </p>
-
-                                <p class="fw-bold"
-                                   data-th-text="${cliente.direccion}">
-                                    Dirección del cliente
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <hr>
-
-                        <div class="d-flex justify-content-end gap-2">
-
-                            <a class="btn btn-secondary"
-                               href="/clientes"
-                               data-th-href="@{/clientes}">
-                                Regresar
-                            </a>
-
-                            <a class="btn btn-warning"
-                               href="#"
-                               data-th-href="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}">
-                                Actualizar
-                            </a>
-
-                            <a class="btn btn-danger"
-                               href="#"
-                               data-th-href="@{/clientes/eliminar/{id}(id=${cliente.idCliente})}">
-                                Eliminar
-                            </a>
-
-                        </div>
+                        <a class="boton-guardar"
+                           href="#"
+                           data-th-href="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}">
+                            Actualizar cliente
+                        </a>
 
                     </div>
 
@@ -193,10 +253,11 @@
 
             </div>
 
-        </div>
+        </section>
 
     </main>
 
-</body>
+</div>
 
+</body>
 </html>
