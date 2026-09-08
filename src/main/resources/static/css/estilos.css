@@ -78,29 +78,39 @@ img {
     border-right: 1px solid var(--borde);
 }
 
-.marca {
-    min-height: 115px;
-    padding: 26px 16px 14px;
+.marca,
+.logo-contenedor {
+    width: 100%;
+    min-height: 125px;
+    padding: 24px 22px 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid var(--borde);
 }
 
-.marca-enlace {
+.marca-enlace,
+.marca > a,
+.logo-contenedor > a {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.logo-uca {
+.logo-uca,
+.marca-logo,
+.marca img,
+.logo-contenedor img {
     display: block;
-    width: 185px;
+    width: 165px;
     max-width: 100%;
     max-height: 72px;
     height: auto;
+    margin: 8px auto 0;
     object-fit: contain;
+    object-position: center;
+    transform: none;
 }
 
 .menu-lateral {
@@ -163,13 +173,6 @@ img {
     width: calc(100% - 240px);
     min-height: 100vh;
     margin-left: 240px;
-}
-
-.icono-superior {
-    width: 20px;
-    height: 20px;
-    display: block;
-    object-fit: contain;
 }
 
 .barra-superior {
@@ -777,14 +780,19 @@ textarea.campo-formulario {
         padding: 30px 24px;
     }
 
-    .marca {
-        min-height: 95px;
-        padding: 14px;
+    .marca,
+    .logo-contenedor {
+        min-height: 115px;
+        padding: 21px 18px 14px;
     }
 
-    .logo-uca {
-        width: 160px;
+    .logo-uca,
+    .marca-logo,
+    .marca img,
+    .logo-contenedor img {
+        width: 150px;
         max-height: 65px;
+        margin: 7px auto 0;
     }
 }
 
@@ -799,14 +807,19 @@ textarea.campo-formulario {
         position: static;
     }
 
-    .marca {
-        min-height: 80px;
-        padding: 12px;
+    .marca,
+    .logo-contenedor {
+        min-height: 95px;
+        padding: 17px 16px 12px;
     }
 
-    .logo-uca {
+    .logo-uca,
+    .marca-logo,
+    .marca img,
+    .logo-contenedor img {
         width: 145px;
         max-height: 55px;
+        margin: 5px auto 0;
     }
 
     .menu-lateral {
