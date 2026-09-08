@@ -1,15 +1,355 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Actualizar participante</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside class="barra-lateral">
+
+        <div class="marca">
+
+            <a class="marca-enlace"
+               href="/clientes"
+               data-th-href="@{/clientes}">
+
+                <img class="logo-uca"
+                     src="/iconos/logo.png"
+                     data-th-src="@{/iconos/logo.png}">
+            </a>
+
+        </div>
+
+        <nav class="menu-lateral">
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/p.png"
+                     data-th-src="@{/iconos/panel.png}">
+
+                <span>Panel principal</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/gestion-academica.png"
+                     data-th-src="@{/iconos/gestion-academica.png}">
+
+                <span>Gestión académica</span>
+            </a>
+
+            <a class="menu-enlace"
+               href="/clientes"
+               data-th-href="@{/clientes}">
+
+                <img class="menu-icono"
+                     src="/iconos/clientes.png"
+                     data-th-src="@{/iconos/clientes.png}">
+
+                <span>Clientes</span>
+            </a>
+
+            <a class="menu-enlace activo"
+               href="/participantes"
+               data-th-href="@{/participantes}">
+
+                <img class="menu-icono"
+                     src="/iconos/participantes.png"
+                     data-th-src="@{/iconos/participantes.png}">
+
+                <span>Participantes</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/inscripcion.png"
+                     data-th-src="@{/iconos/inscripcion.png}">
+
+                <span>Inscripciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/cotizacion.png"
+                     data-th-src="@{/iconos/cotizacion.png}">
+
+                <span>Cotizaciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/espacios.png"
+                     data-th-src="@{/iconos/espacios.png}">
+
+                <span>Espacios</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/catering.png"
+                     data-th-src="@{/iconos/catering.png}">
+
+                <span>Catering</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/agenda.png"
+                     data-th-src="@{/iconos/agenda.png}">
+
+                <span>Agenda</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/pagos.png"
+                     data-th-src="@{/iconos/pagos.png}">
+
+                <span>Pagos</span>
+            </a>
+
+        </nav>
+
+        <div class="pie-lateral">
+
+            <a class="menu-enlace" href="#">
+
+                <img class="menu-icono"
+                     src="/iconos/configuracion.png"
+                     data-th-src="@{/iconos/configuracion.png}">
+
+                <span>Configuración</span>
+            </a>
+
+            <a class="menu-enlace enlace-salir" href="#">
+
+                <span class="menu-icono">↪</span>
+
+                <span>Cerrar sesión</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="area-principal">
+
+        <header class="barra-superior">
+
+            <div class="busqueda-global">
+
+                <span>⌕</span>
+
+                <input type="search"
+                       placeholder="Búsqueda global...">
+
+            </div>
+
+            <div class="acciones-superiores">
+
+                <button class="boton-icono"
+                        type="button"
+                        title="Notificaciones">
+
+                    <img class="icono-superior"
+                         src="/iconos/notificacion.png"
+                         data-th-src="@{/iconos/notificacion.png}">
+                </button>
+
+                <a class="boton-icono"
+                   href="#"
+                   title="Configuración">
+
+                    <img class="icono-superior"
+                         src="/iconos/configuracion.png"
+                         data-th-src="@{/iconos/configuracion.png}">
+                </a>
+
+                <div class="usuario-avatar">
+                    CT
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Actualizar participante</h1>
+
+                    <p>
+                        Modifique la información del participante
+                        seleccionado.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          data-th-action="@{/participantes/actualizar/{id}(id=${participante.idParticipante})}"
+                          data-th-object="${participante}">
+
+                        <input type="hidden"
+                               data-th-field="*{idParticipante}">
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario">
+
+                                <label for="dui">
+                                    DUI
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="dui"
+                                       maxlength="20"
+                                       placeholder="00000000-0"
+                                       data-th-field="*{dui}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('dui')}"
+                                      data-th-errors="*{dui}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="nombre">
+                                    Nombre
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="nombre"
+                                       maxlength="100"
+                                       placeholder="Nombre del participante"
+                                       data-th-field="*{nombre}"
+                                       required>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('nombre')}"
+                                      data-th-errors="*{nombre}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="apellido">
+                                    Apellido
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="apellido"
+                                       maxlength="100"
+                                       placeholder="Apellido del participante"
+                                       data-th-field="*{apellido}"
+                                       required>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('apellido')}"
+                                      data-th-errors="*{apellido}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="correo">
+                                    Correo electrónico
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="email"
+                                       id="correo"
+                                       maxlength="150"
+                                       placeholder="participante@correo.com"
+                                       data-th-field="*{correo}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('correo')}"
+                                      data-th-errors="*{correo}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="telefono">
+                                    Teléfono
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="text"
+                                       id="telefono"
+                                       maxlength="30"
+                                       placeholder="+503 0000-0000"
+                                       data-th-field="*{telefono}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('telefono')}"
+                                      data-th-errors="*{telefono}">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/participantes"
+                               data-th-href="@{/participantes}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar cambios
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
 </html>
