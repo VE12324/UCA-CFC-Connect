@@ -3,10 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Agregar cliente</title>
+    <title>Registrar cliente</title>
 
     <link rel="stylesheet"
           href="/css/estilos.css"
@@ -20,6 +21,7 @@
     <aside class="barra-lateral">
 
         <div class="marca">
+
             <a class="marca-enlace"
                href="/clientes"
                data-th-href="@{/clientes}">
@@ -28,81 +30,102 @@
                      src="/iconos/logo.png"
                      data-th-src="@{/iconos/logo.png}">
             </a>
+
         </div>
 
         <nav class="menu-lateral">
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/panel.png"
                      data-th-src="@{/iconos/panel.png}">
+
                 <span>Panel principal</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/gestion-academica.png"
                      data-th-src="@{/iconos/gestion-academica.png}">
+
                 <span>Gestión académica</span>
             </a>
 
             <a class="menu-enlace activo"
                href="/clientes"
                data-th-href="@{/clientes}">
+
                 <img class="menu-icono"
                      src="/iconos/clientes.png"
                      data-th-src="@{/iconos/clientes.png}">
+
                 <span>Clientes</span>
             </a>
 
             <a class="menu-enlace"
                href="/participantes"
                data-th-href="@{/participantes}">
+
                 <img class="menu-icono"
                      src="/iconos/participantes.png"
                      data-th-src="@{/iconos/participantes.png}">
+
                 <span>Participantes</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/inscripcion.png"
                      data-th-src="@{/iconos/inscripcion.png}">
+
                 <span>Inscripciones</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/cotizacion.png"
                      data-th-src="@{/iconos/cotizacion.png}">
+
                 <span>Cotizaciones</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/espacios.png"
                      data-th-src="@{/iconos/espacios.png}">
+
                 <span>Espacios</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/catering.png"
                      data-th-src="@{/iconos/catering.png}">
+
                 <span>Catering</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/agenda.png"
                      data-th-src="@{/iconos/agenda.png}">
+
                 <span>Agenda</span>
             </a>
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/pagos.png"
                      data-th-src="@{/iconos/pagos.png}">
+
                 <span>Pagos</span>
             </a>
 
@@ -111,14 +134,18 @@
         <div class="pie-lateral">
 
             <a class="menu-enlace" href="#">
+
                 <img class="menu-icono"
                      src="/iconos/configuracion.png"
                      data-th-src="@{/iconos/configuracion.png}">
+
                 <span>Configuración</span>
             </a>
 
             <a class="menu-enlace enlace-salir" href="#">
+
                 <span class="menu-icono">↪</span>
+
                 <span>Cerrar sesión</span>
             </a>
 
@@ -131,9 +158,12 @@
         <header class="barra-superior">
 
             <div class="busqueda-global">
+
                 <span>⌕</span>
+
                 <input type="search"
                        placeholder="Búsqueda global...">
+
             </div>
 
             <div class="acciones-superiores">
@@ -141,6 +171,7 @@
                 <button class="boton-icono"
                         type="button"
                         title="Notificaciones">
+
                     <img class="icono-superior"
                          src="/iconos/notificacion.png"
                          data-th-src="@{/iconos/notificacion.png}">
@@ -149,6 +180,7 @@
                 <a class="boton-icono"
                    href="#"
                    title="Configuración">
+
                     <img class="icono-superior"
                          src="/iconos/configuracion.png"
                          data-th-src="@{/iconos/configuracion.png}">
@@ -167,20 +199,29 @@
             <div class="formulario-tarjeta">
 
                 <div class="tarjeta-encabezado">
-                    <h1>Agregar cliente</h1>
-                    <p>Complete la información del nuevo cliente.</p>
+
+                    <h1>Registrar cliente</h1>
+
+                    <p>
+                        Complete la información del nuevo cliente.
+                    </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
 
                     <form method="post"
-                          data-th-action="@{/clientes/guardar}"
+                          action="/clientes/crear"
+                          data-th-action="@{/clientes/crear}"
                           data-th-object="${cliente}">
 
                         <div class="formulario-cuadricula">
 
                             <div class="grupo-formulario">
-                                <label for="dui">DUI o NIT</label>
+
+                                <label for="dui">
+                                    DUI o NIT
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -193,10 +234,14 @@
                                       data-th-if="${#fields.hasErrors('dui')}"
                                       data-th-errors="*{dui}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="nombre">Nombre</label>
+
+                                <label for="nombre">
+                                    Nombre
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -210,10 +255,14 @@
                                       data-th-if="${#fields.hasErrors('nombre')}"
                                       data-th-errors="*{nombre}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="empresa">Empresa</label>
+
+                                <label for="empresa">
+                                    Empresa
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -221,10 +270,19 @@
                                        maxlength="150"
                                        placeholder="Nombre de la empresa"
                                        data-th-field="*{empresa}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('empresa')}"
+                                      data-th-errors="*{empresa}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="correo">Correo electrónico</label>
+
+                                <label for="correo">
+                                    Correo electrónico
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="email"
@@ -237,10 +295,14 @@
                                       data-th-if="${#fields.hasErrors('correo')}"
                                       data-th-errors="*{correo}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="telefono">Teléfono</label>
+
+                                <label for="telefono">
+                                    Teléfono
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -248,17 +310,31 @@
                                        maxlength="30"
                                        placeholder="+503 0000-0000"
                                        data-th-field="*{telefono}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('telefono')}"
+                                      data-th-errors="*{telefono}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario ancho-completo">
-                                <label for="direccion">Dirección</label>
+
+                                <label for="direccion">
+                                    Dirección
+                                </label>
 
                                 <textarea class="campo-formulario"
                                           id="direccion"
                                           maxlength="255"
                                           placeholder="Dirección del cliente"
-                                          data-th-field="*{direccion}">
-                                </textarea>
+                                          data-th-field="*{direccion}"></textarea>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('direccion')}"
+                                      data-th-errors="*{direccion}">
+                                </span>
+
                             </div>
 
                         </div>
