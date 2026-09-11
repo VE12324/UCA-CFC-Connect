@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Diplomado</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('diplomados')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${diplomado.nombre}">Detalle del Diplomado</h1>
+                    <p>Ficha de información completa del programa de diplomado.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID de Registro</div>
+                            <div class="detalle-valor" th:text="${diplomado.idDiplomado}">1</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" th:text="${diplomado.estado}">ACTIVO</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Categoría</div>
+                            <div class="detalle-valor" th:text="${diplomado.categoria != null ? diplomado.categoria.nombre : 'N/A'}">Categoría</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Modalidad</div>
+                            <div class="detalle-valor" th:text="${diplomado.modalidad != null ? diplomado.modalidad.nombre : 'N/A'}">Modalidad</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Docente Titular</div>
+                            <div class="detalle-valor"
+                                 th:text="${diplomado.docente != null ? (diplomado.docente.nombre + ' ' + diplomado.docente.apellido + (diplomado.docente.especialidad != null ? ' - ' + diplomado.docente.especialidad : '')) : 'No asignado'}">
+                                Docente
+                            </div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Descripción</div>
+                            <div class="detalle-valor" th:text="${diplomado.descripcion}">Sin descripción</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Período</div>
+                            <div class="detalle-valor" th:text="${diplomado.fechaInicio + ' al ' + diplomado.fechaFin}">Fechas</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Cupo Máximo</div>
+                            <div class="detalle-valor" th:text="${diplomado.cupoMaximo + ' participantes'}">30</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Costo de Matrícula</div>
+                            <div class="detalle-valor" th:text="${'$' + diplomado.costo}">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario" href="/diplomados" th:href="@{/diplomados}">Volver al catálogo</a>
+                        <a class="boton-guardar" th:href="@{/diplomados/actualizar/{id}(id=${diplomado.idDiplomado})}">Editar información</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>
