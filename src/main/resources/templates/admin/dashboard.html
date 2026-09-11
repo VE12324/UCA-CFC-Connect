@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel principal — UCA CFC Connect</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <style>
+        .cuadricula-kpi {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .tarjeta-kpi {
+            padding: 24px;
+            border: 1px solid var(--borde);
+            border-radius: var(--radio);
+            background-color: var(--blanco);
+            box-shadow: var(--sombra);
+        }
+
+        .kpi-etiqueta {
+            margin-bottom: 10px;
+            color: var(--texto-suave);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .kpi-valor {
+            color: var(--primario);
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .kpi-icono {
+            width: 38px;
+            height: 38px;
+            margin-bottom: 14px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .cuadricula-accesos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .tarjeta-acceso {
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--borde);
+            border-radius: var(--radio);
+            background-color: var(--blanco);
+            box-shadow: var(--sombra);
+            color: var(--texto);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .tarjeta-acceso:hover {
+            border-color: var(--secundario);
+            background-color: var(--terciario);
+            color: #263000;
+            transform: translateY(-2px);
+        }
+
+        .acceso-icono {
+            width: 36px;
+            height: 36px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .acceso-signo {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--secundario);
+            color: #263000;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .seccion-titulo {
+            margin-bottom: 16px;
+            color: var(--texto);
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1100px) {
+            .cuadricula-kpi,
+            .cuadricula-accesos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cuadricula-kpi,
+            .cuadricula-accesos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('dashboard')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Panel principal</h1>
+                    <p>Resumen general del sistema UCA CFC Connect.</p>
+                </div>
+            </div>
+
+            <!-- KPI cards -->
+            <div class="cuadricula-kpi">
+
+                <div class="tarjeta-kpi">
+                    <img class="kpi-icono"
+                         th:src="@{/iconos/gestion-academica.png}"
+                         src="/iconos/gestion-academica.png"
+                         alt="Cursos">
+                    <p class="kpi-etiqueta">Cursos activos</p>
+                    <p class="kpi-valor" th:text="${cursosActivos}">0</p>
+                </div>
+
+                <div class="tarjeta-kpi">
+                    <img class="kpi-icono"
+                         th:src="@{/iconos/gestion-academica.png}"
+                         src="/iconos/gestion-academica.png"
+                         alt="Diplomados">
+                    <p class="kpi-etiqueta">Diplomados activos</p>
+                    <p class="kpi-valor" th:text="${diplomadosActivos}">0</p>
+                </div>
+
+                <div class="tarjeta-kpi">
+                    <img class="kpi-icono"
+                         th:src="@{/iconos/espacios.png}"
+                         src="/iconos/espacios.png"
+                         alt="Espacios">
+                    <p class="kpi-etiqueta">Espacios disponibles</p>
+                    <p class="kpi-valor" th:text="${espaciosDisponibles}">0</p>
+                </div>
+
+                <div class="tarjeta-kpi">
+                    <img class="kpi-icono"
+                         th:src="@{/iconos/configuracion.png}"
+                         src="/iconos/configuracion.png"
+                         alt="Usuarios">
+                    <p class="kpi-etiqueta">Total usuarios</p>
+                    <p class="kpi-valor" th:text="${totalUsuarios}">0</p>
+                </div>
+
+            </div>
+
+            <!-- Accesos rápidos -->
+            <p class="seccion-titulo">Accesos rápidos</p>
+            <div class="cuadricula-accesos">
+
+                <a class="tarjeta-acceso" th:href="@{/cursos/crear}" href="/cursos/crear">
+                    <span class="acceso-signo">＋</span>
+                    Nuevo curso
+                </a>
+
+                <a class="tarjeta-acceso" th:href="@{/diplomados/crear}" href="/diplomados/crear">
+                    <span class="acceso-signo">＋</span>
+                    Nuevo diplomado
+                </a>
+
+                <a class="tarjeta-acceso" th:href="@{/espacios/crear}" href="/espacios/crear">
+                    <span class="acceso-signo">＋</span>
+                    Nuevo espacio
+                </a>
+
+                <a class="tarjeta-acceso" th:href="@{/usuarios/crear}" href="/usuarios/crear">
+                    <span class="acceso-signo">＋</span>
+                    Nuevo usuario
+                </a>
+
+            </div>
+
+            <!-- Últimos cursos -->
+            <p class="seccion-titulo">Últimos cursos registrados</p>
+            <section class="tarjeta">
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Modalidad</th>
+                                <th>Fecha inicio</th>
+                                <th>Fecha fin</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="curso : ${ultimosCursos}">
+                                <td th:text="${curso.idCurso}">1</td>
+                                <td th:text="${curso.nombre}">Nombre del curso</td>
+                                <td th:text="${curso.modalidad != null ? curso.modalidad.nombre : '—'}">Modalidad</td>
+                                <td th:text="${curso.fechaInicio}">2024-01-01</td>
+                                <td th:text="${curso.fechaFin}">2024-02-01</td>
+                                <td th:text="${curso.estado}">ACTIVO</td>
+                                <td>
+                                    <div class="acciones-tabla">
+                                        <a class="boton-accion boton-consultar"
+                                           th:href="@{/cursos/consultar/{id}(id=${curso.idCurso})}">
+                                            Consultar
+                                        </a>
+                                        <a class="boton-accion boton-actualizar"
+                                           th:href="@{/cursos/actualizar/{id}(id=${curso.idCurso})}">
+                                            Actualizar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(ultimosCursos)}">
+                                <td class="celda-vacia" colspan="7">No hay cursos registrados aún.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pie-tabla">
+                    <a class="boton-nuevo" th:href="@{/cursos}" href="/cursos">
+                        Ver todos los cursos
+                    </a>
+                </div>
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

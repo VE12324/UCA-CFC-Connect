@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Espacio</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('espacios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${espacio.nombre}">Detalle del Espacio</h1>
+                    <p>Ficha de información completa del espacio.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID</div>
+                            <div class="detalle-valor" th:text="${espacio.idEspacio}">1</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" th:text="${espacio.estado}">DISPONIBLE</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Capacidad</div>
+                            <div class="detalle-valor" th:text="${espacio.capacidad + ' personas'}">50</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Costo por Hora</div>
+                            <div class="detalle-valor" th:text="${'$' + espacio.costoHora}">$50.00</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Ubicación</div>
+                            <div class="detalle-valor" th:text="${espacio.ubicacion != null ? espacio.ubicacion : 'Sin especificar'}">Edificio 1</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Descripción</div>
+                            <div class="detalle-valor" th:text="${espacio.descripcion != null ? espacio.descripcion : 'Sin descripción'}">Descripción</div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario" href="/espacios" th:href="@{/espacios}">Volver al catálogo</a>
+                        <a class="boton-guardar" th:href="@{/espacios/actualizar/{id}(id=${espacio.idEspacio})}">Editar información</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

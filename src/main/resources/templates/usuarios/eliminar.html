@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Usuario</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('usuarios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="eliminar-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Eliminar Usuario</h1>
+                    <p>Confirme la eliminación de la cuenta del sistema.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="advertencia-eliminar">
+                        <h2>¿Está seguro de eliminar esta cuenta?</h2>
+                        <p>Esta acción eliminará permanentemente el usuario del sistema. Las acciones y registros asociados podrían verse afectados.</p>
+                    </div>
+
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Usuario a eliminar</div>
+                            <div class="detalle-valor" th:text="${usuario.nombre}">Nombre</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Correo</div>
+                            <div class="detalle-valor" th:text="${usuario.email}">correo@ejemplo.com</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Rol</div>
+                            <div class="detalle-valor" th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">ADMIN</div>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.id})}" method="post">
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/usuarios" th:href="@{/usuarios}">Cancelar</a>
+                            <button class="boton-confirmar" type="submit">Confirmar y Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>
