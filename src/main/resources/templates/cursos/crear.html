@@ -86,7 +86,10 @@
                             <!-- Fechas -->
                             <div class="grupo-formulario">
                                 <label for="fechaInicio">Fecha de Inicio *</label>
-                                <input class="campo-formulario" id="fechaInicio" type="date" th:field="*{fechaInicio}" required>
+                                <input class="campo-formulario" id="fechaInicio" type="date" th:field="*{fechaInicio}"
+                                       th:classappend="${#fields.hasErrors('fechaInicio')} ? 'invalido' : ''"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}"></span>
                             </div>
 
                             <div class="grupo-formulario">
@@ -123,7 +126,7 @@
                             </div>
                         </div>
 
-                        <!-- Botones de Acción -->
+                                        <!-- Botones de Acción -->
                         <div class="acciones-formulario">
                             <a class="boton-secundario" href="/cursos" th:href="@{/cursos}">Cancelar</a>
                             <button class="boton-guardar" type="submit">Guardar Registro</button>
@@ -134,5 +137,16 @@
         </main>
     </section>
 </div>
+<script>
+    (function() {
+        var hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaInicio').min = hoy;
+        var inicio = document.getElementById('fechaInicio');
+        var fin = document.getElementById('fechaFin');
+        inicio.addEventListener('change', function() {
+            if (inicio.value) fin.min = inicio.value;
+        });
+    })();
+</script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Espacios</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('espacios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Alquiler de Espacios</h1>
+                    <p>Administra los espacios disponibles para eventos y formaciones.</p>
+                </div>
+                <a class="boton-nuevo" href="/espacios/crear" th:href="@{/espacios/crear}">
+                    <span>＋</span>
+                    <span>Nuevo espacio</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+
+            <section class="tarjeta">
+                <div class="filtros">
+                    <form class="formulario-busqueda" method="get" action="/espacios" th:action="@{/espacios}">
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+                            <input type="text" name="buscar" th:value="${buscar}" placeholder="Nombre del espacio o descripción...">
+                        </div>
+                        <button class="boton-buscar" type="submit">Buscar</button>
+                        <a class="boton-limpiar" href="/espacios" th:href="@{/espacios}">Limpiar</a>
+                    </form>
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Ubicación</th>
+                            <th>Capacidad</th>
+                            <th>Costo/Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="espacio : ${paginaEspacios.content}">
+                            <td th:text="${espacio.nombre}" style="font-weight: 600;">Sala A</td>
+                            <td th:text="${espacio.ubicacion != null ? espacio.ubicacion : 'Sin especificar'}">Edificio 1</td>
+                            <td th:text="${espacio.capacidad + ' personas'}">50</td>
+                            <td th:text="${'$' + espacio.costoHora + '/hr'}">$50.00/hr</td>
+                            <td>
+                                <span th:text="${espacio.estado}"
+                                      style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
+                                      th:style="${espacio.estado == 'DISPONIBLE' ? 'background: #e5f8ed; color: #198754;' : (espacio.estado == 'OCUPADO' ? 'background: #fff3cd; color: #856404;' : 'background: #f1f3f4; color: #697277;')}">
+                                    DISPONIBLE
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <a class="boton-accion boton-consultar" th:href="@{/espacios/consultar/{id}(id=${espacio.idEspacio})}">Consultar</a>
+                                    <a class="boton-accion boton-actualizar" th:href="@{/espacios/actualizar/{id}(id=${espacio.idEspacio})}">Actualizar</a>
+                                    <a class="boton-accion boton-eliminar" th:href="@{/espacios/eliminar/{id}(id=${espacio.idEspacio})}">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${paginaEspacios.empty}">
+                            <td class="celda-vacia" colspan="6">No se encontraron espacios registrados.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pie-tabla" th:if="${paginaEspacios.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando <span th:text="${paginaEspacios.numberOfElements}">1</span>
+                        de <span th:text="${paginaEspacios.totalElements}">1</span> registros
+                    </p>
+                    <div class="paginacion">
+                        <a class="pagina-enlace" th:if="${!paginaEspacios.first}" th:href="@{/espacios(buscar=${buscar},pagina=${paginaEspacios.number - 1})}">‹</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaEspacios.first}">‹</span>
+                        <span class="pagina-enlace activa" th:text="${paginaEspacios.number + 1}">1</span>
+                        <a class="pagina-enlace" th:if="${!paginaEspacios.last}" th:href="@{/espacios(buscar=${buscar},pagina=${paginaEspacios.number + 1})}">›</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaEspacios.last}">›</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

@@ -6,4 +6,5 @@ import sv.edu.udb.model.Rol;
 
 @Repository
 public interface RolRepository extends JpaRepository<Rol, Integer> {
+    java.util.Optional<Rol> findByNombre(String nombre);
 }

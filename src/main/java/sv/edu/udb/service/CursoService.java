@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sv.edu.udb.exception.RecursoNoEncontrado;
 import sv.edu.udb.model.Curso;
 import sv.edu.udb.repository.CursoRepository;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -64,10 +65,12 @@ public class CursoService {
     }
 
     private void validarFechas(Curso curso) {
-        if (curso.getFechaInicio() != null && curso.getFechaFin() != null) {
-            if (curso.getFechaFin().isBefore(curso.getFechaInicio())) {
-                throw new IllegalArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio");
-            }
+        if (curso.getFechaInicio() == null || curso.getFechaFin() == null) return;
+        if (curso.getFechaInicio().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser anterior a la fecha actual");
+        }
+        if (!curso.getFechaFin().isAfter(curso.getFechaInicio())) {
+            throw new IllegalArgumentException("La fecha de fin debe ser estrictamente posterior a la fecha de inicio");
         }
     }
 }

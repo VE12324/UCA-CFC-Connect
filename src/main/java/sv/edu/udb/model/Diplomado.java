@@ -68,5 +68,5 @@ public class Diplomado {
     @NotNull(message = "Debe asignar un docente")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_docente", nullable = false)
-    private Diplomado diplomado;
+    private Docente docente;
 }

@@ -95,5 +95,16 @@
         </main>
     </section>
 </div>
+<script>
+    (function() {
+        var hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaInicio').min = hoy;
+        var inicio = document.getElementById('fechaInicio');
+        var fin = document.getElementById('fechaFin');
+        inicio.addEventListener('change', function() {
+            if (inicio.value) fin.min = inicio.value;
+        });
+    })();
+</script>
 </body>
 </html>

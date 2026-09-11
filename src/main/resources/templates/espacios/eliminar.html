@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Espacio</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('espacios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="eliminar-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Eliminar Espacio</h1>
+                    <p>Confirme la eliminación del espacio del sistema.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="advertencia-eliminar">
+                        <h2>¿Está seguro de eliminar este espacio?</h2>
+                        <p>Esta acción eliminará el espacio del catálogo de forma permanente. Si existen reservas o cotizaciones asociadas, podrían verse afectadas.</p>
+                    </div>
+
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Espacio a eliminar</div>
+                            <div class="detalle-valor" th:text="${espacio.nombre}">Nombre</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Capacidad</div>
+                            <div class="detalle-valor" th:text="${espacio.capacidad + ' personas'}">50</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Costo/Hora</div>
+                            <div class="detalle-valor" th:text="${'$' + espacio.costoHora}">$0.00</div>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/espacios/eliminar/{id}(id=${espacio.idEspacio})}" method="post">
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/espacios" th:href="@{/espacios}">Cancelar</a>
+                            <button class="boton-confirmar" type="submit">Confirmar y Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

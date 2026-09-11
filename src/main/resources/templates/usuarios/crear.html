@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Usuario</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('usuarios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="formulario-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Nuevo Usuario</h1>
+                    <p>Complete los datos para crear una cuenta de acceso al sistema.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <form th:action="@{/usuarios/crear}" th:object="${usuario}" method="post">
+
+                        <div class="formulario-cuadricula">
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="nombre">Nombre Completo *</label>
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
+                                       maxlength="80"
+                                       placeholder="Nombre completo del usuario"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="correo">Correo Electrónico *</label>
+                                <input class="campo-formulario"
+                                       id="correo"
+                                       type="email"
+                                       th:field="*{correo}"
+                                       th:classappend="${#fields.hasErrors('correo')} ? 'invalido' : ''"
+                                       maxlength="100"
+                                       placeholder="correo@ejemplo.com"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="idRol">Rol del Sistema *</label>
+                                <select class="campo-formulario"
+                                        id="idRol"
+                                        th:field="*{idRol}"
+                                        th:classappend="${#fields.hasErrors('idRol')} ? 'invalido' : ''"
+                                        required>
+                                    <option value="">-- Seleccione un Rol --</option>
+                                    <option th:each="r : ${roles}"
+                                            th:value="${r.idRol}"
+                                            th:text="${r.nombre}"></option>
+                                </select>
+                                <span class="texto-error" th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}"></span>
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="password">Contraseña *</label>
+                                <input class="campo-formulario"
+                                       id="password"
+                                       type="password"
+                                       th:field="*{password}"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'invalido' : ''"
+                                       minlength="6"
+                                       placeholder="Mínimo 6 caracteres"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                            </div>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/usuarios" th:href="@{/usuarios}">Cancelar</a>
+                            <button class="boton-guardar" type="submit">Crear Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

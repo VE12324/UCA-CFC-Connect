@@ -1,83 +1,159 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
 <!-- FRAGMENTO: BARRA LATERAL -->
 <aside th:fragment="barra-lateral(opcionActiva)" class="barra-lateral">
     <div class="marca">
-        <a class="marca-enlace" href="/cursos" data-th-href="@{/cursos}">
-            <img class="logo-uca" src="/iconos/logo.png" data-th-src="@{/iconos/logo.png}" alt="UCA Logo">
+        <a class="marca-enlace" th:href="@{/}">
+            <img class="logo-uca" th:src="@{/iconos/logo.png}" src="/iconos/logo.png" alt="UCA Logo">
         </a>
     </div>
 
     <nav class="menu-lateral">
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/panel.png" data-th-src="@{/iconos/panel.png}">
+
+        <!-- Panel principal — todos los roles -->
+        <a class="menu-enlace"
+           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+           th:href="@{/admin/dashboard}" href="/admin/dashboard">
+            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
             <span>Panel principal</span>
         </a>
 
-        <!-- Se marca como activa si el parámetro coincide -->
-        <a class="menu-enlace"
-           th:classappend="${opcionActiva == 'cursos'} ? 'activo' : ''"
-           href="/cursos" data-th-href="@{/cursos}">
-            <img class="menu-icono" src="/iconos/gestion-academica.png" data-th-src="@{/iconos/gestion-academica.png}">
-            <span>Gestión académica</span>
-        </a>
+        <!-- ==================== ADMIN ==================== -->
+        <th:block sec:authorize="hasRole('ADMIN')">
 
-        <a class="menu-enlace"
-           th:classappend="${opcionActiva == 'clientes'} ? 'activo' : ''"
-           href="/clientes" data-th-href="@{/clientes}">
-            <img class="menu-icono" src="/iconos/clientes.png" data-th-src="@{/iconos/clientes.png}">
-            <span>Clientes</span>
-        </a>
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'cursos'} ? 'activo' : ''"
+               th:href="@{/cursos}" href="/cursos">
+                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+                <span>Cursos</span>
+            </a>
 
-        <a class="menu-enlace"
-           th:classappend="${opcionActiva == 'participantes'} ? 'activo' : ''"
-           href="/participantes" data-th-href="@{/participantes}">
-            <img class="menu-icono" src="/iconos/participantes.png" data-th-src="@{/iconos/participantes.png}">
-            <span>Participantes</span>
-        </a>
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'diplomados'} ? 'activo' : ''"
+               th:href="@{/diplomados}" href="/diplomados">
+                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+                <span>Diplomados</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/inscripcion.png" data-th-src="@{/iconos/inscripcion.png}">
-            <span>Inscripciones</span>
-        </a>
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'espacios'} ? 'activo' : ''"
+               th:href="@{/espacios}" href="/espacios">
+                <img class="menu-icono" th:src="@{/iconos/espacios.png}" src="/iconos/espacios.png" alt="">
+                <span>Espacios</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/cotizacion.png" data-th-src="@{/iconos/cotizacion.png}">
-            <span>Cotizaciones</span>
-        </a>
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'catering'} ? 'activo' : ''"
+               th:href="@{/catering}" href="/catering">
+                <img class="menu-icono" th:src="@{/iconos/catering.png}" src="/iconos/catering.png" alt="">
+                <span>Catering</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/espacios.png" data-th-src="@{/iconos/espacios.png}">
-            <span>Espacios</span>
-        </a>
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+                <span>Cotizaciones</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/catering.png" data-th-src="@{/iconos/catering.png}">
-            <span>Catering</span>
-        </a>
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'usuarios'} ? 'activo' : ''"
+               th:href="@{/usuarios}" href="/usuarios">
+                <img class="menu-icono" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="">
+                <span>Usuarios y roles</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/agenda.png" data-th-src="@{/iconos/agenda.png}">
-            <span>Agenda</span>
-        </a>
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
+                <span>Reportes</span>
+            </a>
 
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/pagos.png" data-th-src="@{/iconos/pagos.png}">
-            <span>Pagos</span>
-        </a>
+        </th:block>
+
+        <!-- ==================== RECEPCIONISTA ==================== -->
+        <th:block sec:authorize="hasRole('RECEPCIONISTA')">
+
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'clientes'} ? 'activo' : ''"
+               th:href="@{/clientes}" href="/clientes">
+                <img class="menu-icono" th:src="@{/iconos/clientes.png}" src="/iconos/clientes.png" alt="">
+                <span>Clientes</span>
+            </a>
+
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'participantes'} ? 'activo' : ''"
+               th:href="@{/participantes}" href="/participantes">
+                <img class="menu-icono" th:src="@{/iconos/participantes.png}" src="/iconos/participantes.png" alt="">
+                <span>Participantes</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/inscripcion.png}" src="/iconos/inscripcion.png" alt="">
+                <span>Inscripciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+                <span>Cotizaciones</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/espacios.png}" src="/iconos/espacios.png" alt="">
+                <span>Alquiler de espacios</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/catering.png}" src="/iconos/catering.png" alt="">
+                <span>Catering</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/agenda.png}" src="/iconos/agenda.png" alt="">
+                <span>Agenda institucional</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
+                <span>Pagos</span>
+            </a>
+
+        </th:block>
+
+        <!-- ==================== CONTABILIDAD ==================== -->
+        <th:block sec:authorize="hasRole('CONTABILIDAD')">
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
+                <span>Pagos</span>
+            </a>
+
+            <a class="menu-enlace" href="#">
+                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+                <span>Estados financieros</span>
+            </a>
+
+        </th:block>
+
     </nav>
 
     <div class="pie-lateral">
-        <a class="menu-enlace" href="#">
-            <img class="menu-icono" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+        <a class="menu-enlace"
+           sec:authorize="hasRole('ADMIN')"
+           th:classappend="${opcionActiva == 'usuarios'} ? 'activo' : ''"
+           th:href="@{/usuarios}" href="/usuarios">
+            <img class="menu-icono" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="">
             <span>Configuración</span>
         </a>
-        <a class="menu-enlace enlace-salir" href="#">
-            <span class="menu-icono">↪</span>
-            <span>Cerrar sesión</span>
-        </a>
+
+        <form th:action="@{/logout}" method="post" style="margin:0">
+            <button type="submit" class="menu-enlace enlace-salir"
+                    style="width:100%;border:none;background:none;cursor:pointer;text-align:left;">
+                <span class="menu-icono" style="font-size:18px;">↪</span>
+                <span>Cerrar sesión</span>
+            </button>
+        </form>
     </div>
 </aside>
 
@@ -90,12 +166,16 @@
 
     <div class="acciones-superiores">
         <button class="boton-icono" type="button" title="Notificaciones">
-            <img class="icono-superior" src="/iconos/notificacion.png" data-th-src="@{/iconos/notificacion.png}">
+            <img class="icono-superior" th:src="@{/iconos/notificacion.png}" src="/iconos/notificacion.png" alt="Notificaciones">
         </button>
-        <a class="boton-icono" href="#" title="Configuración">
-            <img class="icono-superior" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+        <a class="boton-icono" th:href="@{/usuarios}" href="/usuarios" title="Configuración"
+           sec:authorize="hasRole('ADMIN')">
+            <img class="icono-superior" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="Usuarios">
         </a>
-        <div class="usuario-avatar">AD</div>
+        <div class="usuario-avatar"
+             th:text="${#authentication.name != null ? #strings.substring(#authentication.name, 0, 2).toUpperCase() : 'US'}">
+            US
+        </div>
     </div>
 </header>
 
