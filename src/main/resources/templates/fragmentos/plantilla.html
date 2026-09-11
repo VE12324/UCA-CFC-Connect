@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- FRAGMENTO: BARRA LATERAL -->
+<aside th:fragment="barra-lateral(opcionActiva)" class="barra-lateral">
+    <div class="marca">
+        <a class="marca-enlace" href="/cursos" data-th-href="@{/cursos}">
+            <img class="logo-uca" src="/iconos/logo.png" data-th-src="@{/iconos/logo.png}" alt="UCA Logo">
+        </a>
+    </div>
+
+    <nav class="menu-lateral">
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/panel.png" data-th-src="@{/iconos/panel.png}">
+            <span>Panel principal</span>
+        </a>
+
+        <!-- Se marca como activa si el parámetro coincide -->
+        <a class="menu-enlace"
+           th:classappend="${opcionActiva == 'cursos'} ? 'activo' : ''"
+           href="/cursos" data-th-href="@{/cursos}">
+            <img class="menu-icono" src="/iconos/gestion-academica.png" data-th-src="@{/iconos/gestion-academica.png}">
+            <span>Gestión académica</span>
+        </a>
+
+        <a class="menu-enlace"
+           th:classappend="${opcionActiva == 'clientes'} ? 'activo' : ''"
+           href="/clientes" data-th-href="@{/clientes}">
+            <img class="menu-icono" src="/iconos/clientes.png" data-th-src="@{/iconos/clientes.png}">
+            <span>Clientes</span>
+        </a>
+
+        <a class="menu-enlace"
+           th:classappend="${opcionActiva == 'participantes'} ? 'activo' : ''"
+           href="/participantes" data-th-href="@{/participantes}">
+            <img class="menu-icono" src="/iconos/participantes.png" data-th-src="@{/iconos/participantes.png}">
+            <span>Participantes</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/inscripcion.png" data-th-src="@{/iconos/inscripcion.png}">
+            <span>Inscripciones</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/cotizacion.png" data-th-src="@{/iconos/cotizacion.png}">
+            <span>Cotizaciones</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/espacios.png" data-th-src="@{/iconos/espacios.png}">
+            <span>Espacios</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/catering.png" data-th-src="@{/iconos/catering.png}">
+            <span>Catering</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/agenda.png" data-th-src="@{/iconos/agenda.png}">
+            <span>Agenda</span>
+        </a>
+
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/pagos.png" data-th-src="@{/iconos/pagos.png}">
+            <span>Pagos</span>
+        </a>
+    </nav>
+
+    <div class="pie-lateral">
+        <a class="menu-enlace" href="#">
+            <img class="menu-icono" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+            <span>Configuración</span>
+        </a>
+        <a class="menu-enlace enlace-salir" href="#">
+            <span class="menu-icono">↪</span>
+            <span>Cerrar sesión</span>
+        </a>
+    </div>
+</aside>
+
+<!-- FRAGMENTO: BARRA SUPERIOR -->
+<header th:fragment="barra-superior" class="barra-superior">
+    <div class="busqueda-global">
+        <span>⌕</span>
+        <input type="search" placeholder="Búsqueda global...">
+    </div>
+
+    <div class="acciones-superiores">
+        <button class="boton-icono" type="button" title="Notificaciones">
+            <img class="icono-superior" src="/iconos/notificacion.png" data-th-src="@{/iconos/notificacion.png}">
+        </button>
+        <a class="boton-icono" href="#" title="Configuración">
+            <img class="icono-superior" src="/iconos/configuracion.png" data-th-src="@{/iconos/configuracion.png}">
+        </a>
+        <div class="usuario-avatar">AD</div>
+    </div>
+</header>
+
+</body>
+</html>

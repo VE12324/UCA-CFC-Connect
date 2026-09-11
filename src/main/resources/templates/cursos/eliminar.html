@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Curso</title>
+    <link rel="stylesheet" href="/css/estilos.css" data-th-href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cursos')}"></aside>
+
+    <section class="area-principal">
+        <main class="contenido">
+            <div class="eliminar-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Eliminar Curso Académico</h1>
+                    <p>Confirme la eliminación del registro en el sistema.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="advertencia-eliminar">
+                        <h2>¿Está completamente seguro de eliminar este curso?</h2>
+                        <p>Esta acción removerá el curso del catálogo. Si ya existen participantes o inscripciones asociadas a este programa, la base de datos podría restringir la eliminación directa.</p>
+                    </div>
+
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Curso a eliminar</div>
+                            <div class="detalle-valor" data-th-text="${curso.nombre}">Nombre</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Categoría</div>
+                            <div class="detalle-valor" data-th-text="${curso.categoria != null ? curso.categoria.nombre : 'N/A'}">N/A</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Costo</div>
+                            <div class="detalle-valor" data-th-text="${'$' + curso.costo}">$0.00</div>
+                        </div>
+                    </div>
+
+                    <form data-th-action="@{/cursos/eliminar/{id}(id=${curso.idCurso})}" method="post">
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/cursos" data-th-href="@{/cursos}">Cancelar</a>
+                            <button class="boton-confirmar" type="submit">Confirmar y Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>
