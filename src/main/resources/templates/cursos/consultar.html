@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Curso</title>
+    <link rel="stylesheet" href="/css/estilos.css" data-th-href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cursos')}"></aside>>
+
+    <section class="area-principal">
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 data-th-text="${curso.nombre}">Detalle del Curso</h1>
+                    <p>Ficha de información completa del programa académico.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID de Registro</div>
+                            <div class="detalle-valor" data-th-text="${curso.idCurso}">1</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" data-th-text="${curso.estado}">ACTIVO</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Categoría</div>
+                            <div class="detalle-valor" data-th-text="${curso.categoria != null ? curso.categoria.nombre : 'N/A'}">Tecnología</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Modalidad</div>
+                            <div class="detalle-valor" data-th-text="${curso.modalidad != null ? curso.modalidad.nombre : 'N/A'}">Presencial</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Docente Titular</div>
+                            <div class="detalle-valor" data-th-text="${curso.docente != null ? (curso.docente.nombre + ' ' + curso.docente.apellido + ' - Especialidad: ' + curso.docente.especialidad) : 'No asignado'}">Ing. Carlos Morales</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Descripción</div>
+                            <div class="detalle-valor" data-th-text="${curso.descripcion}">Sin descripción</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Período de Clases</div>
+                            <div class="detalle-valor" data-th-text="${curso.fechaInicio + ' al ' + curso.fechaFin}">Fechas</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Cupo Máximo</div>
+                            <div class="detalle-valor" data-th-text="${curso.cupoMaximo + ' participantes'}">30</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Costo de Matrícula</div>
+                            <div class="detalle-valor" data-th-text="${'$' + curso.costo}">$100.00</div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario" href="/cursos" data-th-href="@{/cursos}">Volver al catálogo</a>
+                        <a class="boton-guardar" href="#" data-th-href="@{/cursos/actualizar/{id}(id=${curso.idCurso})}">Editar información</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

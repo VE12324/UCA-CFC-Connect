@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Académica - Cursos</title>
+    <link rel="stylesheet" href="/css/estilos.css" data-th-href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <!-- BARRA LATERAL compartida-->
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cursos')}"></aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Gestión Académica</h1>
+                    <p>Administra cursos, diplomados y asignaciones docentes.</p>
+                </div>
+
+                <a class="boton-nuevo" href="/cursos/crear" data-th-href="@{/cursos/crear}">
+                    <span>＋</span>
+                    <span>Nuevo curso</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito" data-th-if="${exito}" data-th-text="${exito}"></div>
+
+            <section class="tarjeta">
+                <!-- FILTRO Y BÚSQUEDA -->
+                <div class="filtros">
+                    <form class="formulario-busqueda" method="get" action="/cursos" data-th-action="@{/cursos}">
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+                            <input type="text" name="buscar" data-th-value="${buscar}" placeholder="Nombre del curso o descripción...">
+                        </div>
+                        <button class="boton-buscar" type="submit">Buscar</button>
+                        <a class="boton-limpiar" href="/cursos" data-th-href="@{/cursos}">Limpiar</a>
+                    </form>
+                </div>
+
+                <!-- TABLA DE DATOS -->
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Modalidad</th>
+                            <th>Docente</th>
+                            <th>Fechas</th>
+                            <th>Cupo</th>
+                            <th>Costo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-th-each="curso : ${paginaCursos.content}">
+                            <td data-th-text="${curso.nombre}" style="font-weight: 600;">Introducción a Python</td>
+                            <td data-th-text="${curso.categoria != null ? curso.categoria.nombre : 'Sin categoría'}">Tecnología</td>
+                            <td data-th-text="${curso.modalidad != null ? curso.modalidad.nombre : 'Sin modalidad'}">Online</td>
+                            <td data-th-text="${curso.docente != null ? (curso.docente.nombre + ' ' + curso.docente.apellido) : 'No asignado'}">Ana Gómez</td>
+                            <td data-th-text="${curso.fechaInicio + ' al ' + curso.fechaFin}">15 Oct 2026</td>
+                            <td data-th-text="${curso.cupoMaximo}">30</td>
+                            <td data-th-text="${'$' + curso.costo}">$150.00</td>
+                            <td>
+                                        <span data-th-text="${curso.estado}"
+                                              style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
+                                              data-th-style="${curso.estado == 'ACTIVO' ? 'background: #e5f8ed; color: #198754;' : 'background: #f1f3f4; color: #697277;'}">
+                                            ACTIVO
+                                        </span>
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <a class="boton-accion boton-consultar" href="#" data-th-href="@{/cursos/consultar/{id}(id=${curso.idCurso})}">
+                                        Consultar
+                                    </a>
+                                    <a class="boton-accion boton-actualizar" href="#" data-th-href="@{/cursos/actualizar/{id}(id=${curso.idCurso})}">
+                                        Actualizar
+                                    </a>
+                                    <a class="boton-accion boton-eliminar" href="#" data-th-href="@{/cursos/eliminar/{id}(id=${curso.idCurso})}">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr data-th-if="${paginaCursos.empty}">
+                            <td class="celda-vacia" colspan="9">
+                                No se encontraron cursos académicos registrados.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINACIÓN -->
+                <div class="pie-tabla" data-th-if="${paginaCursos.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando <span data-th-text="${paginaCursos.numberOfElements}">1</span> de <span data-th-text="${paginaCursos.totalElements}">1</span> registros
+                    </p>
+
+                    <div class="paginacion">
+                        <a class="pagina-enlace" href="#" data-th-if="${!paginaCursos.first}" data-th-href="@{/cursos(buscar=${buscar},pagina=${paginaCursos.number - 1})}">‹</a>
+                        <span class="pagina-enlace deshabilitada" data-th-if="${paginaCursos.first}">‹</span>
+
+                        <span class="pagina-enlace activa" data-th-text="${paginaCursos.number + 1}">1</span>
+
+                        <a class="pagina-enlace" href="#" data-th-if="${!paginaCursos.last}" data-th-href="@{/cursos(buscar=${buscar},pagina=${paginaCursos.number + 1})}">›</a>
+                        <span class="pagina-enlace deshabilitada" data-th-if="${paginaCursos.last}">›</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

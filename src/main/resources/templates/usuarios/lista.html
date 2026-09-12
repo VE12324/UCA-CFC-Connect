@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('usuarios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Gestión de Usuarios</h1>
+                    <p>Administra las cuentas de acceso al sistema.</p>
+                </div>
+                <a class="boton-nuevo" href="/usuarios/crear" th:href="@{/usuarios/crear}">
+                    <span>＋</span>
+                    <span>Nuevo usuario</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+
+            <section class="tarjeta">
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo electrónico</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(usuarios)}">
+                            <td class="celda-vacia" colspan="5">No hay usuarios registrados en el sistema.</td>
+                        </tr>
+                        <tr th:each="usuario : ${usuarios}">
+                            <td th:text="${usuario.id}">1</td>
+                            <td th:text="${usuario.nombre}" style="font-weight: 600;">Nombre</td>
+                            <td th:text="${usuario.email}">correo@ejemplo.com</td>
+                            <td th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">ADMIN</td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <a class="boton-accion boton-consultar"
+                                       th:href="@{/usuarios/consultar/{id}(id=${usuario.id})}">Consultar</a>
+                                    <a class="boton-accion boton-actualizar"
+                                       th:href="@{/usuarios/actualizar/{id}(id=${usuario.id})}">Actualizar</a>
+                                    <a class="boton-accion boton-eliminar"
+                                       th:href="@{/usuarios/eliminar/{id}(id=${usuario.id})}">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

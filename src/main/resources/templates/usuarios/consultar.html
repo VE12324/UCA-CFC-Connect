@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Usuario</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('usuarios')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${usuario.nombre}">Detalle del Usuario</h1>
+                    <p>Información completa de la cuenta de acceso.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID de Cuenta</div>
+                            <div class="detalle-valor" th:text="${usuario.id}">1</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Rol asignado</div>
+                            <div class="detalle-valor" th:text="${usuario.rol != null ? usuario.rol.nombre : 'Sin rol'}">ADMIN</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Nombre Completo</div>
+                            <div class="detalle-valor" th:text="${usuario.nombre}">Nombre</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Correo Electrónico</div>
+                            <div class="detalle-valor" th:text="${usuario.email}">correo@ejemplo.com</div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario" href="/usuarios" th:href="@{/usuarios}">Volver al listado</a>
+                        <a class="boton-guardar" th:href="@{/usuarios/actualizar/{id}(id=${usuario.id})}">Editar información</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>
