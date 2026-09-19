@@ -1,6 +1,7 @@
 package sv.edu.udb.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,31 +14,62 @@ import sv.edu.udb.repository.EspacioRepository;
 @RequiredArgsConstructor
 public class EspacioService {
 
-    private final EspacioRepository espacioRepository;
+    private final EspacioRepository espacioRepositorio;
 
     @Transactional(readOnly = true)
-    public Page<Espacio> listarEspacios(String busqueda, Pageable pageable) {
+    public Page<Espacio> listarEspacios(
+            String busqueda,
+            Pageable paginacion) {
+
         if (busqueda == null || busqueda.isBlank()) {
-            return espacioRepository.findAll(pageable);
+            return espacioRepositorio.findAll(paginacion);
         }
-        return espacioRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(
-                busqueda, busqueda, pageable);
+
+        return espacioRepositorio
+                .findByNombreContainingIgnoreCaseOrUbicacionContainingIgnoreCase(
+                        busqueda,
+                        busqueda,
+                        paginacion
+                );
     }
 
     @Transactional(readOnly = true)
     public Espacio buscarPorId(Integer id) {
-        return espacioRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontrado("No se encontró el espacio con ID: " + id));
+
+        return espacioRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontrado(
+                        "No se encontró el espacio con ID: " + id
+                ));
     }
 
     @Transactional
     public Espacio registrarEspacio(Espacio espacio) {
-        return espacioRepository.save(espacio);
+
+        validarNombreDuplicado(
+                espacio.getNombre(),
+                null
+        );
+
+        if (espacio.getEstado() == null
+                || espacio.getEstado().isBlank()) {
+
+            espacio.setEstado("DISPONIBLE");
+        }
+
+        return espacioRepositorio.save(espacio);
     }
 
     @Transactional
-    public Espacio actualizarEspacio(Integer id, Espacio datosEspacio) {
+    public Espacio actualizarEspacio(
+            Integer id,
+            Espacio datosEspacio) {
+
         Espacio espacio = buscarPorId(id);
+
+        validarNombreDuplicado(
+                datosEspacio.getNombre(),
+                id
+        );
 
         espacio.setNombre(datosEspacio.getNombre());
         espacio.setDescripcion(datosEspacio.getDescripcion());
@@ -46,12 +78,53 @@ public class EspacioService {
         espacio.setCostoHora(datosEspacio.getCostoHora());
         espacio.setEstado(datosEspacio.getEstado());
 
-        return espacioRepository.save(espacio);
+        return espacioRepositorio.save(espacio);
     }
 
     @Transactional
     public void eliminarEspacio(Integer id) {
+
         Espacio espacio = buscarPorId(id);
-        espacioRepository.delete(espacio);
+
+        try {
+
+            espacioRepositorio.delete(espacio);
+            espacioRepositorio.flush();
+
+        } catch (DataIntegrityViolationException excepcion) {
+
+            throw new IllegalArgumentException(
+                    "No se puede eliminar el espacio porque tiene alquileres u otros registros asociados."
+            );
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public long contarEspaciosDisponibles() {
+
+        return espacioRepositorio.countByEstado("DISPONIBLE");
+    }
+
+    private void validarNombreDuplicado(
+            String nombre,
+            Integer idEspacioActual) {
+
+        if (nombre == null || nombre.isBlank()) {
+            return;
+        }
+
+        espacioRepositorio.findByNombreIgnoreCase(nombre.trim())
+                .filter(espacio ->
+                        idEspacioActual == null
+                        || !espacio.getIdEspacio()
+                                .equals(idEspacioActual)
+                )
+                .ifPresent(espacio -> {
+
+                    throw new IllegalArgumentException(
+                            "Ya existe un espacio registrado con el nombre: "
+                            + nombre
+                    );
+                });
     }
 }

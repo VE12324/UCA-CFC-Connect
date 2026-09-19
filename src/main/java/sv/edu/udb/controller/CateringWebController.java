@@ -9,7 +9,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sv.edu.udb.model.ServicioCatering;
 import sv.edu.udb.service.CateringService;
@@ -26,17 +30,42 @@ public class CateringWebController {
             @RequestParam(defaultValue = "0") int pagina,
             Model modelo) {
 
-        Pageable paginacion = PageRequest.of(pagina, 10, Sort.by("nombre").ascending());
-        Page<ServicioCatering> servicios = cateringService.listarServicios(buscar, paginacion);
+        Pageable paginacion = PageRequest.of(
+                pagina,
+                10,
+                Sort.by("nombre").ascending()
+        );
 
-        modelo.addAttribute("paginaCatering", servicios);
-        modelo.addAttribute("buscar", buscar);
+        Page<ServicioCatering> servicios =
+                cateringService.listarServicios(
+                        buscar,
+                        paginacion
+                );
+
+        modelo.addAttribute(
+                "paginaCatering",
+                servicios
+        );
+
+        modelo.addAttribute(
+                "buscar",
+                buscar
+        );
+
         return "catering/inicio";
     }
 
     @GetMapping("/catering/crear")
     public String mostrarCrear(Model modelo) {
-        modelo.addAttribute("servicio", new ServicioCatering());
+
+        ServicioCatering servicio = new ServicioCatering();
+        servicio.setEstado("DISPONIBLE");
+
+        modelo.addAttribute(
+                "servicio",
+                servicio
+        );
+
         return "catering/crear";
     }
 
@@ -51,18 +80,41 @@ public class CateringWebController {
         }
 
         try {
+
             cateringService.registrarServicio(servicio);
-            mensaje.addFlashAttribute("exito", "Servicio de catering registrado correctamente");
+
+            mensaje.addFlashAttribute(
+                    "exito",
+                    "Servicio de catering registrado correctamente"
+            );
+
             return "redirect:/catering";
+
         } catch (IllegalArgumentException excepcion) {
-            resultado.rejectValue("capacidadMaxima", "capacidad.invalida", excepcion.getMessage());
+
+            resultado.rejectValue(
+                    "capacidadMaxima",
+                    "capacidad.invalida",
+                    excepcion.getMessage()
+            );
+
             return "catering/crear";
         }
     }
 
     @GetMapping("/catering/actualizar/{id}")
-    public String mostrarActualizar(@PathVariable Integer id, Model modelo) {
-        modelo.addAttribute("servicio", cateringService.buscarPorId(id));
+    public String mostrarActualizar(
+            @PathVariable Integer id,
+            Model modelo) {
+
+        ServicioCatering servicio =
+                cateringService.buscarPorId(id);
+
+        modelo.addAttribute(
+                "servicio",
+                servicio
+        );
+
         return "catering/actualizar";
     }
 
@@ -78,31 +130,92 @@ public class CateringWebController {
         }
 
         try {
-            cateringService.actualizarServicio(id, servicio);
-            mensaje.addFlashAttribute("exito", "Servicio de catering actualizado correctamente");
+
+            cateringService.actualizarServicio(
+                    id,
+                    servicio
+            );
+
+            mensaje.addFlashAttribute(
+                    "exito",
+                    "Servicio de catering actualizado correctamente"
+            );
+
             return "redirect:/catering";
+
         } catch (IllegalArgumentException excepcion) {
-            resultado.rejectValue("capacidadMaxima", "capacidad.invalida", excepcion.getMessage());
+
+            resultado.rejectValue(
+                    "capacidadMaxima",
+                    "capacidad.invalida",
+                    excepcion.getMessage()
+            );
+
             return "catering/actualizar";
         }
     }
 
     @GetMapping("/catering/consultar/{id}")
-    public String mostrarServicio(@PathVariable Integer id, Model modelo) {
-        modelo.addAttribute("servicio", cateringService.buscarPorId(id));
+    public String mostrarServicio(
+            @PathVariable Integer id,
+            Model modelo) {
+
+        ServicioCatering servicio =
+                cateringService.buscarPorId(id);
+
+        modelo.addAttribute(
+                "servicio",
+                servicio
+        );
+
         return "catering/consultar";
     }
 
     @GetMapping("/catering/eliminar/{id}")
-    public String mostrarEliminar(@PathVariable Integer id, Model modelo) {
-        modelo.addAttribute("servicio", cateringService.buscarPorId(id));
+    public String mostrarEliminar(
+            @PathVariable Integer id,
+            Model modelo) {
+
+        ServicioCatering servicio =
+                cateringService.buscarPorId(id);
+
+        modelo.addAttribute(
+                "servicio",
+                servicio
+        );
+
         return "catering/eliminar";
     }
 
     @PostMapping("/catering/eliminar/{id}")
-    public String eliminarServicio(@PathVariable Integer id, RedirectAttributes mensaje) {
-        cateringService.eliminarServicio(id);
-        mensaje.addFlashAttribute("exito", "Servicio de catering eliminado correctamente");
+    public String eliminarServicio(
+            @PathVariable Integer id,
+            RedirectAttributes mensaje) {
+
+        try {
+
+            cateringService.eliminarServicio(id);
+
+            mensaje.addFlashAttribute(
+                    "exito",
+                    "Servicio de catering eliminado correctamente"
+            );
+
+        } catch (IllegalArgumentException excepcion) {
+
+            mensaje.addFlashAttribute(
+                    "error",
+                    excepcion.getMessage()
+            );
+
+        } catch (Exception excepcion) {
+
+            mensaje.addFlashAttribute(
+                    "error",
+                    "No se pudo eliminar el servicio de catering."
+            );
+        }
+
         return "redirect:/catering";
     }
 }

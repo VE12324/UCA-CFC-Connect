@@ -32,28 +32,46 @@ public class EspacioController {
                 : Sort.by(ordenarPor).ascending();
 
         Pageable pageable = PageRequest.of(pagina, tamano, sort);
-        return ResponseEntity.ok(espacioService.listarEspacios(buscar, pageable));
+
+        return ResponseEntity.ok(
+                espacioService.listarEspacios(buscar, pageable)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Espacio> buscarPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(espacioService.buscarPorId(id));
+    public ResponseEntity<Espacio> buscarPorId(
+            @PathVariable Integer id) {
+
+        return ResponseEntity.ok(
+                espacioService.buscarPorId(id)
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Espacio> registrarEspacio(@Valid @RequestBody Espacio espacio) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(espacioService.registrarEspacio(espacio));
+    public ResponseEntity<Espacio> registrarEspacio(
+            @Valid @RequestBody Espacio espacio) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(espacioService.registrarEspacio(espacio));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Espacio> actualizarEspacio(
-            @PathVariable Integer id, @Valid @RequestBody Espacio espacio) {
-        return ResponseEntity.ok(espacioService.actualizarEspacio(id, espacio));
+            @PathVariable Integer id,
+            @Valid @RequestBody Espacio espacio) {
+
+        return ResponseEntity.ok(
+                espacioService.actualizarEspacio(id, espacio)
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarEspacio(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminarEspacio(
+            @PathVariable Integer id) {
+
         espacioService.eliminarEspacio(id);
+
         return ResponseEntity.noContent().build();
     }
 }

@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 import sv.edu.udb.model.ServicioCatering;
 
 @Repository
-public interface CateringRepository extends JpaRepository<ServicioCatering, Integer> {
-    Page<ServicioCatering> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(
-            String nombre,
-            String descripcion,
-            Pageable pageable
-    );
+public interface CateringRepository
+        extends JpaRepository<ServicioCatering, Integer> {
+
+    Page<ServicioCatering>
+            findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(
+                    String nombre,
+                    String descripcion,
+                    Pageable paginacion
+            );
 }
