@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios de Catering</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('catering')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Servicios de Catering</h1>
+                    <p>Administra los servicios de catering disponibles para eventos.</p>
+                </div>
+                <a class="boton-nuevo" href="/catering/crear" th:href="@{/catering/crear}">
+                    <span>＋</span>
+                    <span>Nuevo servicio</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+
+            <section class="tarjeta">
+                <div class="filtros">
+                    <form class="formulario-busqueda" method="get" action="/catering" th:action="@{/catering}">
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+                            <input type="text" name="buscar" th:value="${buscar}" placeholder="Nombre del servicio o descripción...">
+                        </div>
+                        <button class="boton-buscar" type="submit">Buscar</button>
+                        <a class="boton-limpiar" href="/catering" th:href="@{/catering}">Limpiar</a>
+                    </form>
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio/Persona</th>
+                            <th>Capacidad Mín.</th>
+                            <th>Capacidad Máx.</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="servicio : ${paginaCatering.content}">
+                            <td th:text="${servicio.nombre}" style="font-weight: 600;">Servicio</td>
+                            <td th:text="${'$' + servicio.precioPorPersona}">$25.00</td>
+                            <td th:text="${servicio.capacidadMinima + ' personas'}">10</td>
+                            <td th:text="${servicio.capacidadMaxima + ' personas'}">100</td>
+                            <td>
+                                <span th:text="${servicio.estado}"
+                                      style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
+                                      th:style="${servicio.estado == 'DISPONIBLE' ? 'background: #e5f8ed; color: #198754;' : 'background: #f1f3f4; color: #697277;'}">
+                                    DISPONIBLE
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <a class="boton-accion boton-consultar" th:href="@{/catering/consultar/{id}(id=${servicio.idCatering})}">Consultar</a>
+                                    <a class="boton-accion boton-actualizar" th:href="@{/catering/actualizar/{id}(id=${servicio.idCatering})}">Actualizar</a>
+                                    <a class="boton-accion boton-eliminar" th:href="@{/catering/eliminar/{id}(id=${servicio.idCatering})}">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${paginaCatering.empty}">
+                            <td class="celda-vacia" colspan="6">No se encontraron servicios de catering registrados.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pie-tabla" th:if="${paginaCatering.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando <span th:text="${paginaCatering.numberOfElements}">1</span>
+                        de <span th:text="${paginaCatering.totalElements}">1</span> registros
+                    </p>
+                    <div class="paginacion">
+                        <a class="pagina-enlace" th:if="${!paginaCatering.first}" th:href="@{/catering(buscar=${buscar},pagina=${paginaCatering.number - 1})}">‹</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaCatering.first}">‹</span>
+                        <span class="pagina-enlace activa" th:text="${paginaCatering.number + 1}">1</span>
+                        <a class="pagina-enlace" th:if="${!paginaCatering.last}" th:href="@{/catering(buscar=${buscar},pagina=${paginaCatering.number + 1})}">›</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaCatering.last}">›</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Servicio de Catering</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('catering')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="formulario-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Nuevo Servicio de Catering</h1>
+                    <p>Registre un nuevo servicio de catering disponible para eventos.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <form th:action="@{/catering/crear}" th:object="${servicio}" method="post">
+
+                        <div class="formulario-cuadricula">
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="nombre">Nombre del Servicio *</label>
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
+                                       maxlength="150"
+                                       placeholder="Ej. Coffee Break Premium">
+                                <span class="texto-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="precioPorPersona">Precio por Persona (USD) *</label>
+                                <input class="campo-formulario"
+                                       id="precioPorPersona"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       th:field="*{precioPorPersona}"
+                                       th:classappend="${#fields.hasErrors('precioPorPersona')} ? 'invalido' : ''"
+                                       placeholder="0.00">
+                                <span class="texto-error" th:if="${#fields.hasErrors('precioPorPersona')}" th:errors="*{precioPorPersona}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="estado">Estado *</label>
+                                <select class="campo-formulario" id="estado" th:field="*{estado}">
+                                    <option value="DISPONIBLE">Disponible</option>
+                                    <option value="NO DISPONIBLE">No Disponible</option>
+                                </select>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="capacidadMinima">Capacidad Mínima (personas) *</label>
+                                <input class="campo-formulario"
+                                       id="capacidadMinima"
+                                       type="number"
+                                       min="1"
+                                       th:field="*{capacidadMinima}"
+                                       th:classappend="${#fields.hasErrors('capacidadMinima')} ? 'invalido' : ''"
+                                       placeholder="10">
+                                <span class="texto-error" th:if="${#fields.hasErrors('capacidadMinima')}" th:errors="*{capacidadMinima}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="capacidadMaxima">Capacidad Máxima (personas) *</label>
+                                <input class="campo-formulario"
+                                       id="capacidadMaxima"
+                                       type="number"
+                                       min="1"
+                                       th:field="*{capacidadMaxima}"
+                                       th:classappend="${#fields.hasErrors('capacidadMaxima')} ? 'invalido' : ''"
+                                       placeholder="100">
+                                <span class="texto-error" th:if="${#fields.hasErrors('capacidadMaxima')}" th:errors="*{capacidadMaxima}"></span>
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="descripcion">Descripción</label>
+                                <textarea class="campo-formulario"
+                                          id="descripcion"
+                                          th:field="*{descripcion}"
+                                          maxlength="500"
+                                          placeholder="Describe el servicio: menú, equipamiento, condiciones..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/catering" th:href="@{/catering}">Cancelar</a>
+                            <button class="boton-guardar" type="submit">Guardar Servicio</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

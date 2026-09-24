@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Diplomado</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('diplomados')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="formulario-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Nuevo Diplomado</h1>
+                    <p>Complete los detalles para dar de alta un nuevo programa de diplomado.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <form th:action="@{/diplomados/crear}" th:object="${diplomado}" method="post">
+
+                        <div class="formulario-cuadricula">
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="nombre">Nombre del Diplomado *</label>
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
+                                       maxlength="150"
+                                       placeholder="Ej. Diplomado en Gestión Empresarial">
+                                <span class="texto-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="categoria">Categoría *</label>
+                                <select class="campo-formulario" id="categoria" name="categoria.idCategoria" required>
+                                    <option value="">Seleccione una categoría</option>
+                                    <option th:each="cat : ${categorias}"
+                                            th:value="${cat.idCategoria}"
+                                            th:text="${cat.nombre}"></option>
+                                </select>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="modalidad">Modalidad *</label>
+                                <select class="campo-formulario" id="modalidad" name="modalidad.idModalidad" required>
+                                    <option value="">Seleccione una modalidad</option>
+                                    <option th:each="m : ${modalidades}"
+                                            th:value="${m.idModalidad}"
+                                            th:text="${m.nombre}"></option>
+                                </select>
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="descripcion">Descripción</label>
+                                <textarea class="campo-formulario"
+                                          id="descripcion"
+                                          th:field="*{descripcion}"
+                                          maxlength="255"
+                                          placeholder="Breve descripción del programa..."></textarea>
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="docente">Docente Asignado *</label>
+                                <select class="campo-formulario" id="docente" name="docente.idDocente" required>
+                                    <option value="">Asignar docente responsable</option>
+                                    <option th:each="doc : ${docentes}"
+                                            th:value="${doc.idDocente}"
+                                            th:text="${doc.nombre + ' ' + doc.apellido}"></option>
+                                </select>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="fechaInicio">Fecha de Inicio *</label>
+                                <input class="campo-formulario"
+                                       id="fechaInicio"
+                                       type="date"
+                                       th:field="*{fechaInicio}"
+                                       th:classappend="${#fields.hasErrors('fechaInicio')} ? 'invalido' : ''"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="fechaFin">Fecha de Finalización *</label>
+                                <input class="campo-formulario"
+                                       id="fechaFin"
+                                       type="date"
+                                       th:field="*{fechaFin}"
+                                       th:classappend="${#fields.hasErrors('fechaFin')} ? 'invalido' : ''"
+                                       required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="cupoMaximo">Cupo Máximo *</label>
+                                <input class="campo-formulario" id="cupoMaximo" type="number" min="1"
+                                       th:field="*{cupoMaximo}" placeholder="30" required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('cupoMaximo')}" th:errors="*{cupoMaximo}"></span>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="costo">Costo (USD) *</label>
+                                <input class="campo-formulario" id="costo" type="number" step="0.01" min="0"
+                                       th:field="*{costo}" placeholder="0.00" required>
+                                <span class="texto-error" th:if="${#fields.hasErrors('costo')}" th:errors="*{costo}"></span>
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="estado">Estado *</label>
+                                <select class="campo-formulario" id="estado" th:field="*{estado}">
+                                    <option value="ACTIVO">Activo para Inscripción</option>
+                                    <option value="INACTIVO">Inactivo / Cerrado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <a class="boton-secundario" href="/diplomados" th:href="@{/diplomados}">Cancelar</a>
+                            <button class="boton-guardar" type="submit">Guardar Diplomado</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+<script>
+    (function() {
+        var hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaInicio').min = hoy;
+        var inicio = document.getElementById('fechaInicio');
+        var fin = document.getElementById('fechaFin');
+        inicio.addEventListener('change', function() {
+            if (inicio.value) fin.min = inicio.value;
+        });
+    })();
+</script>
+</body>
+</html>

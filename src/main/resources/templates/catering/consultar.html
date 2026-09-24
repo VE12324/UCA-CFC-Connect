@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Servicio de Catering</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('catering')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${servicio.nombre}">Detalle del Servicio</h1>
+                    <p>Ficha de información completa del servicio de catering.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID</div>
+                            <div class="detalle-valor" th:text="${servicio.idCatering}">1</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" th:text="${servicio.estado}">DISPONIBLE</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Precio por Persona</div>
+                            <div class="detalle-valor" th:text="${'$' + servicio.precioPorPersona}">$25.00</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Rango de Capacidad</div>
+                            <div class="detalle-valor" th:text="${servicio.capacidadMinima + ' - ' + servicio.capacidadMaxima + ' personas'}">10-100</div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Descripción</div>
+                            <div class="detalle-valor" th:text="${servicio.descripcion != null ? servicio.descripcion : 'Sin descripción'}">Descripción</div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario" href="/catering" th:href="@{/catering}">Volver al catálogo</a>
+                        <a class="boton-guardar" th:href="@{/catering/actualizar/{id}(id=${servicio.idCatering})}">Editar información</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+</html>

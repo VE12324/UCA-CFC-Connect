@@ -3,7 +3,6 @@ package sv.edu.udb.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity

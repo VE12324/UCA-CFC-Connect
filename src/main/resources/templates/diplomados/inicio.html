@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Académica - Diplomados</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('diplomados')}"></aside>
+
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Gestión Académica — Diplomados</h1>
+                    <p>Administra los programas de diplomado del Centro de Formación Continua.</p>
+                </div>
+                <a class="boton-nuevo" href="/diplomados/crear" th:href="@{/diplomados/crear}">
+                    <span>＋</span>
+                    <span>Nuevo diplomado</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+
+            <section class="tarjeta">
+                <div class="filtros">
+                    <form class="formulario-busqueda" method="get" action="/diplomados" th:action="@{/diplomados}">
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+                            <input type="text" name="buscar" th:value="${buscar}" placeholder="Nombre del diplomado o descripción...">
+                        </div>
+                        <button class="boton-buscar" type="submit">Buscar</button>
+                        <a class="boton-limpiar" href="/diplomados" th:href="@{/diplomados}">Limpiar</a>
+                    </form>
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Modalidad</th>
+                            <th>Docente</th>
+                            <th>Fechas</th>
+                            <th>Cupo</th>
+                            <th>Costo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="diplomado : ${paginaDiplomados.content}">
+                            <td th:text="${diplomado.nombre}" style="font-weight: 600;">Diplomado</td>
+                            <td th:text="${diplomado.categoria != null ? diplomado.categoria.nombre : 'Sin categoría'}">Categoría</td>
+                            <td th:text="${diplomado.modalidad != null ? diplomado.modalidad.nombre : 'Sin modalidad'}">Modalidad</td>
+                            <td th:text="${diplomado.docente != null ? (diplomado.docente.nombre + ' ' + diplomado.docente.apellido) : 'No asignado'}">Docente</td>
+                            <td th:text="${diplomado.fechaInicio + ' al ' + diplomado.fechaFin}">Fechas</td>
+                            <td th:text="${diplomado.cupoMaximo}">30</td>
+                            <td th:text="${'$' + diplomado.costo}">$0.00</td>
+                            <td>
+                                <span th:text="${diplomado.estado}"
+                                      style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
+                                      th:style="${diplomado.estado == 'ACTIVO' ? 'background: #e5f8ed; color: #198754;' : 'background: #f1f3f4; color: #697277;'}">
+ACTIVO
+        </span>
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <a class="boton-accion boton-consultar" th:href="@{/diplomados/consultar/{id}(id=${diplomado.idDiplomado})}">Consultar</a>
+                                    <a class="boton-accion boton-actualizar" th:href="@{/diplomados/actualizar/{id}(id=${diplomado.idDiplomado})}">Actualizar</a>
+                                    <a class="boton-accion boton-eliminar" th:href="@{/diplomados/eliminar/{id}(id=${diplomado.idDiplomado})}">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${paginaDiplomados.empty}">
+                            <td class="celda-vacia" colspan="9">No se encontraron diplomados registrados.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pie-tabla" th:if="${paginaDiplomados.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando <span th:text="${paginaDiplomados.numberOfElements}">1</span>
+                        de <span th:text="${paginaDiplomados.totalElements}">1</span> registros
+                    </p>
+                    <div class="paginacion">
+                        <a class="pagina-enlace" th:if="${!paginaDiplomados.first}" th:href="@{/diplomados(buscar=${buscar},pagina=${paginaDiplomados.number - 1})}">‹</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaDiplomados.first}">‹</span>
+                        <span class="pagina-enlace activa" th:text="${paginaDiplomados.number + 1}">1</span>
+                        <a class="pagina-enlace" th:if="${!paginaDiplomados.last}" th:href="@{/diplomados(buscar=${buscar},pagina=${paginaDiplomados.number + 1})}">›</a>
+                        <span class="pagina-enlace deshabilitada" th:if="${paginaDiplomados.last}">›</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

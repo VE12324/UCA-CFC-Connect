@@ -1,31 +1,60 @@
 <!DOCTYPE html>
+
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Espacio</title>
-    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Nuevo espacio</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
 </head>
+
 <body>
+
 <div class="aplicacion">
+
     <aside th:replace="~{fragmentos/plantilla :: barra-lateral('espacios')}"></aside>
 
     <section class="area-principal">
+
         <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
 
         <main class="contenido">
+
             <div class="formulario-tarjeta">
+
                 <div class="tarjeta-encabezado">
-                    <h1>Nuevo Espacio</h1>
-                    <p>Registre un nuevo espacio disponible para alquiler o uso en eventos.</p>
+
+                    <h1>Nuevo espacio</h1>
+
+                    <p>
+                        Registre un nuevo espacio disponible para alquiler o eventos.
+                    </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
-                    <form th:action="@{/espacios/crear}" th:object="${espacio}" method="post">
+
+                    <form th:action="@{/espacios/crear}"
+                          th:object="${espacio}"
+                          method="post">
 
                         <div class="formulario-cuadricula">
+
                             <div class="grupo-formulario ancho-completo">
-                                <label for="nombre">Nombre del Espacio *</label>
+
+                                <label for="nombre">
+                                    Nombre del espacio *
+                                </label>
+
                                 <input class="campo-formulario"
                                        id="nombre"
                                        type="text"
@@ -33,11 +62,20 @@
                                        th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
                                        maxlength="150"
                                        placeholder="Ej. Sala de Conferencias A">
-                                <span class="texto-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('nombre')}"
+                                      th:errors="*{nombre}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="capacidad">Capacidad (personas) *</label>
+
+                                <label for="capacidad">
+                                    Capacidad de personas *
+                                </label>
+
                                 <input class="campo-formulario"
                                        id="capacidad"
                                        type="number"
@@ -45,11 +83,20 @@
                                        th:field="*{capacidad}"
                                        th:classappend="${#fields.hasErrors('capacidad')} ? 'invalido' : ''"
                                        placeholder="50">
-                                <span class="texto-error" th:if="${#fields.hasErrors('capacidad')}" th:errors="*{capacidad}"></span>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('capacidad')}"
+                                      th:errors="*{capacidad}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="costoHora">Costo por Hora (USD) *</label>
+
+                                <label for="costoHora">
+                                    Costo por hora (USD) *
+                                </label>
+
                                 <input class="campo-formulario"
                                        id="costoHora"
                                        type="number"
@@ -58,47 +105,117 @@
                                        th:field="*{costoHora}"
                                        th:classappend="${#fields.hasErrors('costoHora')} ? 'invalido' : ''"
                                        placeholder="0.00">
-                                <span class="texto-error" th:if="${#fields.hasErrors('costoHora')}" th:errors="*{costoHora}"></span>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('costoHora')}"
+                                      th:errors="*{costoHora}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario ancho-completo">
-                                <label for="ubicacion">Ubicación</label>
+
+                                <label for="ubicacion">
+                                    Ubicación
+                                </label>
+
                                 <input class="campo-formulario"
                                        id="ubicacion"
                                        type="text"
                                        th:field="*{ubicacion}"
+                                       th:classappend="${#fields.hasErrors('ubicacion')} ? 'invalido' : ''"
                                        maxlength="255"
                                        placeholder="Ej. Edificio principal, planta 2">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('ubicacion')}"
+                                      th:errors="*{ubicacion}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario ancho-completo">
-                                <label for="descripcion">Descripción</label>
+
+                                <label for="descripcion">
+                                    Descripción
+                                </label>
+
                                 <textarea class="campo-formulario"
                                           id="descripcion"
                                           th:field="*{descripcion}"
+                                          th:classappend="${#fields.hasErrors('descripcion')} ? 'invalido' : ''"
                                           maxlength="500"
-                                          placeholder="Describe las características y equipamiento del espacio..."></textarea>
+                                          placeholder="Describa las características del espacio">
+                                </textarea>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('descripcion')}"
+                                      th:errors="*{descripcion}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario ancho-completo">
-                                <label for="estado">Estado *</label>
-                                <select class="campo-formulario" id="estado" th:field="*{estado}">
-                                    <option value="DISPONIBLE">Disponible</option>
-                                    <option value="OCUPADO">Ocupado</option>
-                                    <option value="MANTENIMIENTO">En Mantenimiento</option>
+
+                                <label for="estado">
+                                    Estado *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="estado"
+                                        th:field="*{estado}"
+                                        th:classappend="${#fields.hasErrors('estado')} ? 'invalido' : ''">
+
+                                    <option value="DISPONIBLE">
+                                        Disponible
+                                    </option>
+
+                                    <option value="OCUPADO">
+                                        Ocupado
+                                    </option>
+
+                                    <option value="MANTENIMIENTO">
+                                        En mantenimiento
+                                    </option>
+
                                 </select>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('estado')}"
+                                      th:errors="*{estado}">
+                                </span>
+
                             </div>
+
                         </div>
 
                         <div class="acciones-formulario">
-                            <a class="boton-secundario" href="/espacios" th:href="@{/espacios}">Cancelar</a>
-                            <button class="boton-guardar" type="submit">Guardar Espacio</button>
+
+                            <a class="boton-secundario"
+                               href="/espacios"
+                               th:href="@{/espacios}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar espacio
+                            </button>
+
                         </div>
+
                     </form>
+
                 </div>
+
             </div>
+
         </main>
+
     </section>
+
 </div>
+
 </body>
+
 </html>
