@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Eliminar categoría</title>
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('categorias')}"></aside>
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <main class="contenido">
+            <div class="eliminar-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1>Eliminar categoría</h1>
+                    <p>
+                        Confirme la eliminación de la categoría del sistema.
+                    </p>
+                </div>
+                <div class="tarjeta-cuerpo">
+                    <div class="advertencia-eliminar">
+                        <h2>
+                            ¿Está seguro de eliminar esta categoría?
+                        </h2>
+                        <p>
+                            Esta acción eliminará la categoría de forma permanente.
+                            Si existen cursos o diplomados asociados, no podrá eliminarse.
+                        </p>
+                    </div>
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+                            <div class="detalle-valor"
+                                 th:text="${categoria.idCategoria}">
+                                1
+                            </div>
+                        </div>
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">
+                                Categoría que se eliminará
+                            </div>
+                            <div class="detalle-valor"
+                                 th:text="${categoria.nombre}">
+                                Nombre de la categoría
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post"
+                          th:action="@{/categorias/eliminar/{id}(id=${categoria.idCategoria})}">
+
+
+                        <input type="hidden"
+                               th:if="${_csrf != null}"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+
+
+                        <div class="acciones-formulario">
+
+
+                            <a class="boton-secundario"
+                               href="/categorias"
+                               th:href="@{/categorias}">
+                                Cancelar
+                            </a>
+
+
+                            <button class="boton-confirmar"
+                                    type="submit">
+                                Confirmar y eliminar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </section>
+</div>
+</body>
+
+</html>

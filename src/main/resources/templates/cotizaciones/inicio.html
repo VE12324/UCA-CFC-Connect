@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Cotizaciones pendientes de aprobación</title>
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cotizaciones')}"></aside>
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Cotizaciones</h1>
+                    <p>
+                        Apruebe o rechace las cotizaciones pendientes o en proceso. La creación de
+                        cotizaciones se realiza desde Recepción.
+                    </p>
+                </div>
+            </div>
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+            <section class="tarjeta">
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Subtotal</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="cotizacion : ${paginaCotizaciones.content}">
+
+
+                            <td style="font-weight: 600;"
+                                th:text="${cotizacion.nombreCliente}">
+                                Juan Pérez
+                            </td>
+                            <td th:text="${cotizacion.fecha}">
+                                2026-09-18
+                            </td>
+                            <td th:text="${'$' + #numbers.formatDecimal(cotizacion.subtotal, 1, 2)}">
+                                $300.00
+                            </td>
+                            <td th:text="${'$' + #numbers.formatDecimal(cotizacion.total, 1, 2)}">
+                                $339.00
+                            </td>
+                            <td>
+                               <span th:text="${cotizacion.estado}"
+                                     class="etiqueta-estado"
+                                     th:styleappend="${cotizacion.estado == 'Pendiente'
+                                         ? 'background-color: #fff3cd; color: #856404;'
+                                         : 'background-color: #e5f1f2; color: #00545f;'}">
+                                   Pendiente
+                               </span>
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+                                    <form method="post"
+                                          th:action="@{/admin/cotizaciones/{id}/aprobar(id=${cotizacion.idCotizacion})}"
+                                          style="display:inline;">
+
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+                                        <button class="boton-accion boton-aprobar" type="submit">
+                                            Aprobar
+                                        </button>
+                                    </form>
+
+                                    <form method="post"
+                                          th:action="@{/admin/cotizaciones/{id}/rechazar(id=${cotizacion.idCotizacion})}"
+                                          style="display:inline;">
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+                                        <button class="boton-accion boton-rechazar" type="submit">
+                                            Rechazar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${paginaCotizaciones.empty}">
+
+
+                            <td class="celda-vacia"
+                                colspan="6">
+                                No hay cotizaciones pendientes o en proceso.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pie-tabla"
+                     th:if="${paginaCotizaciones.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando
+                        <span th:text="${paginaCotizaciones.numberOfElements}">
+                           1
+                       </span>
+                        de
+                        <span th:text="${paginaCotizaciones.totalElements}">
+                           1
+                       </span>
+                        registros
+                    </p>
+                    <div class="paginacion">
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaCotizaciones.first}"
+                           th:href="@{/admin/cotizaciones(pagina=${paginaCotizaciones.number - 1})}">
+                            ‹
+                        </a>
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaCotizaciones.first}">
+                           ‹
+                       </span>
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaCotizaciones.number + 1}">
+                           1
+                       </span>
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaCotizaciones.last}"
+                           th:href="@{/admin/cotizaciones(pagina=${paginaCotizaciones.number + 1})}">
+                            ›
+                        </a>
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaCotizaciones.last}">
+                           ›
+                       </span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+
+</html>

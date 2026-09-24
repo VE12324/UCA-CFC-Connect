@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Gestión de categorías</title>
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('categorias')}"></aside>
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Categorías</h1>
+                    <p>
+                        Administra las categorías académicas de cursos y diplomados.
+                    </p>
+                </div>
+                <a class="boton-nuevo"
+                   href="/categorias/crear"
+                   th:href="@{/categorias/crear}">
+                    <span>＋</span>
+                    <span>Nueva categoría</span>
+                </a>
+            </div>
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+            <section class="tarjeta">
+                <div class="filtros">
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/categorias"
+                          th:action="@{/categorias}">
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por nombre o descripción">
+                        </div>
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+                        <a class="boton-limpiar"
+                           href="/categorias"
+                           th:href="@{/categorias}">
+                            Limpiar
+                        </a>
+                    </form>
+                </div>
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="categoria : ${paginaCategorias.content}">
+                            <td style="font-weight: 600;"
+                                th:text="${categoria.nombre}">
+                                Tecnología
+                            </td>
+                            <td th:text="${categoria.descripcion != null && !categoria.descripcion.isBlank()
+                                         ? categoria.descripcion
+                                         : 'Sin descripción'}">
+                                Descripción
+                            </td>
+                            <td>
+                                <div class="acciones-tabla">
+
+
+                                    <a class="boton-accion boton-consultar"
+                                       href="#"
+                                       th:href="@{/categorias/consultar/{id}(id=${categoria.idCategoria})}">
+                                        Consultar
+                                    </a>
+                                    <a class="boton-accion boton-actualizar"
+                                       href="#"
+                                       th:href="@{/categorias/actualizar/{id}(id=${categoria.idCategoria})}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       href="#"
+                                       th:href="@{/categorias/eliminar/{id}(id=${categoria.idCategoria})}">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${paginaCategorias.empty}">
+                            <td class="celda-vacia"
+                                colspan="3">
+                                No se encontraron categorías registradas.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pie-tabla"
+                     th:if="${paginaCategorias.totalElements > 0}">
+                    <p class="informacion-pagina">
+                        Mostrando
+                        <span th:text="${paginaCategorias.numberOfElements}">
+                           1
+                       </span>
+                        de
+                        <span th:text="${paginaCategorias.totalElements}">
+                           1
+                       </span>
+                        registros
+                    </p>
+                    <div class="paginacion">
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaCategorias.first}"
+                           th:href="@{/categorias(
+                               buscar=${buscar},
+                               pagina=${paginaCategorias.number - 1}
+                          )}">
+                            ‹
+                        </a>
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaCategorias.first}">
+                           ‹
+                       </span>
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaCategorias.number + 1}">
+                           1
+                       </span>
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaCategorias.last}"
+                           th:href="@{/categorias(
+                               buscar=${buscar},
+                               pagina=${paginaCategorias.number + 1}
+                          )}">
+                            ›
+                        </a>
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaCategorias.last}">
+                           ›
+                       </span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</div>
+</body>
+</html>

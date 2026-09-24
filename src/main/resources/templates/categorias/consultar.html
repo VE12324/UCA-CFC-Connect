@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Detalle de categoría</title>
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+<body>
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('categorias')}"></aside>
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <main class="contenido">
+            <div class="detalle-tarjeta">
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${categoria.nombre}">
+                        Detalle de categoría
+                    </h1>
+                    <p>
+                        Ficha de información de la categoría.
+                    </p>
+                </div>
+                <div class="tarjeta-cuerpo">
+                    <div class="detalles-cuadricula">
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${categoria.idCategoria}">
+                                1
+                            </div>
+
+                        </div>
+                        <div class="detalle-item ancho-completo">
+
+
+                            <div class="detalle-etiqueta">
+                                Descripción
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${categoria.descripcion != null && !categoria.descripcion.isBlank()
+                                         ? categoria.descripcion
+                                         : 'Sin descripción'}">
+                                Descripción de la categoría
+                            </div>
+                        </div>
+                    </div>
+                    <div class="acciones-formulario">
+                        <a class="boton-secundario"
+                           href="/categorias"
+                           th:href="@{/categorias}">
+                            Volver al catálogo
+                        </a>
+                        <a class="boton-guardar"
+                           href="#"
+                           th:href="@{/categorias/actualizar/{id}(id=${categoria.idCategoria})}">
+                            Editar información
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+</div>
+
+</body>
+
+</html>
