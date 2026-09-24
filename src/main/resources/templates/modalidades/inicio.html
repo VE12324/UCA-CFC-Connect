@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Gestión de modalidades</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('modalidades')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="encabezado-pagina">
+
+
+                <div class="titulo-pagina">
+
+
+                    <h1>Modalidades</h1>
+
+
+                    <p>
+                        Administra las modalidades de impartición de cursos y diplomados.
+                    </p>
+
+
+                </div>
+
+
+                <a class="boton-nuevo"
+                   href="/modalidades/crear"
+                   th:href="@{/modalidades/crear}">
+
+
+                    <span>＋</span>
+                    <span>Nueva modalidad</span>
+
+
+                </a>
+
+
+            </div>
+
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+
+            <section class="tarjeta">
+
+
+                <div class="filtros">
+
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/modalidades"
+                          th:action="@{/modalidades}">
+
+
+                        <div class="campo-busqueda">
+
+
+                            <span>⌕</span>
+
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por nombre o descripción">
+
+
+                        </div>
+
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+
+                        <a class="boton-limpiar"
+                           href="/modalidades"
+                           th:href="@{/modalidades}">
+                            Limpiar
+                        </a>
+
+
+                    </form>
+
+
+                </div>
+
+
+                <div class="tabla-contenedor">
+
+
+                    <table class="tabla-datos">
+
+
+                        <thead>
+
+
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        <tr th:each="modalidad : ${paginaModalidades.content}">
+
+
+                            <td style="font-weight: 600;"
+                                th:text="${modalidad.nombre}">
+                                Presencial
+                            </td>
+
+
+                            <td th:text="${modalidad.descripcion != null && !modalidad.descripcion.isBlank()
+                                         ? modalidad.descripcion
+                                         : 'Sin descripción'}">
+                                Descripción
+                            </td>
+
+
+                            <td>
+
+
+                                <div class="acciones-tabla">
+
+
+                                    <a class="boton-accion boton-consultar"
+                                       href="#"
+                                       th:href="@{/modalidades/consultar/{id}(id=${modalidad.idModalidad})}">
+                                        Consultar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-actualizar"
+                                       href="#"
+                                       th:href="@{/modalidades/actualizar/{id}(id=${modalidad.idModalidad})}">
+                                        Actualizar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-eliminar"
+                                       href="#"
+                                       th:href="@{/modalidades/eliminar/{id}(id=${modalidad.idModalidad})}">
+                                        Eliminar
+                                    </a>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <tr th:if="${paginaModalidades.empty}">
+
+
+                            <td class="celda-vacia"
+                                colspan="3">
+                                No se encontraron modalidades registradas.
+                            </td>
+
+
+                        </tr>
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+                <div class="pie-tabla"
+                     th:if="${paginaModalidades.totalElements > 0}">
+
+
+                    <p class="informacion-pagina">
+
+
+                        Mostrando
+
+
+                        <span th:text="${paginaModalidades.numberOfElements}">
+                           1
+                       </span>
+
+
+                        de
+
+
+                        <span th:text="${paginaModalidades.totalElements}">
+                           1
+                       </span>
+
+
+                        registros
+
+
+                    </p>
+
+
+                    <div class="paginacion">
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaModalidades.first}"
+                           th:href="@{/modalidades(
+                               buscar=${buscar},
+                               pagina=${paginaModalidades.number - 1}
+                          )}">
+                            ‹
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaModalidades.first}">
+                           ‹
+                       </span>
+
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaModalidades.number + 1}">
+                           1
+                       </span>
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaModalidades.last}"
+                           th:href="@{/modalidades(
+                               buscar=${buscar},
+                               pagina=${paginaModalidades.number + 1}
+                          )}">
+                            ›
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaModalidades.last}">
+                           ›
+                       </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+

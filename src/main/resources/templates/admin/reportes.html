@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Reportes</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('reportes')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="encabezado-pagina">
+
+
+                <div class="titulo-pagina">
+
+
+                    <h1>Reportes</h1>
+
+
+                    <p>
+                        Indicadores generales de solo lectura del sistema.
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="detalles-cuadricula">
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Cursos activos</div>
+                    <div class="detalle-valor" th:text="${cursosActivos}">0</div>
+                </div>
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Diplomados activos</div>
+                    <div class="detalle-valor" th:text="${diplomadosActivos}">0</div>
+                </div>
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Espacios disponibles</div>
+                    <div class="detalle-valor" th:text="${espaciosDisponibles}">0</div>
+                </div>
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Cotizaciones pendientes de aprobación</div>
+                    <div class="detalle-valor" th:text="${cotizacionesPendientes}">0</div>
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+
