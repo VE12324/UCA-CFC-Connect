@@ -14,10 +14,29 @@
 
     <nav class="menu-lateral">
 
-        <!-- Panel principal — todos los roles -->
+        <!-- Panel principal — ADMIN -->
         <a class="menu-enlace"
+           sec:authorize="hasRole('ADMIN')"
            th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
            th:href="@{/admin/dashboard}" href="/admin/dashboard">
+            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
+            <span>Panel principal</span>
+        </a>
+
+        <!-- Panel principal — RECEPCIONISTA (dashboard propio) -->
+        <a class="menu-enlace"
+           sec:authorize="hasRole('RECEPCIONISTA')"
+           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+           th:href="@{/recepcionista/dashboard}" href="/recepcionista/dashboard">
+            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
+            <span>Panel principal</span>
+        </a>
+
+        <!-- Panel principal — CONTABILIDAD (dashboard propio) -->
+        <a class="menu-enlace"
+           sec:authorize="hasRole('CONTABILIDAD')"
+           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+           th:href="@{/contabilidad/dashboard}" href="/contabilidad/dashboard">
             <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
             <span>Panel principal</span>
         </a>
@@ -53,7 +72,30 @@
                 <span>Catering</span>
             </a>
 
-            <a class="menu-enlace" href="#">
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'categorias'} ? 'activo' : ''"
+               th:href="@{/categorias}" href="/categorias">
+                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+                <span>Categorías</span>
+            </a>
+
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'modalidades'} ? 'activo' : ''"
+               th:href="@{/modalidades}" href="/modalidades">
+                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+                <span>Modalidades</span>
+            </a>
+
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'docentes'} ? 'activo' : ''"
+               th:href="@{/docentes}" href="/docentes">
+                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+                <span>Docentes</span>
+            </a>
+
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'cotizaciones'} ? 'activo' : ''"
+               th:href="@{/admin/cotizaciones}" href="/admin/cotizaciones">
                 <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
                 <span>Cotizaciones</span>
             </a>
@@ -65,7 +107,9 @@
                 <span>Usuarios y roles</span>
             </a>
 
-            <a class="menu-enlace" href="#">
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'reportes'} ? 'activo' : ''"
+               th:href="@{/admin/reportes}" href="/admin/reportes">
                 <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
                 <span>Reportes</span>
             </a>
@@ -124,12 +168,16 @@
         <!-- ==================== CONTABILIDAD ==================== -->
         <th:block sec:authorize="hasRole('CONTABILIDAD')">
 
-            <a class="menu-enlace" href="#">
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'pagos-contabilidad'} ? 'activo' : ''"
+               th:href="@{/contabilidad/pagos}" href="/contabilidad/pagos">
                 <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
                 <span>Pagos</span>
             </a>
 
-            <a class="menu-enlace" href="#">
+            <a class="menu-enlace"
+               th:classappend="${opcionActiva == 'estados-financieros'} ? 'activo' : ''"
+               th:href="@{/contabilidad/estados-financieros}" href="/contabilidad/estados-financieros">
                 <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
                 <span>Estados financieros</span>
             </a>

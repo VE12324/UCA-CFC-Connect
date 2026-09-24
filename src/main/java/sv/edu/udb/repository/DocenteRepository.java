@@ -12,6 +12,9 @@ public interface DocenteRepository extends JpaRepository<Docente, Integer> {
     Optional<Docente> findByCorreo(String correo);
     boolean existsByCorreo(String correo);
 
+    // Validar duplicados por nombre completo
+    Optional<Docente> findByNombreIgnoreCaseAndApellidoIgnoreCase(String nombre, String apellido);
+
     // Búsqueda por nombre, apellido o especialidad
     Page<Docente> findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCaseOrEspecialidadContainingIgnoreCase(
             String nombre,

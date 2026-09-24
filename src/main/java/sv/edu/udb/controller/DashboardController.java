@@ -24,8 +24,9 @@ public class DashboardController {
                 .map(GrantedAuthority::getAuthority)
                 .orElse("ROLE_CLIENTE");
         return switch (rol) {
-            case "ROLE_ADMIN", "ROLE_CONTABILIDAD" -> "redirect:/admin/dashboard";
-            case "ROLE_RECEPCIONISTA" -> "redirect:/clientes";
+            case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
+            case "ROLE_CONTABILIDAD" -> "redirect:/contabilidad/dashboard";
+            case "ROLE_RECEPCIONISTA" -> "redirect:/recepcionista/dashboard";
             default -> "redirect:/login?sin-acceso";
         };
     }

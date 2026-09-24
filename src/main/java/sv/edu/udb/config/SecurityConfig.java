@@ -3,6 +3,7 @@ package sv.edu.udb.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -42,12 +43,26 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/css/**", "/iconos/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login", "/error", "/css/**", "/iconos/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                // TODO Fase 3: restringir por rol con hasRole() / @PreAuthorize
-                // .requestMatchers("/admin/**", "/cursos/**", "/diplomados/**",
-                //         "/espacios/**", "/catering/**", "/usuarios/**").hasRole("ADMIN")
-                // .requestMatchers("/clientes/**", "/participantes/**").hasRole("RECEPCIONISTA")
+
+                // Paneles y módulos propios de cada rol
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/recepcionista/**").hasRole("RECEPCIONISTA")
+                .requestMatchers("/contabilidad/**", "/api/pagos/**").hasRole("CONTABILIDAD")
+
+                // Módulos de configuración académica/institucional: exclusivos de Administrador
+                .requestMatchers("/cursos/**", "/diplomados/**", "/espacios/**", "/catering/**",
+                        "/categorias/**", "/modalidades/**", "/docentes/**", "/usuarios/**").hasRole("ADMIN")
+                .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
+
+                // API de catálogos: cualquier usuario autenticado puede consultarlos (GET),
+                // pero solo Administrador puede crear, modificar o eliminar
+                .requestMatchers(HttpMethod.GET, "/api/cursos/**", "/api/diplomados/**", "/api/espacios/**",
+                        "/api/catering/**", "/api/categorias/**", "/api/modalidades/**", "/api/docentes/**").authenticated()
+                .requestMatchers("/api/cursos/**", "/api/diplomados/**", "/api/espacios/**",
+                        "/api/catering/**", "/api/categorias/**", "/api/modalidades/**", "/api/docentes/**").hasRole("ADMIN")
+
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -62,10 +77,9 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-            )
-            .exceptionHandling(ex -> ex
-                .accessDeniedPage("/login?acceso-denegado")
             );
+        // Sin accessDeniedPage: un acceso sin permisos responde 403 y Spring Boot
+        // renderiza templates/error/403.html
         return http.build();
     }
 
@@ -79,8 +93,8 @@ public class SecurityConfig {
 
             String destino = switch (rol) {
                 case "ROLE_ADMIN" -> "/admin/dashboard";
-                case "ROLE_RECEPCIONISTA" -> "/clientes";
-                case "ROLE_CONTABILIDAD" -> "/admin/dashboard";
+                case "ROLE_RECEPCIONISTA" -> "/recepcionista/dashboard";
+                case "ROLE_CONTABILIDAD" -> "/contabilidad/dashboard";
                 default -> "/login?sin-acceso";
             };
 

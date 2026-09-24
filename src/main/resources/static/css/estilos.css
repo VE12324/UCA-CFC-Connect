@@ -499,6 +499,40 @@ img {
     color: var(--blanco);
 }
 
+.boton-aprobar {
+    border: none;
+    border-color: #a7dfc1;
+    background-color: #e8f8ef;
+    color: var(--exito);
+    cursor: pointer;
+}
+
+.boton-aprobar:hover {
+    background-color: var(--exito);
+    color: var(--blanco);
+}
+
+.boton-rechazar {
+    border: none;
+    border-color: #f3c7cb;
+    background-color: var(--peligro-claro);
+    color: var(--peligro);
+    cursor: pointer;
+}
+
+.boton-rechazar:hover {
+    background-color: var(--peligro);
+    color: var(--blanco);
+}
+
+.etiqueta-estado {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
 .pie-tabla {
     padding: 17px 20px;
     display: flex;
@@ -656,6 +690,11 @@ textarea.campo-formulario {
 
 .texto-error {
     color: var(--peligro);
+    font-size: 12px;
+}
+
+.texto-ayuda {
+    color: var(--texto-suave);
     font-size: 12px;
 }
 
