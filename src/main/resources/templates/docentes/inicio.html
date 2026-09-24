@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Gestión de docentes</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('docentes')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="encabezado-pagina">
+
+
+                <div class="titulo-pagina">
+
+
+                    <h1>Docentes</h1>
+
+
+                    <p>
+                        Administra el catálogo de docentes que imparten cursos y diplomados.
+                    </p>
+
+
+                </div>
+
+
+                <a class="boton-nuevo"
+                   href="/docentes/crear"
+                   th:href="@{/docentes/crear}">
+
+
+                    <span>＋</span>
+                    <span>Nuevo docente</span>
+
+
+                </a>
+
+
+            </div>
+
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+
+            <section class="tarjeta">
+
+
+                <div class="filtros">
+
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/docentes"
+                          th:action="@{/docentes}">
+
+
+                        <div class="campo-busqueda">
+
+
+                            <span>⌕</span>
+
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por nombre, apellido o especialidad">
+
+
+                        </div>
+
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+
+                        <a class="boton-limpiar"
+                           href="/docentes"
+                           th:href="@{/docentes}">
+                            Limpiar
+                        </a>
+
+
+                    </form>
+
+
+                </div>
+
+
+                <div class="tabla-contenedor">
+
+
+                    <table class="tabla-datos">
+
+
+                        <thead>
+
+
+                        <tr>
+                            <th>Nombre completo</th>
+                            <th>Especialidad</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        <tr th:each="docente : ${paginaDocentes.content}">
+
+
+                            <td style="font-weight: 600;"
+                                th:text="${docente.nombre + ' ' + docente.apellido}">
+                                Ana Gómez
+                            </td>
+
+
+                            <td th:text="${docente.especialidad != null && !docente.especialidad.isBlank()
+                                         ? docente.especialidad
+                                         : 'Sin especificar'}">
+                                Especialidad
+                            </td>
+
+
+                            <td th:text="${docente.correo != null && !docente.correo.isBlank()
+                                         ? docente.correo
+                                         : 'Sin especificar'}">
+                                correo@uca.edu.sv
+                            </td>
+
+
+                            <td th:text="${docente.telefono != null && !docente.telefono.isBlank()
+                                         ? docente.telefono
+                                         : 'Sin especificar'}">
+                                7000-0000
+                            </td>
+
+
+                            <td>
+
+
+                                <div class="acciones-tabla">
+
+
+                                    <a class="boton-accion boton-consultar"
+                                       href="#"
+                                       th:href="@{/docentes/consultar/{id}(id=${docente.idDocente})}">
+                                        Consultar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-actualizar"
+                                       href="#"
+                                       th:href="@{/docentes/actualizar/{id}(id=${docente.idDocente})}">
+                                        Actualizar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-eliminar"
+                                       href="#"
+                                       th:href="@{/docentes/eliminar/{id}(id=${docente.idDocente})}">
+                                        Eliminar
+                                    </a>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <tr th:if="${paginaDocentes.empty}">
+
+
+                            <td class="celda-vacia"
+                                colspan="5">
+                                No se encontraron docentes registrados.
+                            </td>
+
+
+                        </tr>
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+                <div class="pie-tabla"
+                     th:if="${paginaDocentes.totalElements > 0}">
+
+
+                    <p class="informacion-pagina">
+
+
+                        Mostrando
+
+
+                        <span th:text="${paginaDocentes.numberOfElements}">
+                           1
+                       </span>
+
+
+                        de
+
+
+                        <span th:text="${paginaDocentes.totalElements}">
+                           1
+                       </span>
+
+
+                        registros
+
+
+                    </p>
+
+
+                    <div class="paginacion">
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaDocentes.first}"
+                           th:href="@{/docentes(
+                               buscar=${buscar},
+                               pagina=${paginaDocentes.number - 1}
+                          )}">
+                            ‹
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaDocentes.first}">
+                           ‹
+                       </span>
+
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaDocentes.number + 1}">
+                           1
+                       </span>
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaDocentes.last}"
+                           th:href="@{/docentes(
+                               buscar=${buscar},
+                               pagina=${paginaDocentes.number + 1}
+                          )}">
+                            ›
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaDocentes.last}">
+                           ›
+                       </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Actualizar docente</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('docentes')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="formulario-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1>Actualizar docente</h1>
+
+
+                    <p>
+                        Modifique la información del docente seleccionado.
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <form th:action="@{/docentes/actualizar/{id}(id=${docente.idDocente})}"
+                          th:object="${docente}"
+                          method="post">
+
+
+                        <div class="formulario-cuadricula">
+
+
+                            <div class="grupo-formulario">
+
+
+                                <label for="nombre">
+                                    Nombre *
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
+                                       maxlength="100"
+                                       placeholder="Ej. Ana">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('nombre')}"
+                                      th:errors="*{nombre}">
+                               </span>
+
+
+                            </div>
+
+
+                            <div class="grupo-formulario">
+
+
+                                <label for="apellido">
+                                    Apellido *
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="apellido"
+                                       type="text"
+                                       th:field="*{apellido}"
+                                       th:classappend="${#fields.hasErrors('apellido')} ? 'invalido' : ''"
+                                       maxlength="100"
+                                       placeholder="Ej. Gómez">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('apellido')}"
+                                      th:errors="*{apellido}">
+                               </span>
+
+
+                            </div>
+
+
+                            <div class="grupo-formulario">
+
+
+                                <label for="correo">
+                                    Correo electrónico
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="correo"
+                                       type="email"
+                                       th:field="*{correo}"
+                                       th:classappend="${#fields.hasErrors('correo')} ? 'invalido' : ''"
+                                       maxlength="150"
+                                       placeholder="docente@uca.edu.sv">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('correo')}"
+                                      th:errors="*{correo}">
+                               </span>
+
+
+                            </div>
+
+
+                            <div class="grupo-formulario">
+
+
+                                <label for="telefono">
+                                    Teléfono
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="telefono"
+                                       type="text"
+                                       th:field="*{telefono}"
+                                       th:classappend="${#fields.hasErrors('telefono')} ? 'invalido' : ''"
+                                       maxlength="30"
+                                       placeholder="7000-0000">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('telefono')}"
+                                      th:errors="*{telefono}">
+                               </span>
+
+
+                            </div>
+
+
+                            <div class="grupo-formulario ancho-completo">
+
+
+                                <label for="especialidad">
+                                    Especialidad
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="especialidad"
+                                       type="text"
+                                       th:field="*{especialidad}"
+                                       th:classappend="${#fields.hasErrors('especialidad')} ? 'invalido' : ''"
+                                       maxlength="150"
+                                       placeholder="Ej. Desarrollo de Software">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('especialidad')}"
+                                      th:errors="*{especialidad}">
+                               </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="acciones-formulario">
+
+
+                            <a class="boton-secundario"
+                               href="/docentes"
+                               th:href="@{/docentes}">
+                                Cancelar
+                            </a>
+
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar cambios
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Eliminar modalidad</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('modalidades')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="eliminar-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1>Eliminar modalidad</h1>
+
+
+                    <p>
+                        Confirme la eliminación de la modalidad del sistema.
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <div class="advertencia-eliminar">
+
+
+                        <h2>
+                            ¿Está seguro de eliminar esta modalidad?
+                        </h2>
+
+
+                        <p>
+                            Esta acción eliminará la modalidad de forma permanente.
+                            Si existen cursos o diplomados asociados, no podrá eliminarse.
+                        </p>
+
+
+                    </div>
+
+
+                    <div class="detalles-cuadricula">
+
+
+                        <div class="detalle-item">
+
+
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${modalidad.idModalidad}">
+                                1
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="detalle-item ancho-completo">
+
+
+                            <div class="detalle-etiqueta">
+                                Modalidad que se eliminará
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${modalidad.nombre}">
+                                Nombre de la modalidad
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <form method="post"
+                          th:action="@{/modalidades/eliminar/{id}(id=${modalidad.idModalidad})}">
+
+
+                        <input type="hidden"
+                               th:if="${_csrf != null}"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+
+
+                        <div class="acciones-formulario">
+
+
+                            <a class="boton-secundario"
+                               href="/modalidades"
+                               th:href="@{/modalidades}">
+                                Cancelar
+                            </a>
+
+
+                            <button class="boton-confirmar"
+                                    type="submit">
+                                Confirmar y eliminar
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+

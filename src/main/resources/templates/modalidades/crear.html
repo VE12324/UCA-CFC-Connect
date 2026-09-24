@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Nueva modalidad</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('modalidades')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="formulario-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1>Nueva modalidad</h1>
+
+
+                    <p>
+                        Registre una nueva modalidad de impartición.
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <form th:action="@{/modalidades/crear}"
+                          th:object="${modalidad}"
+                          method="post">
+
+
+                        <div class="formulario-cuadricula">
+
+
+                            <div class="grupo-formulario ancho-completo">
+
+
+                                <label for="nombre">
+                                    Nombre de la modalidad *
+                                </label>
+
+
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'invalido' : ''"
+                                       maxlength="100"
+                                       placeholder="Ej. Presencial">
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('nombre')}"
+                                      th:errors="*{nombre}">
+                               </span>
+
+
+                            </div>
+
+
+                            <div class="grupo-formulario ancho-completo">
+
+
+                                <label for="descripcion">
+                                    Descripción
+                                </label>
+
+
+                                <textarea class="campo-formulario"
+                                          id="descripcion"
+                                          th:field="*{descripcion}"
+                                          th:classappend="${#fields.hasErrors('descripcion')} ? 'invalido' : ''"
+                                          maxlength="255"
+                                          placeholder="Describa brevemente la modalidad">
+                               </textarea>
+
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('descripcion')}"
+                                      th:errors="*{descripcion}">
+                               </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="acciones-formulario">
+
+
+                            <a class="boton-secundario"
+                               href="/modalidades"
+                               th:href="@{/modalidades}">
+                                Cancelar
+                            </a>
+
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar modalidad
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+
+
+

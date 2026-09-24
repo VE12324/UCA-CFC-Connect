@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Detalle de docente</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('docentes')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="detalle-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1 th:text="${docente.nombre + ' ' + docente.apellido}">
+                        Detalle de docente
+                    </h1>
+
+
+                    <p>
+                        Ficha de información del docente.
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <div class="detalles-cuadricula">
+
+
+                        <div class="detalle-item">
+
+
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${docente.idDocente}">
+                                1
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="detalle-item">
+
+
+                            <div class="detalle-etiqueta">
+                                Especialidad
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${docente.especialidad != null && !docente.especialidad.isBlank()
+                                         ? docente.especialidad
+                                         : 'Sin especificar'}">
+                                Especialidad
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="detalle-item">
+
+
+                            <div class="detalle-etiqueta">
+                                Correo electrónico
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${docente.correo != null && !docente.correo.isBlank()
+                                         ? docente.correo
+                                         : 'Sin especificar'}">
+                                correo@uca.edu.sv
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="detalle-item">
+
+
+                            <div class="detalle-etiqueta">
+                                Teléfono
+                            </div>
+
+
+                            <div class="detalle-valor"
+                                 th:text="${docente.telefono != null && !docente.telefono.isBlank()
+                                         ? docente.telefono
+                                         : 'Sin especificar'}">
+                                7000-0000
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="acciones-formulario">
+
+
+                        <a class="boton-secundario"
+                           href="/docentes"
+                           th:href="@{/docentes}">
+                            Volver al catálogo
+                        </a>
+
+
+                        <a class="boton-guardar"
+                           href="#"
+                           th:href="@{/docentes/actualizar/{id}(id=${docente.idDocente})}">
+                            Editar información
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
+
+
