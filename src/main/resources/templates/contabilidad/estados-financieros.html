@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Estados financieros</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('estados-financieros')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="encabezado-pagina">
+
+
+                <div class="titulo-pagina">
+
+
+                    <h1>Estados financieros</h1>
+
+
+                    <p>
+                        Resumen de solo lectura de los pagos registrados en el sistema.
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="detalles-cuadricula" style="margin-bottom: 28px;">
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Total recaudado</div>
+                    <div class="detalle-valor" th:text="${'$' + #numbers.formatDecimal(totalRecaudado, 1, 2)}">$0.00</div>
+                </div>
+
+
+                <div class="detalle-item">
+                    <div class="detalle-etiqueta">Total pendiente</div>
+                    <div class="detalle-valor" th:text="${'$' + #numbers.formatDecimal(totalPendiente, 1, 2)}">$0.00</div>
+                </div>
+
+
+            </div>
+
+
+            <p class="seccion-titulo">Desglose por método de pago</p>
+            <section class="tarjeta" style="margin-bottom: 28px;">
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Método de pago</th>
+                            <th>Monto</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entrada : ${desglosePorMetodo}">
+                            <td th:text="${entrada.key}">Efectivo</td>
+                            <td th:text="${'$' + #numbers.formatDecimal(entrada.value, 1, 2)}">$0.00</td>
+                        </tr>
+                        <tr th:if="${#maps.isEmpty(desglosePorMetodo)}">
+                            <td class="celda-vacia" colspan="2">No hay pagos registrados aún.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+
+            <p class="seccion-titulo">Desglose por estado</p>
+            <section class="tarjeta">
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Monto</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entrada : ${desglosePorEstado}">
+                            <td th:text="${entrada.key}">Pagado</td>
+                            <td th:text="${'$' + #numbers.formatDecimal(entrada.value, 1, 2)}">$0.00</td>
+                        </tr>
+                        <tr th:if="${#maps.isEmpty(desglosePorEstado)}">
+                            <td class="celda-vacia" colspan="2">No hay pagos registrados aún.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>

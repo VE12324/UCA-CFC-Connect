@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Comprobante de pago</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('pagos-contabilidad')}" class="no-imprimir"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}" class="no-imprimir"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="detalle-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1>Comprobante de pago</h1>
+
+
+                    <p>
+                        UCA — Centro de Formación Continua
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <div class="detalles-cuadricula">
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">N.º de pago</div>
+                            <div class="detalle-valor" th:text="'#' + ${pago.idPago}">#1</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" th:text="${pago.estado}">Pagado</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Cliente</div>
+                            <div class="detalle-valor" th:text="${pago.nombreCliente}">Juan Pérez</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Fecha de pago</div>
+                            <div class="detalle-valor" th:text="${pago.fecha}">2026-09-18</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Monto</div>
+                            <div class="detalle-valor" th:text="${'$' + #numbers.formatDecimal(pago.monto, 1, 2)}">$150.00</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Método de pago</div>
+                            <div class="detalle-valor" th:text="${pago.metodoPago}">Efectivo</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Concepto del pago</div>
+                            <div class="detalle-valor"
+                                 th:text="${pago.tipoPago != null ? pago.tipoPago.etiqueta + ' #' + pago.idReferencia : 'Sin especificar'}">
+                                Cotización #1
+                            </div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Número de referencia externa</div>
+                            <div class="detalle-valor"
+                                 th:text="${pago.numeroReferenciaExterna != null && !pago.numeroReferenciaExterna.isBlank() ? pago.numeroReferenciaExterna : 'Sin referencia'}">
+                                TRX-0001
+                            </div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Fecha de emisión</div>
+                            <div class="detalle-valor"
+                                 th:text="${pago.fechaEmision != null ? pago.fechaEmision : 'Aún no emitido'}">
+                                Aún no emitido
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="acciones-formulario no-imprimir">
+
+
+                        <a class="boton-secundario"
+                           href="/contabilidad/pagos"
+                           th:href="@{/contabilidad/pagos}">
+                            Volver al listado
+                        </a>
+
+
+                        <form method="post"
+                              th:if="${pago.fechaEmision == null}"
+                              th:action="@{/contabilidad/pagos/{id}/comprobante(id=${pago.idPago})}">
+
+
+                            <input type="hidden"
+                                   th:if="${_csrf != null}"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}">
+
+
+                            <button class="boton-guardar" type="submit">
+                                Emitir comprobante
+                            </button>
+
+
+                        </form>
+
+
+                        <button class="boton-guardar"
+                                type="button"
+                                onclick="window.print()"
+                                th:if="${pago.fechaEmision != null}">
+                            Imprimir comprobante
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+<style>
+    @media print {
+        .no-imprimir {
+            display: none !important;
+        }
+    }
+</style>
+
+
+</body>
+
+
+</html>

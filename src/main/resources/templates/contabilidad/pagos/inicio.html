@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Gestión de pagos</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('pagos-contabilidad')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="encabezado-pagina">
+
+
+                <div class="titulo-pagina">
+
+
+                    <h1>Pagos</h1>
+
+
+                    <p>
+                        Registra, valida y emite comprobantes de los pagos de los clientes.
+                    </p>
+
+
+                </div>
+
+
+                <a class="boton-nuevo"
+                   href="/contabilidad/pagos/crear"
+                   th:href="@{/contabilidad/pagos/crear}">
+
+
+                    <span>＋</span>
+                    <span>Registrar pago</span>
+
+
+                </a>
+
+
+            </div>
+
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+
+            <section class="tarjeta">
+
+
+                <div class="filtros">
+
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/contabilidad/pagos"
+                          th:action="@{/contabilidad/pagos}">
+
+
+                        <div class="campo-busqueda">
+
+
+                            <span>⌕</span>
+
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por cliente o número de referencia">
+
+
+                        </div>
+
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+
+                        <a class="boton-limpiar"
+                           href="/contabilidad/pagos"
+                           th:href="@{/contabilidad/pagos}">
+                            Limpiar
+                        </a>
+
+
+                    </form>
+
+
+                </div>
+
+
+                <div class="tabla-contenedor">
+
+
+                    <table class="tabla-datos">
+
+
+                        <thead>
+
+
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Concepto</th>
+                            <th>Método</th>
+                            <th>Ref. externa</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        <tr th:each="pago : ${paginaPagos.content}">
+
+
+                            <td style="font-weight: 600;"
+                                th:text="${pago.nombreCliente}">
+                                Juan Pérez
+                            </td>
+
+
+                            <td th:text="${pago.fecha}">
+                                2026-09-18
+                            </td>
+
+
+                            <td th:text="${'$' + #numbers.formatDecimal(pago.monto, 1, 2)}">
+                                $150.00
+                            </td>
+
+
+                            <td th:text="${pago.tipoPago != null ? pago.tipoPago.etiqueta + ' #' + pago.idReferencia : 'Sin especificar'}">
+                                Cotización #1
+                            </td>
+
+
+                            <td th:text="${pago.metodoPago}">
+                                Efectivo
+                            </td>
+
+
+                            <td th:text="${pago.numeroReferenciaExterna != null && !pago.numeroReferenciaExterna.isBlank() ? pago.numeroReferenciaExterna : 'Sin referencia'}">
+                                TRX-0001
+                            </td>
+
+
+                            <td>
+
+
+                               <span th:text="${pago.estado}"
+                                     class="etiqueta-estado"
+                                     th:styleappend="${pago.estado == 'Pagado'
+                                         ? 'background-color: #e5f8ed; color: #198754;'
+                                         : (pago.estado == 'Parcial'
+                                             ? 'background-color: #fff3cd; color: #856404;'
+                                             : 'background-color: #f1f3f4; color: #697277;')}">
+                                   Pendiente
+                               </span>
+
+
+                            </td>
+
+
+                            <td>
+
+
+                                <div class="acciones-tabla">
+
+
+                                    <a class="boton-accion boton-consultar"
+                                       href="#"
+                                       th:href="@{/contabilidad/pagos/consultar/{id}(id=${pago.idPago})}">
+                                        Consultar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-actualizar"
+                                       href="#"
+                                       th:href="@{/contabilidad/pagos/actualizar/{id}(id=${pago.idPago})}">
+                                        Actualizar
+                                    </a>
+
+
+                                    <!-- El estado solo cambia con acciones explícitas: Validar (→ Pagado) y Marcar como parcial -->
+                                    <form method="post"
+                                          th:if="${pago.estado != 'Pagado'}"
+                                          th:action="@{/contabilidad/pagos/{id}/validar(id=${pago.idPago})}"
+                                          style="display:inline;">
+
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+
+
+                                        <button class="boton-accion boton-aprobar" type="submit">
+                                            Validar
+                                        </button>
+
+
+                                    </form>
+
+
+                                    <form method="post"
+                                          th:if="${pago.estado != 'Pagado' && pago.estado != 'Parcial'}"
+                                          th:action="@{/contabilidad/pagos/{id}/parcial(id=${pago.idPago})}"
+                                          style="display:inline;">
+
+
+                                        <input type="hidden"
+                                               th:if="${_csrf != null}"
+                                               th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}">
+
+
+                                        <button class="boton-accion boton-actualizar" type="submit">
+                                            Marcar como parcial
+                                        </button>
+
+
+                                    </form>
+
+
+                                    <a class="boton-accion boton-aprobar"
+                                       href="#"
+                                       th:href="@{/contabilidad/pagos/{id}/comprobante(id=${pago.idPago})}">
+                                        Comprobante
+                                    </a>
+
+
+                                    <a class="boton-accion boton-eliminar"
+                                       href="#"
+                                       th:href="@{/contabilidad/pagos/eliminar/{id}(id=${pago.idPago})}">
+                                        Eliminar
+                                    </a>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <tr th:if="${paginaPagos.empty}">
+
+
+                            <td class="celda-vacia"
+                                colspan="8">
+                                No se encontraron pagos registrados.
+                            </td>
+
+
+                        </tr>
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+                <div class="pie-tabla"
+                     th:if="${paginaPagos.totalElements > 0}">
+
+
+                    <p class="informacion-pagina">
+
+
+                        Mostrando
+
+
+                        <span th:text="${paginaPagos.numberOfElements}">
+                           1
+                       </span>
+
+
+                        de
+
+
+                        <span th:text="${paginaPagos.totalElements}">
+                           1
+                       </span>
+
+
+                        registros
+
+
+                    </p>
+
+
+                    <div class="paginacion">
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaPagos.first}"
+                           th:href="@{/contabilidad/pagos(
+                               buscar=${buscar},
+                               pagina=${paginaPagos.number - 1}
+                          )}">
+                            ‹
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaPagos.first}">
+                           ‹
+                       </span>
+
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaPagos.number + 1}">
+                           1
+                       </span>
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           th:if="${!paginaPagos.last}"
+                           th:href="@{/contabilidad/pagos(
+                               buscar=${buscar},
+                               pagina=${paginaPagos.number + 1}
+                          )}">
+                            ›
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaPagos.last}">
+                           ›
+                       </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
