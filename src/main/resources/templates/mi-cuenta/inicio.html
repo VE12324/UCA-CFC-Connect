@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mi cuenta</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mi-cuenta')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div>
+
+                    <h1>
+                        Bienvenido,
+                        <span data-th-text="${cliente.nombre}">
+                            Cliente
+                        </span>
+                    </h1>
+
+                    <p>
+                        Desde este portal puede consultar su información
+                        y los servicios asociados con su cuenta.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h2>Mi información</h2>
+
+                    <p>
+                        Información personal registrada en el sistema.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="formulario-cuadricula">
+
+                        <div class="grupo-formulario">
+
+                            <label>Nombre</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${cliente.nombre}">
+                                Nombre
+                            </p>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>DUI o NIT</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#strings.isEmpty(cliente.dui)
+                                    ? 'No registrado'
+                                    : cliente.dui}">
+                                No registrado
+                            </p>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Correo electrónico</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#strings.isEmpty(cliente.correo)
+                                    ? 'No registrado'
+                                    : cliente.correo}">
+                                No registrado
+                            </p>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Teléfono</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#strings.isEmpty(cliente.telefono)
+                                    ? 'No registrado'
+                                    : cliente.telefono}">
+                                No registrado
+                            </p>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Empresa</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#strings.isEmpty(cliente.empresa)
+                                    ? 'No registrada'
+                                    : cliente.empresa}">
+                                No registrada
+                            </p>
+
+                        </div>
+
+                        <div class="grupo-formulario ancho-completo">
+
+                            <label>Dirección</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#strings.isEmpty(cliente.direccion)
+                                    ? 'No registrada'
+                                    : cliente.direccion}">
+                                No registrada
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

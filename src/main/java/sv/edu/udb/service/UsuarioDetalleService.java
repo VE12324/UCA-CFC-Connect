@@ -14,19 +14,27 @@ import sv.edu.udb.repository.UsuarioRepository;
 @RequiredArgsConstructor
 public class UsuarioDetalleService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+     private final UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+
+        Usuario usuario = usuarioRepository
+                .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "No se encontró usuario con el correo: " + email));
+                    "No se encontró un usuario con el correo: "
+                    + email
+                ));
 
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getPassword())
                 .roles(usuario.getRol().getNombre())
+                .disabled(!Boolean.TRUE.equals(
+                        usuario.getEstado()
+                ))
                 .build();
     }
 }

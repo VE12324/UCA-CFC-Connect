@@ -29,7 +29,6 @@ import sv.edu.udb.service.ClienteService;
 @RequiredArgsConstructor
 public class ClienteWebController {
     
-    
    private final ClienteService clienteServicio;
 
     @GetMapping("/clientes")
@@ -44,14 +43,21 @@ public class ClienteWebController {
                 Sort.by("nombre").ascending()
         );
 
-        Page<Cliente> clientes =
-                clienteServicio.listarClientes(
+        Page<Cliente> clientes
+                = clienteServicio.listarClientes(
                         buscar,
                         paginacion
                 );
 
-        modelo.addAttribute("paginaClientes", clientes);
-        modelo.addAttribute("buscar", buscar);
+        modelo.addAttribute(
+                "paginaClientes",
+                clientes
+        );
+
+        modelo.addAttribute(
+                "buscar",
+                buscar
+        );
 
         return "clientes/inicio";
     }
@@ -59,14 +65,21 @@ public class ClienteWebController {
     @GetMapping("/clientes/crear")
     public String mostrarCrear(Model modelo) {
 
-        modelo.addAttribute("cliente", new Cliente());
+        Cliente cliente = new Cliente();
+        cliente.setCrearCuenta(false);
+
+        modelo.addAttribute(
+                "cliente",
+                cliente
+        );
 
         return "clientes/crear";
     }
 
     @PostMapping("/clientes/crear")
     public String crearCliente(
-            @Valid @ModelAttribute("cliente") Cliente cliente,
+            @Valid
+            @ModelAttribute("cliente") Cliente cliente,
             BindingResult resultado,
             RedirectAttributes mensaje) {
 
@@ -75,6 +88,7 @@ public class ClienteWebController {
         }
 
         try {
+
             clienteServicio.registrarCliente(cliente);
 
             mensaje.addFlashAttribute(
@@ -86,9 +100,8 @@ public class ClienteWebController {
 
         } catch (IllegalArgumentException excepcion) {
 
-            resultado.rejectValue(
-                    "dui",
-                    "dui.repetido",
+            registrarError(
+                    resultado,
                     excepcion.getMessage()
             );
 
@@ -101,9 +114,13 @@ public class ClienteWebController {
             @PathVariable Integer id,
             Model modelo) {
 
-        Cliente cliente = clienteServicio.buscarPorId(id);
+        Cliente cliente
+                = clienteServicio.buscarPorId(id);
 
-        modelo.addAttribute("cliente", cliente);
+        modelo.addAttribute(
+                "cliente",
+                cliente
+        );
 
         return "clientes/consultar";
     }
@@ -113,9 +130,20 @@ public class ClienteWebController {
             @PathVariable Integer id,
             Model modelo) {
 
-        Cliente cliente = clienteServicio.buscarPorId(id);
+        Cliente cliente
+                = clienteServicio.buscarPorId(id);
 
-        modelo.addAttribute("cliente", cliente);
+        cliente.setCrearCuenta(
+                cliente.getUsuario() != null
+        );
+
+        cliente.setPassword(null);
+        cliente.setConfirmarPassword(null);
+
+        modelo.addAttribute(
+                "cliente",
+                cliente
+        );
 
         return "clientes/actualizar";
     }
@@ -123,16 +151,29 @@ public class ClienteWebController {
     @PostMapping("/clientes/actualizar/{id}")
     public String actualizarCliente(
             @PathVariable Integer id,
-            @Valid @ModelAttribute("cliente") Cliente cliente,
+            @Valid
+            @ModelAttribute("cliente") Cliente cliente,
             BindingResult resultado,
             RedirectAttributes mensaje) {
 
+        cliente.setIdCliente(id);
+
         if (resultado.hasErrors()) {
+
+            cargarCuentaExistente(
+                    id,
+                    cliente
+            );
+
             return "clientes/actualizar";
         }
 
         try {
-            clienteServicio.actualizarCliente(id, cliente);
+
+            clienteServicio.actualizarCliente(
+                    id,
+                    cliente
+            );
 
             mensaje.addFlashAttribute(
                     "exito",
@@ -143,9 +184,13 @@ public class ClienteWebController {
 
         } catch (IllegalArgumentException excepcion) {
 
-            resultado.rejectValue(
-                    "dui",
-                    "dui.repetido",
+            cargarCuentaExistente(
+                    id,
+                    cliente
+            );
+
+            registrarError(
+                    resultado,
                     excepcion.getMessage()
             );
 
@@ -158,9 +203,13 @@ public class ClienteWebController {
             @PathVariable Integer id,
             Model modelo) {
 
-        Cliente cliente = clienteServicio.buscarPorId(id);
+        Cliente cliente
+                = clienteServicio.buscarPorId(id);
 
-        modelo.addAttribute("cliente", cliente);
+        modelo.addAttribute(
+                "cliente",
+                cliente
+        );
 
         return "clientes/eliminar";
     }
@@ -174,9 +223,87 @@ public class ClienteWebController {
 
         mensaje.addFlashAttribute(
                 "exito",
-                "Cliente eliminado correctamente"
+                "Cliente y su cuenta asociada "
+                + "fueron eliminados correctamente"
         );
 
         return "redirect:/clientes";
+    }
+
+    private void cargarCuentaExistente(
+            Integer id,
+            Cliente clienteFormulario) {
+
+        Cliente clienteGuardado
+                = clienteServicio.buscarPorId(id);
+
+        clienteFormulario.setUsuario(
+                clienteGuardado.getUsuario()
+        );
+
+        clienteFormulario.setCrearCuenta(
+                clienteGuardado.getUsuario() != null
+                || Boolean.TRUE.equals(
+                        clienteFormulario.getCrearCuenta()
+                )
+        );
+    }
+
+    private void registrarError(
+            BindingResult resultado,
+            String mensaje) {
+
+        if (mensaje == null) {
+
+            resultado.reject(
+                    "cliente.error",
+                    "No se pudo completar la operación"
+            );
+
+            return;
+        }
+
+        String mensajeMinuscula
+                = mensaje.toLowerCase();
+
+        if (mensajeMinuscula.contains("dui")) {
+
+            resultado.rejectValue(
+                    "dui",
+                    "dui.invalido",
+                    mensaje
+            );
+
+        } else if (mensajeMinuscula.contains("correo")) {
+
+            resultado.rejectValue(
+                    "correo",
+                    "correo.invalido",
+                    mensaje
+            );
+
+        } else if (mensajeMinuscula.contains("confirmar")) {
+
+            resultado.rejectValue(
+                    "confirmarPassword",
+                    "confirmacion.invalida",
+                    mensaje
+            );
+
+        } else if (mensajeMinuscula.contains("contraseña")) {
+
+            resultado.rejectValue(
+                    "password",
+                    "password.invalido",
+                    mensaje
+            );
+
+        } else {
+
+            resultado.reject(
+                    "cliente.error",
+                    mensaje
+            );
+        }
     }
 }

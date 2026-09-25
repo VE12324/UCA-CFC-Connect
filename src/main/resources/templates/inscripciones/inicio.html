@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de Inscripciones</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('inscripciones')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+                    <h1>Inscripciones</h1>
+                    <p>
+                        Administra las inscripciones de clientes y participantes
+                        en los cursos disponibles.
+                    </p>
+                </div>
+
+                <a class="boton-nuevo"
+                   href="/inscripciones/crear"
+                   th:href="@{/inscripciones/crear}">
+
+                    <span>＋</span>
+                    <span>Nueva inscripción</span>
+                </a>
+
+            </div>
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+            <section class="tarjeta">
+
+                <div class="filtros">
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/inscripciones"
+                          th:action="@{/inscripciones}">
+
+                        <div class="campo-busqueda">
+
+                            <span>⌕</span>
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por cliente o curso...">
+
+                        </div>
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+                        <a class="boton-limpiar"
+                           href="/inscripciones"
+                           th:href="@{/inscripciones}">
+                            Limpiar
+                        </a>
+
+                    </form>
+
+                </div>
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Curso</th>
+                            <th>Participantes</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="inscripcion : ${paginaInscripciones.content}">
+
+                            <td th:text="${#temporals.format(inscripcion.fecha, 'dd/MM/yyyy')}">
+                                01/01/2026
+                            </td>
+
+                            <td th:text="${inscripcion.cliente.nombre}"
+                                style="font-weight: 600;">
+                                Nombre del cliente
+                            </td>
+
+                            <td th:text="${inscripcion.curso.nombre}">
+                                Nombre del curso
+                            </td>
+
+                            <td th:text="${inscripcion.participantes.size() + ' participante(s)'}">
+                                1 participante
+                            </td>
+
+                            <td>
+
+                                <span th:text="${inscripcion.estadoInscripcion.nombre}"
+                                      style="display: inline-block;
+                                             padding: 4px 8px;
+                                             border-radius: 4px;
+                                             font-size: 11px;
+                                             font-weight: 700;"
+                                      th:style="${inscripcion.estadoInscripcion.nombre == 'Confirmada'
+                                      ? 'background: #e5f8ed; color: #198754;'
+                                      : (inscripcion.estadoInscripcion.nombre == 'Cancelada'
+                                      ? 'background: #fde8e8; color: #dc3545;'
+                                      : (inscripcion.estadoInscripcion.nombre == 'Finalizada'
+                                      ? 'background: #e8eaf6; color: #3f51b5;'
+                                      : 'background: #fff3cd; color: #856404;'))}">
+                                    Pendiente
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="acciones-tabla">
+
+                                    <a class="boton-accion boton-consultar"
+                                       th:href="@{/inscripciones/consultar/{id}
+                                       (id=${inscripcion.idInscripcion})}">
+                                        Consultar
+                                    </a>
+
+                                    <a class="boton-accion boton-actualizar"
+                                       th:href="@{/inscripciones/actualizar/{id}
+                                       (id=${inscripcion.idInscripcion})}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       th:href="@{/inscripciones/eliminar/{id}
+                                       (id=${inscripcion.idInscripcion})}">
+                                        Eliminar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${paginaInscripciones.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="6">
+                                No se encontraron inscripciones registradas.
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla"
+                     th:if="${paginaInscripciones.totalElements > 0}">
+
+                    <p class="informacion-pagina">
+
+                        Mostrando
+
+                        <span th:text="${paginaInscripciones.numberOfElements}">
+                            1
+                        </span>
+
+                        de
+
+                        <span th:text="${paginaInscripciones.totalElements}">
+                            1
+                        </span>
+
+                        registros
+
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaInscripciones.first}"
+                           th:href="@{/inscripciones(
+                           buscar=${buscar},
+                           pagina=${paginaInscripciones.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaInscripciones.first}">
+                            ‹
+                        </span>
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaInscripciones.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaInscripciones.last}"
+                           th:href="@{/inscripciones(
+                           buscar=${buscar},
+                           pagina=${paginaInscripciones.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaInscripciones.last}">
+                            ›
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

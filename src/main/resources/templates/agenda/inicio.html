@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Institucional</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('agenda')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>Agenda Institucional</h1>
+                    <p>Administra las actividades y eventos programados.</p>
+                </div>
+
+                <a class="boton-nuevo"
+                   href="/agenda/crear"
+                   th:href="@{/agenda/crear}">
+                    <span>＋</span>
+                    <span>Nueva actividad</span>
+                </a>
+            </div>
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+            <section class="tarjeta">
+
+                <div class="filtros">
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/agenda"
+                          th:action="@{/agenda}">
+
+                        <div class="campo-busqueda">
+                            <span>⌕</span>
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por nombre, tipo o descripción...">
+                        </div>
+
+                        <button class="boton-buscar" type="submit">
+                            Buscar
+                        </button>
+
+                        <a class="boton-limpiar"
+                           href="/agenda"
+                           th:href="@{/agenda}">
+                            Limpiar
+                        </a>
+
+                    </form>
+
+                </div>
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Actividad</th>
+                            <th>Tipo</th>
+                            <th>Horario</th>
+                            <th>Relacionado con</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="actividad : ${paginaActividades.content}">
+
+                            <td th:text="${#temporals.format(
+                            actividad.fecha,
+                            'dd/MM/yyyy'
+                            )}">
+                                01/01/2026
+                            </td>
+
+                            <td th:text="${actividad.nombre}"
+                                style="font-weight: 600;">
+                                Actividad
+                            </td>
+
+                            <td>
+                                <span th:text="${actividad.tipo}"
+                                      style="display: inline-block;
+                                             padding: 4px 8px;
+                                             border-radius: 4px;
+                                             font-size: 11px;
+                                             font-weight: 700;
+                                             background: #e7f1ff;
+                                             color: #0d6efd;">
+                                    INSTITUCIONAL
+                                </span>
+                            </td>
+
+                            <td th:text="${actividad.horario != null
+                            && !actividad.horario.isBlank()
+                            ? actividad.horario
+                            : 'Sin especificar'}">
+                                08:00 - 10:00
+                            </td>
+
+                            <td>
+                                <span th:if="${actividad.tipo == 'INSTITUCIONAL'}">
+                                    Actividad institucional
+                                </span>
+
+                                <span th:if="${actividad.tipo == 'CURSO'}"
+                                      th:text="${actividad.curso != null
+                                      ? actividad.curso.nombre
+                                      : 'Sin curso'}">
+                                    Curso
+                                </span>
+
+                                <span th:if="${actividad.tipo == 'DIPLOMADO'}"
+                                      th:text="${actividad.diplomado != null
+                                      ? actividad.diplomado.nombre
+                                      : 'Sin diplomado'}">
+                                    Diplomado
+                                </span>
+
+                                <span th:if="${actividad.tipo == 'ALQUILER'}"
+                                      th:text="${actividad.alquiler != null
+                                      ? actividad.alquiler.espacio.nombre
+                                      : 'Sin alquiler'}">
+                                    Alquiler
+                                </span>
+
+                                <span th:if="${actividad.tipo == 'CATERING'}"
+                                      th:text="${actividad.solicitudCatering != null
+                                      ? actividad.solicitudCatering.servicioCatering.nombre
+                                      : 'Sin solicitud'}">
+                                    Catering
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="acciones-tabla">
+
+                                    <a class="boton-accion boton-consultar"
+                                       th:href="@{/agenda/consultar/{id}
+                                       (id=${actividad.idActividad})}">
+                                        Consultar
+                                    </a>
+
+                                    <a class="boton-accion boton-actualizar"
+                                       th:href="@{/agenda/actualizar/{id}
+                                       (id=${actividad.idActividad})}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       th:href="@{/agenda/eliminar/{id}
+                                       (id=${actividad.idActividad})}">
+                                        Eliminar
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${paginaActividades.empty}">
+                            <td class="celda-vacia" colspan="6">
+                                No se encontraron actividades registradas.
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla"
+                     th:if="${paginaActividades.totalElements > 0}">
+
+                    <p class="informacion-pagina">
+                        Mostrando
+                        <span th:text="${paginaActividades.numberOfElements}">1</span>
+                        de
+                        <span th:text="${paginaActividades.totalElements}">1</span>
+                        registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaActividades.first}"
+                           th:href="@{/agenda(
+                           buscar=${buscar},
+                           pagina=${paginaActividades.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaActividades.first}">
+                            ‹
+                        </span>
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaActividades.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaActividades.last}"
+                           th:href="@{/agenda(
+                           buscar=${buscar},
+                           pagina=${paginaActividades.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaActividades.last}">
+                            ›
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

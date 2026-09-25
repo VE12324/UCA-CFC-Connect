@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Eliminar Solicitud de Catering</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('solicitudes-catering')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="eliminar-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Eliminar Solicitud de Catering</h1>
+
+                    <p>
+                        Confirme la eliminación de la solicitud.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="advertencia-eliminar">
+
+                        <h2>
+                            ¿Está seguro de eliminar esta solicitud?
+                        </h2>
+
+                        <p>
+                            Si existen pagos o actividades asociadas,
+                            la solicitud no podrá eliminarse.
+                        </p>
+
+                    </div>
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">ID</div>
+
+                            <div class="detalle-valor"
+                                 th:text="${solicitud.idSolicitud}">
+                                1
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">Estado</div>
+
+                            <div class="detalle-valor"
+                                 th:text="${solicitud.estado}">
+                                PENDIENTE
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">Cliente</div>
+
+                            <div class="detalle-valor"
+                                 th:text="${solicitud.cliente.nombre}">
+                                Cliente
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">Servicio</div>
+
+                            <div class="detalle-valor"
+                                 th:text="${solicitud.servicioCatering.nombre}">
+                                Servicio
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">Fecha y hora</div>
+
+                            <div class="detalle-valor">
+
+                                <span th:text="${#temporals.format(
+                                solicitud.fecha,
+                                'dd/MM/yyyy'
+                                )}">
+                                    01/01/2026
+                                </span>
+
+                                <span> - </span>
+
+                                <span th:text="${#temporals.format(
+                                solicitud.hora,
+                                'HH:mm'
+                                )}">
+                                    12:00
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">Asistentes</div>
+
+                            <div class="detalle-valor"
+                                 th:text="${solicitud.cantidadAsistentes}">
+                                1
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <form method="post"
+                          th:action="@{/solicitudes-catering/eliminar/{id}
+                          (id=${solicitud.idSolicitud})}">
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/solicitudes-catering"
+                               th:href="@{/solicitudes-catering}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-confirmar"
+                                    type="submit">
+                                Confirmar y Eliminar
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

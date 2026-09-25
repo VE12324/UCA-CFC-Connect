@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -17,19 +19,24 @@
 
 <div class="aplicacion">
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
+    <aside data-th-replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
 
     <main class="area-principal">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <header data-th-replace="~{fragmentos/plantilla :: barra-superior}"></header>
 
         <section class="contenido">
 
             <div class="formulario-tarjeta">
 
                 <div class="tarjeta-encabezado">
+
                     <h1>Actualizar cliente</h1>
-                    <p>Modifique la información del cliente seleccionado.</p>
+
+                    <p>
+                        Modifique la información del cliente seleccionado.
+                    </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
@@ -44,7 +51,10 @@
                         <div class="formulario-cuadricula">
 
                             <div class="grupo-formulario">
-                                <label for="dui">DUI o NIT</label>
+
+                                <label for="dui">
+                                    DUI o NIT
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -56,10 +66,14 @@
                                       data-th-if="${#fields.hasErrors('dui')}"
                                       data-th-errors="*{dui}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="nombre">Nombre</label>
+
+                                <label for="nombre">
+                                    Nombre
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
@@ -72,20 +86,33 @@
                                       data-th-if="${#fields.hasErrors('nombre')}"
                                       data-th-errors="*{nombre}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="empresa">Empresa</label>
+
+                                <label for="empresa">
+                                    Empresa
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
                                        id="empresa"
                                        maxlength="150"
                                        data-th-field="*{empresa}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('empresa')}"
+                                      data-th-errors="*{empresa}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="correo">Correo electrónico</label>
+
+                                <label for="correo">
+                                    Correo electrónico
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="email"
@@ -97,26 +124,207 @@
                                       data-th-if="${#fields.hasErrors('correo')}"
                                       data-th-errors="*{correo}">
                                 </span>
+
                             </div>
 
                             <div class="grupo-formulario">
-                                <label for="telefono">Teléfono</label>
+
+                                <label for="telefono">
+                                    Teléfono
+                                </label>
 
                                 <input class="campo-formulario"
                                        type="text"
                                        id="telefono"
                                        maxlength="30"
                                        data-th-field="*{telefono}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('telefono')}"
+                                      data-th-errors="*{telefono}">
+                                </span>
+
                             </div>
 
                             <div class="grupo-formulario ancho-completo">
-                                <label for="direccion">Dirección</label>
+
+                                <label for="direccion">
+                                    Dirección
+                                </label>
 
                                 <textarea class="campo-formulario"
                                           id="direccion"
                                           maxlength="255"
-                                          data-th-field="*{direccion}">
-                                </textarea>
+                                          data-th-field="*{direccion}"></textarea>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('direccion')}"
+                                      data-th-errors="*{direccion}">
+                                </span>
+
+                            </div>
+
+                            <!-- Cliente que ya tiene cuenta -->
+
+                            <div class="grupo-formulario ancho-completo"
+                                 data-th-if="${cliente.usuario != null}">
+
+                                <div style="padding:15px;
+                                            border:1px solid #b8d8c0;
+                                            border-radius:8px;
+                                            background:#f0fff4;">
+
+                                    <strong>
+                                        Este cliente tiene una cuenta de acceso.
+                                    </strong>
+
+                                    <p style="margin:6px 0 0 0;">
+                                        El correo de acceso se actualizará con el
+                                        correo electrónico colocado en este formulario.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo"
+                                 data-th-if="${cliente.usuario != null}">
+
+                                <p>
+                                    Si no desea cambiar la contraseña, deje los
+                                    siguientes campos vacíos.
+                                </p>
+
+                            </div>
+
+                            <div class="grupo-formulario"
+                                 data-th-if="${cliente.usuario != null}">
+
+                                <label for="passwordExistente">
+                                    Nueva contraseña
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="password"
+                                       id="passwordExistente"
+                                       autocomplete="new-password"
+                                       placeholder="Nueva contraseña opcional"
+                                       data-th-field="*{password}">
+
+                                <small>
+                                    Mínimo 8 caracteres, con mayúscula,
+                                    minúscula, número y carácter especial.
+                                </small>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('password')}"
+                                      data-th-errors="*{password}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario"
+                                 data-th-if="${cliente.usuario != null}">
+
+                                <label for="confirmarPasswordExistente">
+                                    Confirmar nueva contraseña
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="password"
+                                       id="confirmarPasswordExistente"
+                                       autocomplete="new-password"
+                                       placeholder="Repita la nueva contraseña"
+                                       data-th-field="*{confirmarPassword}">
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('confirmarPassword')}"
+                                      data-th-errors="*{confirmarPassword}">
+                                </span>
+
+                            </div>
+
+                            <!-- Cliente que todavía no tiene cuenta -->
+
+                            <div class="grupo-formulario ancho-completo"
+                                 data-th-if="${cliente.usuario == null}">
+
+                                <label style="display:flex;
+                                              align-items:center;
+                                              gap:10px;
+                                              cursor:pointer;">
+
+                                    <input type="checkbox"
+                                           id="crearCuenta"
+                                           data-th-field="*{crearCuenta}">
+
+                                    <span>
+                                        Crear una cuenta de acceso para este cliente
+                                    </span>
+
+                                </label>
+
+                                <small>
+                                    El cliente utilizará su correo electrónico y
+                                    contraseña para ingresar al sistema.
+                                </small>
+
+                            </div>
+
+                            <div id="datosCuentaNueva"
+                                 class="ancho-completo"
+                                 style="display:none;"
+                                 data-th-if="${cliente.usuario == null}">
+
+                                <div class="formulario-cuadricula">
+
+                                    <div class="grupo-formulario">
+
+                                        <label for="passwordNueva">
+                                            Contraseña
+                                        </label>
+
+                                        <input class="campo-formulario"
+                                               type="password"
+                                               id="passwordNueva"
+                                               autocomplete="new-password"
+                                               placeholder="Ingrese la contraseña"
+                                               data-th-field="*{password}">
+
+                                        <small>
+                                            Mínimo 8 caracteres, con mayúscula,
+                                            minúscula, número y carácter especial.
+                                        </small>
+
+                                        <span class="texto-error"
+                                              data-th-if="${#fields.hasErrors('password')}"
+                                              data-th-errors="*{password}">
+                                        </span>
+
+                                    </div>
+
+                                    <div class="grupo-formulario">
+
+                                        <label for="confirmarPasswordNueva">
+                                            Confirmar contraseña
+                                        </label>
+
+                                        <input class="campo-formulario"
+                                               type="password"
+                                               id="confirmarPasswordNueva"
+                                               autocomplete="new-password"
+                                               placeholder="Repita la contraseña"
+                                               data-th-field="*{confirmarPassword}">
+
+                                        <span class="texto-error"
+                                              data-th-if="${#fields.hasErrors('confirmarPassword')}"
+                                              data-th-errors="*{confirmarPassword}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
                         </div>
@@ -147,6 +355,44 @@
     </main>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const crearCuenta = document.getElementById("crearCuenta");
+        const datosCuenta = document.getElementById("datosCuentaNueva");
+        const password = document.getElementById("passwordNueva");
+        const confirmarPassword =
+                document.getElementById("confirmarPasswordNueva");
+
+        if (!crearCuenta || !datosCuenta) {
+            return;
+        }
+
+        function actualizarCamposCuenta() {
+
+            const cuentaSeleccionada = crearCuenta.checked;
+
+            datosCuenta.style.display =
+                    cuentaSeleccionada ? "block" : "none";
+
+            password.required = cuentaSeleccionada;
+            confirmarPassword.required = cuentaSeleccionada;
+
+            if (!cuentaSeleccionada) {
+                password.value = "";
+                confirmarPassword.value = "";
+            }
+        }
+
+        crearCuenta.addEventListener(
+                "change",
+                actualizarCamposCuenta
+        );
+
+        actualizarCamposCuenta();
+    });
+</script>
 
 </body>
 </html>

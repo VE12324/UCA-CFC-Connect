@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis alquileres</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mis-alquileres')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Mis alquileres</h1>
+
+                    <p>
+                        Consulte sus reservaciones de espacios.
+                    </p>
+
+                </div>
+
+                <a class="boton-limpiar"
+                   href="/mi-cuenta"
+                   data-th-href="@{/mi-cuenta}">
+                    Regresar a mi cuenta
+                </a>
+
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Espacio</th>
+                            <th>Ubicación</th>
+                            <th>Inicio</th>
+                            <th>Finalización</th>
+                            <th>Personas</th>
+                            <th>Estado</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "alquiler : ${paginaAlquileres.content}">
+
+                            <td data-th-text=
+                                "${alquiler.espacio.nombre}">
+                                Espacio
+                            </td>
+
+                            <td data-th-text=
+                                "${#strings.isEmpty(
+                                    alquiler.espacio.ubicacion
+                                )
+                                ? 'No registrada'
+                                : alquiler.espacio.ubicacion}">
+                                Ubicación
+                            </td>
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    alquiler.horaInicio,
+                                    'dd/MM/yyyy HH:mm'
+                                )}">
+                                Inicio
+                            </td>
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    alquiler.horaFin,
+                                    'dd/MM/yyyy HH:mm'
+                                )}">
+                                Finalización
+                            </td>
+
+                            <td data-th-text=
+                                "${alquiler.cantidadPersonas}">
+                                1
+                            </td>
+
+                            <td>
+
+                                <span class="etiqueta-estado"
+                                      data-th-text=
+                                      "${alquiler.estado}">
+                                    Estado
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${paginaAlquileres.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="6">
+
+                                No tiene alquileres registrados.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + paginaAlquileres.numberOfElements
+                       + ' de '
+                       + paginaAlquileres.totalElements
+                       + ' registros'}">
+                        Registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaAlquileres.hasPrevious()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/alquileres(
+                                pagina=${paginaAlquileres.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace activa"
+                              data-th-text=
+                              "${paginaAlquileres.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaAlquileres.hasNext()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/alquileres(
+                                pagina=${paginaAlquileres.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html> 

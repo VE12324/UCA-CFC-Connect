@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -18,11 +19,11 @@
 
 <div class="aplicacion">
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
+    <aside data-th-replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
 
     <main class="area-principal">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <header data-th-replace="~{fragmentos/plantilla :: barra-superior}"></header>
 
         <section class="contenido">
 
@@ -167,6 +168,87 @@
 
                             </div>
 
+                            <!-- Creación opcional de cuenta -->
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label style="display:flex;
+                                              align-items:center;
+                                              gap:10px;
+                                              cursor:pointer;">
+
+                                    <input type="checkbox"
+                                           id="crearCuenta"
+                                           data-th-field="*{crearCuenta}">
+
+                                    <span>
+                                        Crear una cuenta de acceso para este cliente
+                                    </span>
+
+                                </label>
+
+                                <small>
+                                    El cliente utilizará su correo electrónico y
+                                    contraseña para ingresar al sistema.
+                                </small>
+
+                            </div>
+
+                            <div id="datosCuenta"
+                                 class="ancho-completo"
+                                 style="display:none;">
+
+                                <div class="formulario-cuadricula">
+
+                                    <div class="grupo-formulario">
+
+                                        <label for="password">
+                                            Contraseña
+                                        </label>
+
+                                        <input class="campo-formulario"
+                                               type="password"
+                                               id="password"
+                                               autocomplete="new-password"
+                                               placeholder="Ingrese la contraseña"
+                                               data-th-field="*{password}">
+
+                                        <small>
+                                            Mínimo 8 caracteres, con mayúscula,
+                                            minúscula, número y carácter especial.
+                                        </small>
+
+                                        <span class="texto-error"
+                                              data-th-if="${#fields.hasErrors('password')}"
+                                              data-th-errors="*{password}">
+                                        </span>
+
+                                    </div>
+
+                                    <div class="grupo-formulario">
+
+                                        <label for="confirmarPassword">
+                                            Confirmar contraseña
+                                        </label>
+
+                                        <input class="campo-formulario"
+                                               type="password"
+                                               id="confirmarPassword"
+                                               autocomplete="new-password"
+                                               placeholder="Repita la contraseña"
+                                               data-th-field="*{confirmarPassword}">
+
+                                        <span class="texto-error"
+                                              data-th-if="${#fields.hasErrors('confirmarPassword')}"
+                                              data-th-errors="*{confirmarPassword}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
                         </div>
 
                         <div class="acciones-formulario">
@@ -195,6 +277,40 @@
     </main>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const crearCuenta = document.getElementById("crearCuenta");
+        const datosCuenta = document.getElementById("datosCuenta");
+        const password = document.getElementById("password");
+        const confirmarPassword =
+                document.getElementById("confirmarPassword");
+
+        function actualizarCamposCuenta() {
+
+            const cuentaSeleccionada = crearCuenta.checked;
+
+            datosCuenta.style.display =
+                    cuentaSeleccionada ? "block" : "none";
+
+            password.required = cuentaSeleccionada;
+            confirmarPassword.required = cuentaSeleccionada;
+
+            if (!cuentaSeleccionada) {
+                password.value = "";
+                confirmarPassword.value = "";
+            }
+        }
+
+        crearCuenta.addEventListener(
+                "change",
+                actualizarCamposCuenta
+        );
+
+        actualizarCamposCuenta();
+    });
+</script>
 
 </body>
 </html>

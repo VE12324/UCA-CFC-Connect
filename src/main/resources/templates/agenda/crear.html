@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Actividad</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('agenda')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+                    <h1>Nueva Actividad</h1>
+                    <p>Registre una nueva actividad en la agenda institucional.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          action="/agenda/crear"
+                          th:action="@{/agenda/crear}"
+                          th:object="${actividad}">
+
+                        <div class="mensaje mensaje-error"
+                             th:if="${#fields.hasGlobalErrors()}">
+
+                            <div th:each="error : ${#fields.globalErrors()}"
+                                 th:text="${error}">
+                                Error
+                            </div>
+
+                        </div>
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="nombre">Nombre de la actividad *</label>
+
+                                <input class="campo-formulario"
+                                       id="nombre"
+                                       type="text"
+                                       maxlength="150"
+                                       placeholder="Ej. Jornada de capacitación"
+                                       th:field="*{nombre}"
+                                       th:classappend="${#fields.hasErrors('nombre')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('nombre')}"
+                                      th:errors="*{nombre}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="tipo">Tipo de actividad *</label>
+
+                                <select class="campo-formulario"
+                                        id="tipo"
+                                        th:field="*{tipo}">
+
+                                    <option value="INSTITUCIONAL">Institucional</option>
+                                    <option value="CURSO">Curso</option>
+                                    <option value="DIPLOMADO">Diplomado</option>
+                                    <option value="ALQUILER">Alquiler de espacio</option>
+                                    <option value="CATERING">Catering</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="fecha">Fecha *</label>
+
+                                <input class="campo-formulario"
+                                       id="fecha"
+                                       type="date"
+                                       th:field="*{fecha}"
+                                       th:classappend="${#fields.hasErrors('fecha')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('fecha')}"
+                                      th:errors="*{fecha}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="horaInicio">Fecha y hora de inicio</label>
+
+                                <input class="campo-formulario"
+                                       id="horaInicio"
+                                       type="datetime-local"
+                                       th:field="*{horaInicio}">
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="horaFin">Fecha y hora de finalización</label>
+
+                                <input class="campo-formulario"
+                                       id="horaFin"
+                                       type="datetime-local"
+                                       th:field="*{horaFin}">
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="horario">Descripción del horario</label>
+
+                                <input class="campo-formulario"
+                                       id="horario"
+                                       type="text"
+                                       maxlength="100"
+                                       placeholder="Se calculará automáticamente si se deja vacío"
+                                       th:field="*{horario}">
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo"
+                                 id="grupoCurso">
+
+                                <label for="curso">Curso relacionado *</label>
+
+                                <select class="campo-formulario"
+                                        id="curso"
+                                        th:field="*{curso.idCurso}">
+
+                                    <option value="">Seleccione un curso</option>
+
+                                    <option th:each="curso : ${cursos}"
+                                            th:value="${curso.idCurso}"
+                                            th:text="${curso.nombre}">
+                                        Curso
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo"
+                                 id="grupoDiplomado">
+
+                                <label for="diplomado">Diplomado relacionado *</label>
+
+                                <select class="campo-formulario"
+                                        id="diplomado"
+                                        th:field="*{diplomado.idDiplomado}">
+
+                                    <option value="">Seleccione un diplomado</option>
+
+                                    <option th:each="diplomado : ${diplomados}"
+                                            th:value="${diplomado.idDiplomado}"
+                                            th:text="${diplomado.nombre}">
+                                        Diplomado
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo"
+                                 id="grupoAlquiler">
+
+                                <label for="alquiler">Alquiler relacionado *</label>
+
+                                <select class="campo-formulario"
+                                        id="alquiler"
+                                        th:field="*{alquiler.idAlquiler}">
+
+                                    <option value="">Seleccione un alquiler</option>
+
+                                    <option th:each="alquiler : ${alquileres}"
+                                            th:value="${alquiler.idAlquiler}"
+                                            th:text="${alquiler.espacio.nombre
+                                            + ' — '
+                                            + alquiler.cliente.nombre
+                                            + ' — '
+                                            + #temporals.format(
+                                            alquiler.fecha,
+                                            'dd/MM/yyyy'
+                                            )}">
+                                        Alquiler
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo"
+                                 id="grupoCatering">
+
+                                <label for="solicitudCatering">
+                                    Solicitud de catering relacionada *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="solicitudCatering"
+                                        th:field="*{solicitudCatering.idSolicitud}">
+
+                                    <option value="">
+                                        Seleccione una solicitud
+                                    </option>
+
+                                    <option th:each="solicitud : ${solicitudesCatering}"
+                                            th:value="${solicitud.idSolicitud}"
+                                            th:text="${solicitud.servicioCatering.nombre
+                                            + ' — '
+                                            + solicitud.cliente.nombre
+                                            + ' — '
+                                            + #temporals.format(
+                                            solicitud.fecha,
+                                            'dd/MM/yyyy'
+                                            )}">
+                                        Solicitud
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="descripcion">Descripción</label>
+
+                                <textarea class="campo-formulario"
+                                          id="descripcion"
+                                          maxlength="500"
+                                          placeholder="Descripción de la actividad..."
+                                          th:field="*{descripcion}"></textarea>
+
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/agenda"
+                               th:href="@{/agenda}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar" type="submit">
+                                Guardar Actividad
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tipo = document.getElementById("tipo");
+
+        tipo.addEventListener("change", mostrarRelacion);
+        mostrarRelacion();
+    });
+
+    function mostrarRelacion() {
+        const tipo = document.getElementById("tipo").value;
+
+        document.getElementById("grupoCurso").style.display =
+                tipo === "CURSO" ? "block" : "none";
+
+        document.getElementById("grupoDiplomado").style.display =
+                tipo === "DIPLOMADO" ? "block" : "none";
+
+        document.getElementById("grupoAlquiler").style.display =
+                tipo === "ALQUILER" ? "block" : "none";
+
+        document.getElementById("grupoCatering").style.display =
+                tipo === "CATERING" ? "block" : "none";
+    }
+</script>
+
+</body>
+</html>

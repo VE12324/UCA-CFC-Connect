@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Nueva Solicitud de Catering</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('solicitudes-catering')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Nueva Solicitud de Catering</h1>
+
+                    <p>
+                        Registre la solicitud de alimentación
+                        para un evento.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          action="/solicitudes-catering/crear"
+                          th:action="@{/solicitudes-catering/crear}"
+                          th:object="${solicitud}">
+
+                        <div class="mensaje mensaje-error"
+                             th:if="${#fields.hasGlobalErrors()}">
+
+                            <div th:each="error : ${#fields.globalErrors()}"
+                                 th:text="${error}">
+                                Error
+                            </div>
+
+                        </div>
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="cliente">
+                                    Cliente *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="cliente"
+                                        th:field="*{cliente.idCliente}">
+
+                                    <option value="">
+                                        Seleccione un cliente
+                                    </option>
+
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.idCliente}"
+                                            th:text="${cliente.nombre
+                                            + (cliente.dui != null
+                                            && !cliente.dui.isBlank()
+                                            ? ' — DUI: ' + cliente.dui
+                                            : '')}">
+                                        Cliente
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="servicio">
+                                    Servicio de catering *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="servicio"
+                                        th:field="*{servicioCatering.idCatering}">
+
+                                    <option value="">
+                                        Seleccione un servicio
+                                    </option>
+
+                                    <option th:each="servicio : ${servicios}"
+                                            th:value="${servicio.idCatering}"
+                                            th:text="${servicio.nombre
+                                            + ' — $'
+                                            + servicio.precioPorPersona
+                                            + ' por persona — Capacidad: '
+                                            + servicio.capacidadMinima
+                                            + ' a '
+                                            + servicio.capacidadMaxima}">
+                                        Servicio
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="cantidadAsistentes">
+                                    Cantidad de asistentes *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="cantidadAsistentes"
+                                       type="number"
+                                       min="1"
+                                       th:field="*{cantidadAsistentes}"
+                                       th:classappend="${#fields.hasErrors('cantidadAsistentes')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('cantidadAsistentes')}"
+                                      th:errors="*{cantidadAsistentes}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="estado">
+                                    Estado *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="estado"
+                                        th:field="*{estado}">
+
+                                    <option value="PENDIENTE">
+                                        Pendiente
+                                    </option>
+
+                                    <option value="CONFIRMADA">
+                                        Confirmada
+                                    </option>
+
+                                    <option value="CANCELADA">
+                                        Cancelada
+                                    </option>
+
+                                    <option value="FINALIZADA">
+                                        Finalizada
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="fecha">
+                                    Fecha *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="fecha"
+                                       type="date"
+                                       th:field="*{fecha}"
+                                       th:classappend="${#fields.hasErrors('fecha')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('fecha')}"
+                                      th:errors="*{fecha}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="hora">
+                                    Hora *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="hora"
+                                       type="time"
+                                       th:field="*{hora}"
+                                       th:classappend="${#fields.hasErrors('hora')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('hora')}"
+                                      th:errors="*{hora}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="lugar">
+                                    Lugar *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="lugar"
+                                       type="text"
+                                       maxlength="255"
+                                       placeholder="Ej. Salón principal"
+                                       th:field="*{lugar}"
+                                       th:classappend="${#fields.hasErrors('lugar')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('lugar')}"
+                                      th:errors="*{lugar}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="menu">
+                                    Menú solicitado *
+                                </label>
+
+                                <textarea class="campo-formulario"
+                                          id="menu"
+                                          maxlength="255"
+                                          placeholder="Describa el menú solicitado..."
+                                          th:field="*{menu}"
+                                          th:classappend="${#fields.hasErrors('menu')}
+                                          ? 'invalido' : ''"></textarea>
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('menu')}"
+                                      th:errors="*{menu}">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/solicitudes-catering"
+                               th:href="@{/solicitudes-catering}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar Solicitud
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

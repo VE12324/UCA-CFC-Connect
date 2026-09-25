@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Actualizar Inscripción</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('inscripciones')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Actualizar Inscripción</h1>
+
+                    <p>
+                        Modifique los datos de la inscripción seleccionada.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          th:action="@{/inscripciones/actualizar/{id}
+                          (id=${inscripcion.idInscripcion})}"
+                          th:object="${inscripcion}">
+
+                        <input type="hidden"
+                               th:field="*{idInscripcion}">
+
+                        <div class="mensaje mensaje-error"
+                             th:if="${#fields.hasGlobalErrors()}">
+
+                            <div th:each="error : ${#fields.globalErrors()}"
+                                 th:text="${error}">
+                                Error
+                            </div>
+
+                        </div>
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario">
+
+                                <label for="fecha">
+                                    Fecha de inscripción *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="fecha"
+                                       type="date"
+                                       th:field="*{fecha}"
+                                       th:classappend="${#fields.hasErrors('fecha')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('fecha')}"
+                                      th:errors="*{fecha}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="estado">
+                                    Estado *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="estado"
+                                        th:field="*{estadoInscripcion.idEstadoInscripcion}">
+
+                                    <option value="">
+                                        Seleccione un estado
+                                    </option>
+
+                                    <option th:each="estado : ${estados}"
+                                            th:value="${estado.idEstadoInscripcion}"
+                                            th:text="${estado.nombre}">
+                                        Estado
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="cliente">
+                                    Cliente *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="cliente"
+                                        th:field="*{cliente.idCliente}">
+
+                                    <option value="">
+                                        Seleccione un cliente
+                                    </option>
+
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.idCliente}"
+                                            th:text="${cliente.nombre
+                                            + (cliente.dui != null
+                                            && !cliente.dui.isBlank()
+                                            ? ' — DUI: ' + cliente.dui
+                                            : '')}">
+                                        Cliente
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="curso">
+                                    Curso *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="curso"
+                                        th:field="*{curso.idCurso}">
+
+                                    <option value="">
+                                        Seleccione un curso
+                                    </option>
+
+                                    <option th:each="curso : ${cursos}"
+                                            th:value="${curso.idCurso}"
+                                            th:text="${curso.nombre}">
+                                        Curso
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label>
+                                    Participantes *
+                                </label>
+
+                                <div style="border: 1px solid #d9dfe5;
+                                            border-radius: 6px;
+                                            padding: 15px;
+                                            max-height: 260px;
+                                            overflow-y: auto;">
+
+                                    <div th:if="${participantes.empty}"
+                                         style="color: #697277;">
+                                        No hay participantes registrados.
+                                    </div>
+
+                                    <label th:each="participante : ${participantes}"
+                                           style="display: flex;
+                                                  align-items: center;
+                                                  gap: 10px;
+                                                  padding: 8px 4px;
+                                                  cursor: pointer;">
+
+                                        <input type="checkbox"
+                                               name="participantesIds"
+                                               th:value="${participante.idParticipante}"
+                                               th:checked="${participantesSeleccionados.contains(
+                                               participante.idParticipante)}">
+
+                                        <span th:text="${participante.nombre
+                                        + ' '
+                                        + participante.apellido
+                                        + ' — DUI: '
+                                        + participante.dui}">
+                                            Participante
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/inscripciones"
+                               th:href="@{/inscripciones}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Actualizar Inscripción
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

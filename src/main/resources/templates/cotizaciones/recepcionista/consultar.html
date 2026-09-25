@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Consultar cotización</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+                    <h1>Detalle de cotización</h1>
+                    <p>Información completa de la cotización.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="formulario-cuadricula">
+
+                        <div class="grupo-formulario">
+                            <label>Cliente</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${cotizacion.nombreCliente}">
+                                Cliente
+                            </p>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label>Fecha</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${#temporals.format(cotizacion.fecha, 'dd/MM/yyyy')}">
+                                Fecha
+                            </p>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label>Estado</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${cotizacion.estado}">
+                                Estado
+                            </p>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label>Subtotal</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${'$ ' + #numbers.formatDecimal(cotizacion.subtotal, 1, 2)}">
+                                $ 0.00
+                            </p>
+                        </div>
+
+                        <div class="grupo-formulario">
+                            <label>Total con IVA</label>
+
+                            <p class="campo-formulario"
+                               data-th-text="${'$ ' + #numbers.formatDecimal(cotizacion.total, 1, 2)}">
+                                $ 0.00
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="tabla-responsive"
+                         style="margin-top:25px;">
+
+                        <table>
+
+                            <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Subtotal</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr data-th-each="detalle : ${cotizacion.detalles}">
+
+                                <td data-th-text="${detalle.descripcion}">
+                                    Descripción
+                                </td>
+
+                                <td data-th-text="${detalle.cantidad}">
+                                    1
+                                </td>
+
+                                <td data-th-text="${'$ ' + #numbers.formatDecimal(detalle.precio, 1, 2)}">
+                                    $ 0.00
+                                </td>
+
+                                <td data-th-text="${'$ ' + #numbers.formatDecimal(detalle.subtotal, 1, 2)}">
+                                    $ 0.00
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="acciones-formulario">
+
+                        <a class="boton-secundario"
+                           data-th-href="@{/cotizaciones}">
+                            Regresar
+                        </a>
+
+                        <a class="boton-actualizar"
+                           data-th-if="${!#strings.equalsIgnoreCase(cotizacion.estado, 'Aprobada')}"
+                           data-th-href="@{/cotizaciones/actualizar/{id}(id=${cotizacion.idCotizacion})}">
+                            Actualizar
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

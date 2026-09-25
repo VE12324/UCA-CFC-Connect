@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de la Actividad</title>
+    <link rel="stylesheet" href="/css/estilos.css" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('agenda')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="detalle-tarjeta">
+
+                <div class="tarjeta-encabezado">
+                    <h1 th:text="${actividad.nombre}">Actividad</h1>
+                    <p>Información completa de la actividad.</p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">ID</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.idActividad}">
+                                1
+                            </div>
+                        </div>
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Tipo</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.tipo}">
+                                INSTITUCIONAL
+                            </div>
+                        </div>
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Fecha</div>
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 actividad.fecha,
+                                 'dd/MM/yyyy'
+                                 )}">
+                                01/01/2026
+                            </div>
+                        </div>
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Horario</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.horario != null
+                                 && !actividad.horario.isBlank()
+                                 ? actividad.horario
+                                 : 'Sin especificar'}">
+                                08:00 - 10:00
+                            </div>
+                        </div>
+
+                        <div class="detalle-item"
+                             th:if="${actividad.horaInicio != null}">
+                            <div class="detalle-etiqueta">Inicio</div>
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 actividad.horaInicio,
+                                 'dd/MM/yyyy HH:mm'
+                                 )}">
+                                01/01/2026 08:00
+                            </div>
+                        </div>
+
+                        <div class="detalle-item"
+                             th:if="${actividad.horaFin != null}">
+                            <div class="detalle-etiqueta">Finalización</div>
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 actividad.horaFin,
+                                 'dd/MM/yyyy HH:mm'
+                                 )}">
+                                01/01/2026 10:00
+                            </div>
+                        </div>
+
+                        <div class="detalle-item ancho-completo"
+                             th:if="${actividad.tipo == 'CURSO'}">
+                            <div class="detalle-etiqueta">Curso</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.curso.nombre}">
+                                Curso
+                            </div>
+                        </div>
+
+                        <div class="detalle-item ancho-completo"
+                             th:if="${actividad.tipo == 'DIPLOMADO'}">
+                            <div class="detalle-etiqueta">Diplomado</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.diplomado.nombre}">
+                                Diplomado
+                            </div>
+                        </div>
+
+                        <div class="detalle-item ancho-completo"
+                             th:if="${actividad.tipo == 'ALQUILER'}">
+                            <div class="detalle-etiqueta">Alquiler</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.alquiler.espacio.nombre
+                                 + ' — '
+                                 + actividad.alquiler.cliente.nombre}">
+                                Alquiler
+                            </div>
+                        </div>
+
+                        <div class="detalle-item ancho-completo"
+                             th:if="${actividad.tipo == 'CATERING'}">
+                            <div class="detalle-etiqueta">
+                                Solicitud de catering
+                            </div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.solicitudCatering.servicioCatering.nombre
+                                 + ' — '
+                                 + actividad.solicitudCatering.cliente.nombre}">
+                                Catering
+                            </div>
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Descripción</div>
+                            <div class="detalle-valor"
+                                 th:text="${actividad.descripcion != null
+                                 && !actividad.descripcion.isBlank()
+                                 ? actividad.descripcion
+                                 : 'Sin descripción'}">
+                                Descripción
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="acciones-formulario">
+
+                        <a class="boton-secundario"
+                           href="/agenda"
+                           th:href="@{/agenda}">
+                            Volver al listado
+                        </a>
+
+                        <a class="boton-guardar"
+                           th:href="@{/agenda/actualizar/{id}
+                           (id=${actividad.idActividad})}">
+                            Editar Actividad
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

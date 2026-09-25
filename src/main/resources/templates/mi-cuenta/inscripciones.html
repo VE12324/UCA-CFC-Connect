@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis inscripciones</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mis-inscripciones')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Mis inscripciones</h1>
+
+                    <p>
+                        Consulte los cursos en los que se encuentra inscrito.
+                    </p>
+
+                </div>
+
+                <a class="boton-limpiar"
+                   href="/mi-cuenta"
+                   data-th-href="@{/mi-cuenta}">
+                    Regresar a mi cuenta
+                </a>
+
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Fecha de inscripción</th>
+                            <th>Curso</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de finalización</th>
+                            <th>Participantes</th>
+                            <th>Estado</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "inscripcion : ${paginaInscripciones.content}">
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    inscripcion.fecha,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Fecha
+                            </td>
+
+                            <td data-th-text=
+                                "${inscripcion.curso.nombre}">
+                                Curso
+                            </td>
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    inscripcion.curso.fechaInicio,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Inicio
+                            </td>
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    inscripcion.curso.fechaFin,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Finalización
+                            </td>
+
+                            <td>
+
+                                <details>
+
+                                    <summary data-th-text=
+                                             "${inscripcion.participantes.size()
+                                             + ' participante(s)'}">
+                                        Participantes
+                                    </summary>
+
+                                    <ul>
+
+                                        <li data-th-each=
+                                            "participante :
+                                            ${inscripcion.participantes}"
+                                            data-th-text=
+                                            "${participante.nombre
+                                            + ' '
+                                            + participante.apellido}">
+                                            Participante
+                                        </li>
+
+                                    </ul>
+
+                                </details>
+
+                            </td>
+
+                            <td>
+
+                                <span class="etiqueta-estado"
+                                      data-th-text=
+                                      "${inscripcion.estadoInscripcion.nombre}">
+                                    Estado
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${paginaInscripciones.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="6">
+
+                                No tiene inscripciones registradas.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + paginaInscripciones.numberOfElements
+                       + ' de '
+                       + paginaInscripciones.totalElements
+                       + ' registros'}">
+                        Registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaInscripciones.hasPrevious()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/inscripciones(
+                                pagina=${paginaInscripciones.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace activa"
+                              data-th-text=
+                              "${paginaInscripciones.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaInscripciones.hasNext()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/inscripciones(
+                                pagina=${paginaInscripciones.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

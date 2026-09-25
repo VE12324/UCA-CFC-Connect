@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Solicitudes de Catering</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('solicitudes-catering')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Solicitudes de Catering</h1>
+
+                    <p>
+                        Administra las solicitudes de servicios
+                        de alimentación para eventos.
+                    </p>
+
+                </div>
+
+                <a class="boton-nuevo"
+                   href="/solicitudes-catering/crear"
+                   th:href="@{/solicitudes-catering/crear}">
+
+                    <span>＋</span>
+                    <span>Nueva solicitud</span>
+
+                </a>
+
+            </div>
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+            <section class="tarjeta">
+
+                <div class="filtros">
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/solicitudes-catering"
+                          th:action="@{/solicitudes-catering}">
+
+                        <div class="campo-busqueda">
+
+                            <span>⌕</span>
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por cliente, servicio o lugar...">
+
+                        </div>
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+                        <a class="boton-limpiar"
+                           href="/solicitudes-catering"
+                           th:href="@{/solicitudes-catering}">
+                            Limpiar
+                        </a>
+
+                    </form>
+
+                </div>
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+                        <tr>
+                            <th>Fecha y hora</th>
+                            <th>Cliente</th>
+                            <th>Servicio</th>
+                            <th>Asistentes</th>
+                            <th>Lugar</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="solicitud : ${paginaSolicitudes.content}">
+
+                            <td>
+                                <span th:text="${#temporals.format(
+                                solicitud.fecha,
+                                'dd/MM/yyyy'
+                                )}">
+                                    01/01/2026
+                                </span>
+
+                                <span> - </span>
+
+                                <span th:text="${#temporals.format(
+                                solicitud.hora,
+                                'HH:mm'
+                                )}">
+                                    12:00
+                                </span>
+                            </td>
+
+                            <td th:text="${solicitud.cliente.nombre}"
+                                style="font-weight: 600;">
+                                Cliente
+                            </td>
+
+                            <td th:text="${solicitud.servicioCatering.nombre}">
+                                Servicio
+                            </td>
+
+                            <td th:text="${solicitud.cantidadAsistentes}">
+                                1
+                            </td>
+
+                            <td th:text="${solicitud.lugar}">
+                                Lugar
+                            </td>
+
+                            <td>
+
+                                <span th:text="${solicitud.estado}"
+                                      style="display: inline-block;
+                                             padding: 4px 8px;
+                                             border-radius: 4px;
+                                             font-size: 11px;
+                                             font-weight: 700;"
+                                      th:style="${solicitud.estado == 'CONFIRMADA'
+                                      ? 'background: #e5f8ed; color: #198754;'
+                                      : (solicitud.estado == 'CANCELADA'
+                                      ? 'background: #fde8e8; color: #dc3545;'
+                                      : (solicitud.estado == 'FINALIZADA'
+                                      ? 'background: #e8eaf6; color: #3f51b5;'
+                                      : 'background: #fff3cd; color: #856404;'))}">
+                                    PENDIENTE
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="acciones-tabla">
+
+                                    <a class="boton-accion boton-consultar"
+                                       th:href="@{/solicitudes-catering/consultar/{id}
+                                       (id=${solicitud.idSolicitud})}">
+                                        Consultar
+                                    </a>
+
+                                    <a class="boton-accion boton-actualizar"
+                                       th:href="@{/solicitudes-catering/actualizar/{id}
+                                       (id=${solicitud.idSolicitud})}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       th:href="@{/solicitudes-catering/eliminar/{id}
+                                       (id=${solicitud.idSolicitud})}">
+                                        Eliminar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${paginaSolicitudes.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="7">
+                                No se encontraron solicitudes de catering.
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla"
+                     th:if="${paginaSolicitudes.totalElements > 0}">
+
+                    <p class="informacion-pagina">
+
+                        Mostrando
+
+                        <span th:text="${paginaSolicitudes.numberOfElements}">
+                            1
+                        </span>
+
+                        de
+
+                        <span th:text="${paginaSolicitudes.totalElements}">
+                            1
+                        </span>
+
+                        registros
+
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaSolicitudes.first}"
+                           th:href="@{/solicitudes-catering(
+                           buscar=${buscar},
+                           pagina=${paginaSolicitudes.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaSolicitudes.first}">
+                            ‹
+                        </span>
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaSolicitudes.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaSolicitudes.last}"
+                           th:href="@{/solicitudes-catering(
+                           buscar=${buscar},
+                           pagina=${paginaSolicitudes.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaSolicitudes.last}">
+                            ›
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

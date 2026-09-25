@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Eliminar Inscripción</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('inscripciones')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="eliminar-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Eliminar Inscripción</h1>
+
+                    <p>
+                        Confirme la eliminación de la inscripción.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="advertencia-eliminar">
+
+                        <h2>
+                            ¿Está seguro de eliminar esta inscripción?
+                        </h2>
+
+                        <p>
+                            Se eliminará también la relación con sus
+                            participantes. Si existen pagos asociados,
+                            la inscripción no podrá eliminarse.
+                        </p>
+
+                    </div>
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.idInscripcion}">
+                                1
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Fecha
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 inscripcion.fecha,
+                                 'dd/MM/yyyy'
+                                 )}">
+                                01/01/2026
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">
+                                Cliente
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.cliente.nombre}">
+                                Cliente
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">
+                                Curso
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.curso.nombre}">
+                                Curso
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Estado
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.estadoInscripcion.nombre}">
+                                Pendiente
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Participantes
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.participantes.size()}">
+                                1
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <form method="post"
+                          th:action="@{/inscripciones/eliminar/{id}
+                          (id=${inscripcion.idInscripcion})}">
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/inscripciones"
+                               th:href="@{/inscripciones}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-confirmar"
+                                    type="submit">
+                                Confirmar y Eliminar
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Nuevo Alquiler</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('alquileres')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Nuevo Alquiler</h1>
+
+                    <p>
+                        Registre la reservación de un espacio
+                        para un cliente.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          action="/alquileres/crear"
+                          th:action="@{/alquileres/crear}"
+                          th:object="${alquiler}">
+
+                        <div class="mensaje mensaje-error"
+                             th:if="${#fields.hasGlobalErrors()}">
+
+                            <div th:each="error : ${#fields.globalErrors()}"
+                                 th:text="${error}">
+                                Error
+                            </div>
+
+                        </div>
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="cliente">
+                                    Cliente *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="cliente"
+                                        th:field="*{cliente.idCliente}">
+
+                                    <option value="">
+                                        Seleccione un cliente
+                                    </option>
+
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.idCliente}"
+                                            th:text="${cliente.nombre
+                                            + (cliente.dui != null
+                                            && !cliente.dui.isBlank()
+                                            ? ' — DUI: ' + cliente.dui
+                                            : '')}">
+                                        Cliente
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="espacio">
+                                    Espacio *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="espacio"
+                                        th:field="*{espacio.idEspacio}">
+
+                                    <option value="">
+                                        Seleccione un espacio
+                                    </option>
+
+                                    <option th:each="espacio : ${espacios}"
+                                            th:value="${espacio.idEspacio}"
+                                            th:text="${espacio.nombre
+                                            + ' — Capacidad: '
+                                            + espacio.capacidad
+                                            + ' personas — $'
+                                            + espacio.costoHora
+                                            + '/hora'}">
+                                        Espacio
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="fecha">
+                                    Fecha del alquiler *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="fecha"
+                                       type="date"
+                                       th:field="*{fecha}"
+                                       th:classappend="${#fields.hasErrors('fecha')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('fecha')}"
+                                      th:errors="*{fecha}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="cantidadPersonas">
+                                    Cantidad de personas *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="cantidadPersonas"
+                                       type="number"
+                                       min="1"
+                                       th:field="*{cantidadPersonas}"
+                                       th:classappend="${#fields.hasErrors('cantidadPersonas')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('cantidadPersonas')}"
+                                      th:errors="*{cantidadPersonas}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="horaInicio">
+                                    Fecha y hora de inicio *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="horaInicio"
+                                       type="datetime-local"
+                                       th:field="*{horaInicio}"
+                                       th:classappend="${#fields.hasErrors('horaInicio')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('horaInicio')}"
+                                      th:errors="*{horaInicio}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="horaFin">
+                                    Fecha y hora de finalización *
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="horaFin"
+                                       type="datetime-local"
+                                       th:field="*{horaFin}"
+                                       th:classappend="${#fields.hasErrors('horaFin')}
+                                       ? 'invalido' : ''">
+
+                                <span class="texto-error"
+                                      th:if="${#fields.hasErrors('horaFin')}"
+                                      th:errors="*{horaFin}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <label for="estado">
+                                    Estado *
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="estado"
+                                        th:field="*{estado}">
+
+                                    <option value="PENDIENTE">
+                                        Pendiente
+                                    </option>
+
+                                    <option value="CONFIRMADO">
+                                        Confirmado
+                                    </option>
+
+                                    <option value="CANCELADO">
+                                        Cancelado
+                                    </option>
+
+                                    <option value="FINALIZADO">
+                                        Finalizado
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               href="/alquileres"
+                               th:href="@{/alquileres}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar Alquiler
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

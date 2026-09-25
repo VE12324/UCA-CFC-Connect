@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Nueva cotización</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="formulario-tarjeta">
+
+                <div class="tarjeta-encabezado">
+                    <h1>Nueva cotización</h1>
+
+                    <p>
+                        Registre los servicios solicitados
+                        por el cliente.
+                    </p>
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <form method="post"
+                          data-th-action="@{/cotizaciones/crear}"
+                          data-th-object="${cotizacion}">
+
+                        <div class="mensaje-error"
+                             data-th-if="${#fields.hasGlobalErrors()}">
+
+                            <p data-th-each="error : ${#fields.globalErrors()}"
+                               data-th-text="${error}">
+                            </p>
+
+                        </div>
+
+                        <div class="formulario-cuadricula">
+
+                            <div class="grupo-formulario">
+
+                                <label for="idCliente">
+                                    Cliente
+                                </label>
+
+                                <select class="campo-formulario"
+                                        id="idCliente"
+                                        data-th-field="*{idCliente}"
+                                        required>
+
+                                    <option value="">
+                                        Seleccione un cliente
+                                    </option>
+
+                                    <option data-th-each="cliente : ${clientes}"
+                                            data-th-value="${cliente.idCliente}"
+                                            data-th-text="${cliente.nombre}">
+                                    </option>
+
+                                </select>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('idCliente')}"
+                                      data-th-errors="*{idCliente}">
+                                </span>
+
+                            </div>
+
+                            <div class="grupo-formulario">
+
+                                <label for="fecha">
+                                    Fecha
+                                </label>
+
+                                <input class="campo-formulario"
+                                       type="date"
+                                       id="fecha"
+                                       data-th-field="*{fecha}"
+                                       required>
+
+                                <span class="texto-error"
+                                      data-th-if="${#fields.hasErrors('fecha')}"
+                                      data-th-errors="*{fecha}">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div style="margin-top:25px;">
+
+                            <div class="encabezado-pagina">
+
+                                <div>
+                                    <h2>Detalles</h2>
+                                    <p>Agregue los productos o servicios.</p>
+                                </div>
+
+                                <button class="boton-secundario"
+                                        id="agregarDetalle"
+                                        type="button">
+                                    + Agregar detalle
+                                </button>
+
+                            </div>
+
+                            <div class="tabla-responsive">
+
+                                <table id="tablaDetalles">
+
+                                    <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody id="cuerpoDetalles">
+
+                                    <tr data-th-each="detalle, estado : *{detalles}">
+
+                                        <td>
+                                            <input class="campo-formulario descripcion-detalle"
+                                                   type="text"
+                                                   data-th-field="*{detalles[__${estado.index}__].descripcion}"
+                                                   maxlength="255"
+                                                   required>
+                                        </td>
+
+                                        <td>
+                                            <input class="campo-formulario cantidad-detalle"
+                                                   type="number"
+                                                   data-th-field="*{detalles[__${estado.index}__].cantidad}"
+                                                   min="1"
+                                                   required>
+                                        </td>
+
+                                        <td>
+                                            <input class="campo-formulario precio-detalle"
+                                                   type="number"
+                                                   data-th-field="*{detalles[__${estado.index}__].precio}"
+                                                   min="0"
+                                                   step="0.01"
+                                                   required>
+                                        </td>
+
+                                        <td>
+                                            <button class="boton-eliminar eliminar-detalle"
+                                                    type="button">
+                                                Quitar
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <span class="texto-error"
+                                  data-th-if="${#fields.hasErrors('detalles')}"
+                                  data-th-errors="*{detalles}">
+                            </span>
+
+                        </div>
+
+                        <div class="acciones-formulario">
+
+                            <a class="boton-secundario"
+                               data-th-href="@{/cotizaciones}">
+                                Cancelar
+                            </a>
+
+                            <button class="boton-guardar"
+                                    type="submit">
+                                Guardar cotización
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const cuerpo = document.getElementById("cuerpoDetalles");
+        const agregar = document.getElementById("agregarDetalle");
+
+        function renumerar() {
+
+            const filas = cuerpo.querySelectorAll("tr");
+
+            filas.forEach(function (fila, indice) {
+
+                fila.querySelector(".descripcion-detalle").name =
+                        "detalles[" + indice + "].descripcion";
+
+                fila.querySelector(".cantidad-detalle").name =
+                        "detalles[" + indice + "].cantidad";
+
+                fila.querySelector(".precio-detalle").name =
+                        "detalles[" + indice + "].precio";
+            });
+        }
+
+        function agregarFila() {
+
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>
+                    <input class="campo-formulario descripcion-detalle"
+                           type="text"
+                           maxlength="255"
+                           required>
+                </td>
+                <td>
+                    <input class="campo-formulario cantidad-detalle"
+                           type="number"
+                           min="1"
+                           required>
+                </td>
+                <td>
+                    <input class="campo-formulario precio-detalle"
+                           type="number"
+                           min="0"
+                           step="0.01"
+                           required>
+                </td>
+                <td>
+                    <button class="boton-eliminar eliminar-detalle"
+                            type="button">
+                        Quitar
+                    </button>
+                </td>
+            `;
+
+            cuerpo.appendChild(fila);
+            renumerar();
+        }
+
+        agregar.addEventListener("click", agregarFila);
+
+        cuerpo.addEventListener("click", function (evento) {
+
+            if (!evento.target.classList.contains("eliminar-detalle")) {
+                return;
+            }
+
+            const filas = cuerpo.querySelectorAll("tr");
+
+            if (filas.length === 1) {
+                alert("La cotización debe tener al menos un detalle.");
+                return;
+            }
+
+            evento.target.closest("tr").remove();
+            renumerar();
+        });
+
+        renumerar();
+    });
+</script>
+
+</body>
+</html>

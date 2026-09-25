@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle de la Inscripción</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('inscripciones')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="detalle-tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <h1>Detalle de la Inscripción</h1>
+
+                    <p>
+                        Información completa de la inscripción seleccionada.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-cuerpo">
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.idInscripcion}">
+                                1
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Fecha
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 inscripcion.fecha,
+                                 'dd/MM/yyyy'
+                                 )}">
+                                01/01/2026
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Estado
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.estadoInscripcion.nombre}">
+                                Pendiente
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Cantidad de participantes
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.participantes.size()}">
+                                1
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">
+                                Cliente
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.cliente.nombre}">
+                                Cliente
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">
+                                Curso
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${inscripcion.curso.nombre}">
+                                Curso
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item ancho-completo">
+
+                            <div class="detalle-etiqueta">
+                                Participantes inscritos
+                            </div>
+
+                            <div class="detalle-valor">
+
+                                <ul style="margin: 0;
+                                           padding-left: 20px;">
+
+                                    <li th:each="participante :
+                                    ${inscripcion.participantes}"
+                                        th:text="${participante.nombre
+                                        + ' '
+                                        + participante.apellido
+                                        + ' — DUI: '
+                                        + participante.dui}">
+                                        Participante
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="acciones-formulario">
+
+                        <a class="boton-secundario"
+                           href="/inscripciones"
+                           th:href="@{/inscripciones}">
+                            Volver al listado
+                        </a>
+
+                        <a class="boton-guardar"
+                           th:href="@{/inscripciones/actualizar/{id}
+                           (id=${inscripcion.idInscripcion})}">
+                            Editar Inscripción
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

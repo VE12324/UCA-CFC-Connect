@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Agenda institucional</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mi-agenda')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Agenda institucional</h1>
+
+                    <p>
+                        Consulte las actividades relacionadas
+                        con sus cursos y servicios.
+                    </p>
+
+                </div>
+
+                <a class="boton-limpiar"
+                   href="/mi-cuenta"
+                   data-th-href="@{/mi-cuenta}">
+                    Regresar a mi cuenta
+                </a>
+
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Tipo</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Descripción</th>
+                            <th>Relacionado con</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "actividad : ${actividades}">
+
+                            <td data-th-text=
+                                "${actividad.nombre}">
+                                Actividad
+                            </td>
+
+                            <td data-th-text=
+                                "${actividad.tipo}">
+                                Tipo
+                            </td>
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    actividad.fecha,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Fecha
+                            </td>
+
+                            <td>
+
+                                <span data-th-if=
+                                      "${actividad.horaInicio != null
+                                      && actividad.horaFin != null}"
+                                      data-th-text=
+                                      "${#temporals.format(
+                                            actividad.horaInicio,
+                                            'HH:mm'
+                                        )
+                                        + ' - '
+                                        + #temporals.format(
+                                            actividad.horaFin,
+                                            'HH:mm'
+                                        )}">
+                                    Horario
+                                </span>
+
+                                <span data-th-if=
+                                      "${actividad.horaInicio == null
+                                      || actividad.horaFin == null}"
+                                      data-th-text=
+                                      "${#strings.isEmpty(
+                                            actividad.horario
+                                        )
+                                        ? 'No especificado'
+                                        : actividad.horario}">
+                                    No especificado
+                                </span>
+
+                            </td>
+
+                            <td data-th-text=
+                                "${#strings.isEmpty(
+                                    actividad.descripcion
+                                )
+                                ? 'Sin descripción'
+                                : actividad.descripcion}">
+                                Descripción
+                            </td>
+
+                            <td>
+
+                                <span data-th-if=
+                                      "${actividad.curso != null}"
+                                      data-th-text=
+                                      "${'Curso: '
+                                      + actividad.curso.nombre}">
+                                    Curso
+                                </span>
+
+                                <span data-th-if=
+                                      "${actividad.diplomado != null}"
+                                      data-th-text=
+                                      "${'Diplomado: '
+                                      + actividad.diplomado.nombre}">
+                                    Diplomado
+                                </span>
+
+                                <span data-th-if=
+                                      "${actividad.alquiler != null}"
+                                      data-th-text=
+                                      "${'Alquiler: '
+                                      + actividad.alquiler.espacio.nombre}">
+                                    Alquiler
+                                </span>
+
+                                <span data-th-if=
+                                      "${actividad.solicitudCatering != null}"
+                                      data-th-text=
+                                      "${'Catering: '
+                                      + actividad.solicitudCatering
+                                          .servicioCatering.nombre}">
+                                    Catering
+                                </span>
+
+                                <span data-th-if=
+                                      "${actividad.curso == null
+                                      && actividad.diplomado == null
+                                      && actividad.alquiler == null
+                                      && actividad.solicitudCatering == null}">
+                                    Actividad general
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${#lists.isEmpty(actividades)}">
+
+                            <td class="celda-vacia"
+                                colspan="6">
+
+                                No hay actividades disponibles.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + #lists.size(actividades)
+                       + ' actividad(es)'}">
+                        Actividades
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

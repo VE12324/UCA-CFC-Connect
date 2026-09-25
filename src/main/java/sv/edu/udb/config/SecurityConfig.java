@@ -22,83 +22,281 @@ import sv.edu.udb.service.UsuarioDetalleService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UsuarioDetalleService usuarioDetalleService;
+       private final UsuarioDetalleService usuarioDetalleService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        // Spring Security 6.4+: UserDetailsService va en el constructor, no en setter
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(usuarioDetalleService);
-        provider.setPasswordEncoder(passwordEncoder());
+
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(
+                        usuarioDetalleService
+                );
+
+        provider.setPasswordEncoder(
+                passwordEncoder()
+        );
+
         return provider;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http) throws Exception {
+
         http
-            .authenticationProvider(authenticationProvider())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/error", "/css/**", "/iconos/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                .authenticationProvider(
+                        authenticationProvider()
+                )
 
-                // Paneles y módulos propios de cada rol
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/recepcionista/**").hasRole("RECEPCIONISTA")
-                .requestMatchers("/contabilidad/**", "/api/pagos/**").hasRole("CONTABILIDAD")
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/api/**"
+                        )
+                )
 
-                // Módulos de configuración académica/institucional: exclusivos de Administrador
-                .requestMatchers("/cursos/**", "/diplomados/**", "/espacios/**", "/catering/**",
-                        "/categorias/**", "/modalidades/**", "/docentes/**", "/usuarios/**").hasRole("ADMIN")
-                .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
+                .authorizeHttpRequests(auth -> auth
 
-                // API de catálogos: cualquier usuario autenticado puede consultarlos (GET),
-                // pero solo Administrador puede crear, modificar o eliminar
-                .requestMatchers(HttpMethod.GET, "/api/cursos/**", "/api/diplomados/**", "/api/espacios/**",
-                        "/api/catering/**", "/api/categorias/**", "/api/modalidades/**", "/api/docentes/**").authenticated()
-                .requestMatchers("/api/cursos/**", "/api/diplomados/**", "/api/espacios/**",
-                        "/api/catering/**", "/api/categorias/**", "/api/modalidades/**", "/api/docentes/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/login",
+                                "/error",
+                                "/css/**",
+                                "/iconos/**",
+                                "/js/**",
+                                "/images/**"
+                        )
+                        .permitAll()
 
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .successHandler(manejadorExito())
-                .failureUrl("/login?error")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            );
-        // Sin accessDeniedPage: un acceso sin permisos responde 403 y Spring Boot
-        // renderiza templates/error/403.html
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        )
+                        .permitAll()
+
+                        /*
+                         * Paneles principales
+                         */
+                        .requestMatchers(
+                                "/admin/**"
+                        )
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/recepcionista/**"
+                        )
+                        .hasRole("RECEPCIONISTA")
+
+                        .requestMatchers(
+                                "/contabilidad/**"
+                        )
+                        .hasRole("CONTABILIDAD")
+
+                        /*
+                         * Portal del cliente
+                         */
+                        .requestMatchers(
+                                "/mi-cuenta/**"
+                        )
+                        .hasRole("CLIENTE")
+
+                        /*
+                         * Configuración exclusiva del administrador
+                         */
+                        .requestMatchers(
+                                "/cursos/**",
+                                "/diplomados/**",
+                                "/espacios/**",
+                                "/catering/**",
+                                "/categorias/**",
+                                "/modalidades/**",
+                                "/docentes/**",
+                                "/usuarios/**"
+                        )
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/api/usuarios/**"
+                        )
+                        .hasRole("ADMIN")
+
+                        /*
+                         * Módulos administrados por recepción
+                         */
+                        .requestMatchers(
+                                "/clientes/**",
+                                "/participantes/**",
+                                "/inscripciones/**",
+                                "/cotizaciones/**",
+                                "/alquileres/**",
+                                "/solicitudes-catering/**",
+                                "/agenda/**"
+                        )
+                        .hasAnyRole(
+                                "ADMIN",
+                                "RECEPCIONISTA"
+                        )
+
+                        /*
+                         * Aprobar y rechazar cotizaciones:
+                         * solamente el administrador
+                         */
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/cotizaciones/*/aprobar",
+                                "/api/cotizaciones/*/rechazar"
+                        )
+                        .hasRole("ADMIN")
+
+                        /*
+                         * API de cotizaciones
+                         */
+                        .requestMatchers(
+                                "/api/cotizaciones/**"
+                        )
+                        .hasAnyRole(
+                                "ADMIN",
+                                "RECEPCIONISTA"
+                        )
+
+                        /*
+                         * API de los módulos de recepción
+                         */
+                        .requestMatchers(
+                                "/api/clientes/**",
+                                "/api/participantes/**",
+                                "/api/inscripciones/**",
+                                "/api/alquileres/**",
+                                "/api/solicitudes-catering/**",
+                                "/api/agenda/**"
+                        )
+                        .hasAnyRole(
+                                "ADMIN",
+                                "RECEPCIONISTA"
+                        )
+
+                        /*
+                         * Pagos y contabilidad
+                         */
+                        .requestMatchers(
+                                "/api/pagos/**"
+                        )
+                        .hasRole("CONTABILIDAD")
+
+                        /*
+                         * Consulta de catálogos
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/cursos/**",
+                                "/api/diplomados/**",
+                                "/api/espacios/**",
+                                "/api/catering/**",
+                                "/api/categorias/**",
+                                "/api/modalidades/**",
+                                "/api/docentes/**"
+                        )
+                        .authenticated()
+
+                        /*
+                         * Modificación de catálogos
+                         */
+                        .requestMatchers(
+                                "/api/cursos/**",
+                                "/api/diplomados/**",
+                                "/api/espacios/**",
+                                "/api/catering/**",
+                                "/api/categorias/**",
+                                "/api/modalidades/**",
+                                "/api/docentes/**"
+                        )
+                        .hasRole("ADMIN")
+
+                        .anyRequest()
+                        .authenticated()
+                )
+
+                .formLogin(form -> form
+                        .loginPage(
+                                "/login"
+                        )
+                        .loginProcessingUrl(
+                                "/login"
+                        )
+                        .successHandler(
+                                manejadorExito()
+                        )
+                        .failureUrl(
+                                "/login?error"
+                        )
+                        .permitAll()
+                )
+
+                .logout(logout -> logout
+                        .logoutUrl(
+                                "/logout"
+                        )
+                        .logoutSuccessUrl(
+                                "/login?logout"
+                        )
+                        .invalidateHttpSession(
+                                true
+                        )
+                        .clearAuthentication(
+                                true
+                        )
+                        .deleteCookies(
+                                "JSESSIONID"
+                        )
+                        .permitAll()
+                );
+
         return http.build();
     }
 
     @Bean
     public AuthenticationSuccessHandler manejadorExito() {
+
         return (request, response, authentication) -> {
-            String rol = authentication.getAuthorities().stream()
+
+            String rol = authentication
+                    .getAuthorities()
+                    .stream()
                     .findFirst()
-                    .map(GrantedAuthority::getAuthority)
-                    .orElse("ROLE_CLIENTE");
+                    .map(
+                            GrantedAuthority::getAuthority
+                    )
+                    .orElse(
+                            "ROLE_CLIENTE"
+                    );
 
             String destino = switch (rol) {
-                case "ROLE_ADMIN" -> "/admin/dashboard";
-                case "ROLE_RECEPCIONISTA" -> "/recepcionista/dashboard";
-                case "ROLE_CONTABILIDAD" -> "/contabilidad/dashboard";
-                default -> "/login?sin-acceso";
+
+                case "ROLE_ADMIN" ->
+                    "/admin/dashboard";
+
+                case "ROLE_RECEPCIONISTA" ->
+                    "/recepcionista/dashboard";
+
+                case "ROLE_CONTABILIDAD" ->
+                    "/contabilidad/dashboard";
+
+                case "ROLE_CLIENTE" ->
+                    "/mi-cuenta";
+
+                default ->
+                    "/login?sin-acceso";
             };
 
-            response.sendRedirect(request.getContextPath() + destino);
+            response.sendRedirect(
+                    request.getContextPath()
+                    + destino
+            );
         };
     }
 }

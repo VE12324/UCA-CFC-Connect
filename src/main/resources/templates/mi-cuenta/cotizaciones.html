@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis cotizaciones</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mis-cotizaciones')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Mis cotizaciones</h1>
+
+                    <p>
+                        Consulte las cotizaciones registradas
+                        a nombre de
+                        <strong data-th-text="${cliente.nombre}">
+                            Cliente
+                        </strong>.
+                    </p>
+
+                </div>
+
+                <a class="boton-limpiar"
+                   href="/mi-cuenta"
+                   data-th-href="@{/mi-cuenta}">
+                    Regresar a mi cuenta
+                </a>
+
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Detalles</th>
+                            <th>Subtotal</th>
+                            <th>Total con IVA</th>
+                            <th>Estado</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "cotizacion : ${paginaCotizaciones.content}">
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    cotizacion.fecha,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Fecha
+                            </td>
+
+                            <td>
+
+                                <details>
+
+                                    <summary data-th-text=
+                                             "${cotizacion.detalles.size()
+                                             + ' detalle(s)'}">
+                                        Ver detalles
+                                    </summary>
+
+                                    <div data-th-each=
+                                         "detalle : ${cotizacion.detalles}">
+
+                                        <p>
+                                            <strong data-th-text=
+                                                    "${detalle.descripcion}">
+                                                Descripción
+                                            </strong>
+                                        </p>
+
+                                        <p>
+                                            Cantidad:
+
+                                            <span data-th-text=
+                                                  "${detalle.cantidad}">
+                                                1
+                                            </span>
+
+                                            · Precio:
+
+                                            <span data-th-text=
+                                                  "${'$ '
+                                                  + #numbers.formatDecimal(
+                                                        detalle.precio,
+                                                        1,
+                                                        2
+                                                    )}">
+                                                $ 0.00
+                                            </span>
+
+                                            · Subtotal:
+
+                                            <span data-th-text=
+                                                  "${'$ '
+                                                  + #numbers.formatDecimal(
+                                                        detalle.subtotal,
+                                                        1,
+                                                        2
+                                                    )}">
+                                                $ 0.00
+                                            </span>
+                                        </p>
+
+                                    </div>
+
+                                </details>
+
+                            </td>
+
+                            <td data-th-text=
+                                "${'$ '
+                                + #numbers.formatDecimal(
+                                    cotizacion.subtotal,
+                                    1,
+                                    2
+                                )}">
+                                $ 0.00
+                            </td>
+
+                            <td data-th-text=
+                                "${'$ '
+                                + #numbers.formatDecimal(
+                                    cotizacion.total,
+                                    1,
+                                    2
+                                )}">
+                                $ 0.00
+                            </td>
+
+                            <td>
+
+                                <span class="etiqueta-estado"
+                                      data-th-text=
+                                      "${cotizacion.estado}">
+                                    Pendiente
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${paginaCotizaciones.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="5">
+
+                                No tiene cotizaciones registradas.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + paginaCotizaciones.numberOfElements
+                       + ' de '
+                       + paginaCotizaciones.totalElements
+                       + ' registros'}">
+                        Registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaCotizaciones.hasPrevious()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/cotizaciones(
+                                pagina=${paginaCotizaciones.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace activa"
+                              data-th-text=
+                              "${paginaCotizaciones.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaCotizaciones.hasNext()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/cotizaciones(
+                                pagina=${paginaCotizaciones.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

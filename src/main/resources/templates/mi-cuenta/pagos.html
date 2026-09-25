@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis pagos</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('mis-pagos')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Mis pagos</h1>
+
+                    <p>
+                        Consulte los pagos registrados a nombre de
+                        <strong data-th-text="${cliente.nombre}">
+                            Cliente
+                        </strong>.
+                    </p>
+
+                </div>
+
+                <a class="boton-limpiar"
+                   href="/mi-cuenta"
+                   data-th-href="@{/mi-cuenta}">
+                    Regresar a mi cuenta
+                </a>
+
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Referencia</th>
+                            <th>Método</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Comprobante</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "pago : ${paginaPagos.content}">
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    pago.fecha,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Fecha
+                            </td>
+
+                            <td>
+
+                                <span data-th-if=
+                                      "${pago.tipoPago != null}"
+                                      data-th-text=
+                                      "${pago.tipoPago}">
+                                    Tipo
+                                </span>
+
+                                <span data-th-if=
+                                      "${pago.tipoPago == null}">
+                                    No especificado
+                                </span>
+
+                                <span data-th-if=
+                                      "${pago.idReferencia != null}"
+                                      data-th-text=
+                                      "${' #' + pago.idReferencia}">
+                                    #1
+                                </span>
+
+                            </td>
+
+                            <td data-th-text=
+                                "${#strings.isEmpty(
+                                    pago.numeroReferenciaExterna
+                                )
+                                ? 'Sin referencia'
+                                : pago.numeroReferenciaExterna}">
+                                Referencia
+                            </td>
+
+                            <td data-th-text=
+                                "${pago.nombreMetodoPago}">
+                                Método
+                            </td>
+
+                            <td data-th-text=
+                                "${'$ '
+                                + #numbers.formatDecimal(
+                                    pago.monto,
+                                    1,
+                                    2
+                                )}">
+                                $ 0.00
+                            </td>
+
+                            <td>
+
+                                <span class="etiqueta-estado"
+                                      data-th-text=
+                                      "${pago.estado}">
+                                    Estado
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span data-th-if=
+                                      "${pago.fechaEmision != null}"
+                                      data-th-text=
+                                      "${'Emitido el '
+                                      + #temporals.format(
+                                            pago.fechaEmision,
+                                            'dd/MM/yyyy'
+                                        )}">
+                                    Emitido
+                                </span>
+
+                                <span data-th-if=
+                                      "${pago.fechaEmision == null}">
+                                    Pendiente de emisión
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${paginaPagos.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="7">
+
+                                No tiene pagos registrados.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + paginaPagos.numberOfElements
+                       + ' de '
+                       + paginaPagos.totalElements
+                       + ' registros'}">
+                        Registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaPagos.hasPrevious()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/pagos(
+                                pagina=${paginaPagos.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace activa"
+                              data-th-text=
+                              "${paginaPagos.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaPagos.hasNext()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/mi-cuenta/pagos(
+                                pagina=${paginaPagos.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html> 

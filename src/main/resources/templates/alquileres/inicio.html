@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Alquiler de Espacios</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('alquileres')}"></aside>
+
+    <section class="area-principal">
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+        <main class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Alquiler de Espacios</h1>
+
+                    <p>
+                        Administra las reservaciones y alquileres
+                        de los espacios disponibles.
+                    </p>
+
+                </div>
+
+                <a class="boton-nuevo"
+                   href="/alquileres/crear"
+                   th:href="@{/alquileres/crear}">
+
+                    <span>＋</span>
+                    <span>Nuevo alquiler</span>
+
+                </a>
+
+            </div>
+
+            <div class="mensaje mensaje-exito"
+                 th:if="${exito}"
+                 th:text="${exito}">
+            </div>
+
+            <div class="mensaje mensaje-error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+            <section class="tarjeta">
+
+                <div class="filtros">
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/alquileres"
+                          th:action="@{/alquileres}">
+
+                        <div class="campo-busqueda">
+
+                            <span>⌕</span>
+
+                            <input type="text"
+                                   name="buscar"
+                                   th:value="${buscar}"
+                                   placeholder="Buscar por cliente o espacio...">
+
+                        </div>
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+                        <a class="boton-limpiar"
+                           href="/alquileres"
+                           th:href="@{/alquileres}">
+                            Limpiar
+                        </a>
+
+                    </form>
+
+                </div>
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Cliente</th>
+                            <th>Espacio</th>
+                            <th>Personas</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="alquiler : ${paginaAlquileres.content}">
+
+                            <td th:text="${#temporals.format(
+                            alquiler.fecha,
+                            'dd/MM/yyyy'
+                            )}">
+                                01/01/2026
+                            </td>
+
+                            <td>
+                                <span th:text="${#temporals.format(
+                                alquiler.horaInicio,
+                                'HH:mm'
+                                )}">
+                                    08:00
+                                </span>
+
+                                <span> - </span>
+
+                                <span th:text="${#temporals.format(
+                                alquiler.horaFin,
+                                'HH:mm'
+                                )}">
+                                    10:00
+                                </span>
+                            </td>
+
+                            <td th:text="${alquiler.cliente.nombre}"
+                                style="font-weight: 600;">
+                                Cliente
+                            </td>
+
+                            <td th:text="${alquiler.espacio.nombre}">
+                                Espacio
+                            </td>
+
+                            <td th:text="${alquiler.cantidadPersonas}">
+                                1
+                            </td>
+
+                            <td>
+
+                                <span th:text="${alquiler.estado}"
+                                      style="display: inline-block;
+                                             padding: 4px 8px;
+                                             border-radius: 4px;
+                                             font-size: 11px;
+                                             font-weight: 700;"
+                                      th:style="${alquiler.estado == 'CONFIRMADO'
+                                      ? 'background: #e5f8ed; color: #198754;'
+                                      : (alquiler.estado == 'CANCELADO'
+                                      ? 'background: #fde8e8; color: #dc3545;'
+                                      : (alquiler.estado == 'FINALIZADO'
+                                      ? 'background: #e8eaf6; color: #3f51b5;'
+                                      : 'background: #fff3cd; color: #856404;'))}">
+                                    PENDIENTE
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="acciones-tabla">
+
+                                    <a class="boton-accion boton-consultar"
+                                       th:href="@{/alquileres/consultar/{id}
+                                       (id=${alquiler.idAlquiler})}">
+                                        Consultar
+                                    </a>
+
+                                    <a class="boton-accion boton-actualizar"
+                                       th:href="@{/alquileres/actualizar/{id}
+                                       (id=${alquiler.idAlquiler})}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       th:href="@{/alquileres/eliminar/{id}
+                                       (id=${alquiler.idAlquiler})}">
+                                        Eliminar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${paginaAlquileres.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="7">
+                                No se encontraron alquileres registrados.
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla"
+                     th:if="${paginaAlquileres.totalElements > 0}">
+
+                    <p class="informacion-pagina">
+
+                        Mostrando
+
+                        <span th:text="${paginaAlquileres.numberOfElements}">
+                            1
+                        </span>
+
+                        de
+
+                        <span th:text="${paginaAlquileres.totalElements}">
+                            1
+                        </span>
+
+                        registros
+
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaAlquileres.first}"
+                           th:href="@{/alquileres(
+                           buscar=${buscar},
+                           pagina=${paginaAlquileres.number - 1}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaAlquileres.first}">
+                            ‹
+                        </span>
+
+                        <span class="pagina-enlace activa"
+                              th:text="${paginaAlquileres.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           th:if="${!paginaAlquileres.last}"
+                           th:href="@{/alquileres(
+                           buscar=${buscar},
+                           pagina=${paginaAlquileres.number + 1}
+                           )}">
+                            ›
+                        </a>
+
+                        <span class="pagina-enlace deshabilitada"
+                              th:if="${paginaAlquileres.last}">
+                            ›
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+</body>
+</html>

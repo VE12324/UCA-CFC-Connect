@@ -2,269 +2,476 @@
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
 
+<aside data-th-fragment="barra-lateral(opcionActiva)"
+       class="barra-lateral">
 
-<!-- FRAGMENTO: BARRA LATERAL -->
-<aside th:fragment="barra-lateral(opcionActiva)" class="barra-lateral">
     <div class="marca">
-        <a class="marca-enlace" th:href="@{/}">
-            <img class="logo-uca" th:src="@{/iconos/logo.png}" src="/iconos/logo.png" alt="UCA Logo">
-        </a>
-    </div>
 
+        <a class="marca-enlace"
+           sec:authorize="hasRole('ADMIN')"
+           data-th-href="@{/admin/dashboard}">
+
+            <img class="logo-uca"
+                 data-th-src="@{/iconos/logo.png}"
+                 src="/iconos/logo.png"
+                 alt="UCA Logo">
+        </a>
+
+        <a class="marca-enlace"
+           sec:authorize="hasRole('RECEPCIONISTA')"
+           data-th-href="@{/recepcionista/dashboard}">
+
+            <img class="logo-uca"
+                 data-th-src="@{/iconos/logo.png}"
+                 src="/iconos/logo.png"
+                 alt="UCA Logo">
+        </a>
+
+        <a class="marca-enlace"
+           sec:authorize="hasRole('CONTABILIDAD')"
+           data-th-href="@{/contabilidad/dashboard}">
+
+            <img class="logo-uca"
+                 data-th-src="@{/iconos/logo.png}"
+                 src="/iconos/logo.png"
+                 alt="UCA Logo">
+        </a>
+
+        <a class="marca-enlace"
+           sec:authorize="hasRole('CLIENTE')"
+           data-th-href="@{/mi-cuenta}">
+
+            <img class="logo-uca"
+                 data-th-src="@{/iconos/logo.png}"
+                 src="/iconos/logo.png"
+                 alt="UCA Logo">
+        </a>
+
+    </div>
 
     <nav class="menu-lateral">
 
+        <!-- ADMINISTRADOR -->
 
-        <!-- Panel principal — ADMIN -->
-        <a class="menu-enlace"
-           sec:authorize="hasRole('ADMIN')"
-           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
-           th:href="@{/admin/dashboard}" href="/admin/dashboard">
-            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
-            <span>Panel principal</span>
-        </a>
-
-
-        <!-- Panel principal — RECEPCIONISTA (dashboard propio) -->
-        <a class="menu-enlace"
-           sec:authorize="hasRole('RECEPCIONISTA')"
-           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
-           th:href="@{/recepcionista/dashboard}" href="/recepcionista/dashboard">
-            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
-            <span>Panel principal</span>
-        </a>
-
-
-        <!-- Panel principal — CONTABILIDAD (dashboard propio) -->
-        <a class="menu-enlace"
-           sec:authorize="hasRole('CONTABILIDAD')"
-           th:classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
-           th:href="@{/contabilidad/dashboard}" href="/contabilidad/dashboard">
-            <img class="menu-icono" th:src="@{/iconos/panel.png}" src="/iconos/panel.png" alt="">
-            <span>Panel principal</span>
-        </a>
-
-
-        <!-- ==================== ADMIN ==================== -->
         <th:block sec:authorize="hasRole('ADMIN')">
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+               data-th-href="@{/admin/dashboard}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/panel.png}"
+                     alt="">
+
+                <span>Panel principal</span>
+            </a>
 
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'cursos'} ? 'activo' : ''"
-               th:href="@{/cursos}" href="/cursos">
-                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+               data-th-classappend="${opcionActiva == 'cursos'} ? 'activo' : ''"
+               data-th-href="@{/cursos}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/gestion-academica.png}"
+                     alt="">
+
                 <span>Cursos</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'diplomados'} ? 'activo' : ''"
-               th:href="@{/diplomados}" href="/diplomados">
-                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+               data-th-classappend="${opcionActiva == 'diplomados'} ? 'activo' : ''"
+               data-th-href="@{/diplomados}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/gestion-academica.png}"
+                     alt="">
+
                 <span>Diplomados</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'espacios'} ? 'activo' : ''"
-               th:href="@{/espacios}" href="/espacios">
-                <img class="menu-icono" th:src="@{/iconos/espacios.png}" src="/iconos/espacios.png" alt="">
+               data-th-classappend="${opcionActiva == 'espacios'} ? 'activo' : ''"
+               data-th-href="@{/espacios}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/espacios.png}"
+                     alt="">
+
                 <span>Espacios</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'catering'} ? 'activo' : ''"
-               th:href="@{/catering}" href="/catering">
-                <img class="menu-icono" th:src="@{/iconos/catering.png}" src="/iconos/catering.png" alt="">
+               data-th-classappend="${opcionActiva == 'catering'} ? 'activo' : ''"
+               data-th-href="@{/catering}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/catering.png}"
+                     alt="">
+
                 <span>Catering</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'categorias'} ? 'activo' : ''"
-               th:href="@{/categorias}" href="/categorias">
-                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+               data-th-classappend="${opcionActiva == 'categorias'} ? 'activo' : ''"
+               data-th-href="@{/categorias}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/gestion-academica.png}"
+                     alt="">
+
                 <span>Categorías</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'modalidades'} ? 'activo' : ''"
-               th:href="@{/modalidades}" href="/modalidades">
-                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+               data-th-classappend="${opcionActiva == 'modalidades'} ? 'activo' : ''"
+               data-th-href="@{/modalidades}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/gestion-academica.png}"
+                     alt="">
+
                 <span>Modalidades</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'docentes'} ? 'activo' : ''"
-               th:href="@{/docentes}" href="/docentes">
-                <img class="menu-icono" th:src="@{/iconos/gestion-academica.png}" src="/iconos/gestion-academica.png" alt="">
+               data-th-classappend="${opcionActiva == 'docentes'} ? 'activo' : ''"
+               data-th-href="@{/docentes}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/participantes.png}"
+                     alt="">
+
                 <span>Docentes</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'cotizaciones'} ? 'activo' : ''"
-               th:href="@{/admin/cotizaciones}" href="/admin/cotizaciones">
-                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+               data-th-classappend="${opcionActiva == 'cotizaciones'} ? 'activo' : ''"
+               data-th-href="@{/admin/cotizaciones}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/cotizacion.png}"
+                     alt="">
+
                 <span>Cotizaciones</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'usuarios'} ? 'activo' : ''"
-               th:href="@{/usuarios}" href="/usuarios">
-                <img class="menu-icono" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="">
+               data-th-classappend="${opcionActiva == 'usuarios'} ? 'activo' : ''"
+               data-th-href="@{/usuarios}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/configuracion.png}"
+                     alt="">
+
                 <span>Usuarios y roles</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'reportes'} ? 'activo' : ''"
-               th:href="@{/admin/reportes}" href="/admin/reportes">
-                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
+               data-th-classappend="${opcionActiva == 'reportes'} ? 'activo' : ''"
+               data-th-href="@{/admin/reportes}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/pagos.png}"
+                     alt="">
+
                 <span>Reportes</span>
             </a>
 
-
         </th:block>
 
+        <!-- RECEPCIONISTA -->
 
-        <!-- ==================== RECEPCIONISTA ==================== -->
         <th:block sec:authorize="hasRole('RECEPCIONISTA')">
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+               data-th-href="@{/recepcionista/dashboard}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/panel.png}"
+                     alt="">
+
+                <span>Panel principal</span>
+            </a>
 
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'clientes'} ? 'activo' : ''"
-               th:href="@{/clientes}" href="/clientes">
-                <img class="menu-icono" th:src="@{/iconos/clientes.png}" src="/iconos/clientes.png" alt="">
+               data-th-classappend="${opcionActiva == 'clientes'} ? 'activo' : ''"
+               data-th-href="@{/clientes}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/clientes.png}"
+                     alt="">
+
                 <span>Clientes</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'participantes'} ? 'activo' : ''"
-               th:href="@{/participantes}" href="/participantes">
-                <img class="menu-icono" th:src="@{/iconos/participantes.png}" src="/iconos/participantes.png" alt="">
+               data-th-classappend="${opcionActiva == 'participantes'} ? 'activo' : ''"
+               data-th-href="@{/participantes}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/participantes.png}"
+                     alt="">
+
                 <span>Participantes</span>
             </a>
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'inscripciones'} ? 'activo' : ''"
+               data-th-href="@{/inscripciones}">
 
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/inscripcion.png}" src="/iconos/inscripcion.png" alt="">
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/inscripcion.png}"
+                     alt="">
+
                 <span>Inscripciones</span>
             </a>
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'cotizaciones'} ? 'activo' : ''"
+               data-th-href="@{/cotizaciones}">
 
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/cotizacion.png}"
+                     alt="">
+
                 <span>Cotizaciones</span>
             </a>
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'alquileres'} ? 'activo' : ''"
+               data-th-href="@{/alquileres}">
 
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/espacios.png}" src="/iconos/espacios.png" alt="">
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/espacios.png}"
+                     alt="">
+
                 <span>Alquiler de espacios</span>
             </a>
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'solicitudes-catering'} ? 'activo' : ''"
+               data-th-href="@{/solicitudes-catering}">
 
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/catering.png}" src="/iconos/catering.png" alt="">
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/catering.png}"
+                     alt="">
+
                 <span>Catering</span>
             </a>
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'agenda'} ? 'activo' : ''"
+               data-th-href="@{/agenda}">
 
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/agenda.png}" src="/iconos/agenda.png" alt="">
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/agenda.png}"
+                     alt="">
+
                 <span>Agenda institucional</span>
             </a>
 
-
-            <a class="menu-enlace" href="#">
-                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
-                <span>Pagos</span>
-            </a>
-
-
         </th:block>
 
+        <!-- CONTABILIDAD -->
 
-        <!-- ==================== CONTABILIDAD ==================== -->
         <th:block sec:authorize="hasRole('CONTABILIDAD')">
 
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'dashboard'} ? 'activo' : ''"
+               data-th-href="@{/contabilidad/dashboard}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/panel.png}"
+                     alt="">
+
+                <span>Panel principal</span>
+            </a>
 
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'pagos-contabilidad'} ? 'activo' : ''"
-               th:href="@{/contabilidad/pagos}" href="/contabilidad/pagos">
-                <img class="menu-icono" th:src="@{/iconos/pagos.png}" src="/iconos/pagos.png" alt="">
+               data-th-classappend="${opcionActiva == 'pagos'} ? 'activo' : ''"
+               data-th-href="@{/contabilidad/pagos}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/pagos.png}"
+                     alt="">
+
                 <span>Pagos</span>
             </a>
 
-
             <a class="menu-enlace"
-               th:classappend="${opcionActiva == 'estados-financieros'} ? 'activo' : ''"
-               th:href="@{/contabilidad/estados-financieros}" href="/contabilidad/estados-financieros">
-                <img class="menu-icono" th:src="@{/iconos/cotizacion.png}" src="/iconos/cotizacion.png" alt="">
+               data-th-classappend="${opcionActiva == 'estados-financieros'} ? 'activo' : ''"
+               data-th-href="@{/contabilidad/estados-financieros}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/cotizacion.png}"
+                     alt="">
+
                 <span>Estados financieros</span>
             </a>
 
+        </th:block>
+
+        <!-- CLIENTE -->
+
+        <th:block sec:authorize="hasRole('CLIENTE')">
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mi-cuenta'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/clientes.png}"
+                     alt="">
+
+                <span>Mi cuenta</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mis-inscripciones'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/inscripciones}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/inscripcion.png}"
+                     alt="">
+
+                <span>Mis inscripciones</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mis-cotizaciones'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/cotizaciones}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/cotizacion.png}"
+                     alt="">
+
+                <span>Mis cotizaciones</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mis-alquileres'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/alquileres}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/espacios.png}"
+                     alt="">
+
+                <span>Mis alquileres</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mi-catering'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/catering}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/catering.png}"
+                     alt="">
+
+                <span>Mi catering</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mis-pagos'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/pagos}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/pagos.png}"
+                     alt="">
+
+                <span>Mis pagos</span>
+            </a>
+
+            <a class="menu-enlace"
+               data-th-classappend="${opcionActiva == 'mi-agenda'} ? 'activo' : ''"
+               data-th-href="@{/mi-cuenta/agenda}">
+
+                <img class="menu-icono"
+                     data-th-src="@{/iconos/agenda.png}"
+                     alt="">
+
+                <span>Agenda institucional</span>
+            </a>
 
         </th:block>
 
-
     </nav>
 
-
     <div class="pie-lateral">
-        <a class="menu-enlace"
-           sec:authorize="hasRole('ADMIN')"
-           th:classappend="${opcionActiva == 'usuarios'} ? 'activo' : ''"
-           th:href="@{/usuarios}" href="/usuarios">
-            <img class="menu-icono" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="">
-            <span>Configuración</span>
-        </a>
 
+        <form data-th-action="@{/logout}"
+              method="post"
+              style="margin:0;">
 
-        <form th:action="@{/logout}" method="post" style="margin:0">
-            <button type="submit" class="menu-enlace enlace-salir"
-                    style="width:100%;border:none;background:none;cursor:pointer;text-align:left;">
-                <span class="menu-icono" style="font-size:18px;">↪</span>
+            <button type="submit"
+                    class="menu-enlace enlace-salir"
+                    style="width:100%;
+                           border:none;
+                           background:none;
+                           cursor:pointer;
+                           text-align:left;">
+
+                <span class="menu-icono">↪</span>
                 <span>Cerrar sesión</span>
+
             </button>
+
         </form>
+
     </div>
+
 </aside>
 
+<header data-th-fragment="barra-superior"
+        class="barra-superior">
 
-<!-- FRAGMENTO: BARRA SUPERIOR -->
-<header th:fragment="barra-superior" class="barra-superior">
-    <div class="busqueda-global">
+    <div class="busqueda-global"
+         sec:authorize="!hasRole('CLIENTE')">
+
         <span>⌕</span>
-        <input type="search" placeholder="Búsqueda global...">
+
+        <input type="search"
+               placeholder="Búsqueda global...">
+
     </div>
 
+    <div sec:authorize="hasRole('CLIENTE')">
+        <strong>Portal del cliente</strong>
+    </div>
 
     <div class="acciones-superiores">
-        <button class="boton-icono" type="button" title="Notificaciones">
-            <img class="icono-superior" th:src="@{/iconos/notificacion.png}" src="/iconos/notificacion.png" alt="Notificaciones">
-        </button>
-        <a class="boton-icono" th:href="@{/usuarios}" href="/usuarios" title="Configuración"
-           sec:authorize="hasRole('ADMIN')">
-            <img class="icono-superior" th:src="@{/iconos/configuracion.png}" src="/iconos/configuracion.png" alt="Usuarios">
-        </a>
-        <div class="usuario-avatar"
-             th:text="${#authentication.name != null ? #strings.substring(#authentication.name, 0, 2).toUpperCase() : 'US'}">
-            US
-        </div>
-    </div>
-</header>
 
+        <button class="boton-icono"
+                type="button"
+                title="Notificaciones">
+
+            <img class="icono-superior"
+                 data-th-src="@{/iconos/notificacion.png}"
+                 alt="Notificaciones">
+
+        </button>
+
+        <a class="boton-icono"
+           data-th-href="@{/usuarios}"
+           title="Configuración"
+           sec:authorize="hasRole('ADMIN')">
+
+            <img class="icono-superior"
+                 data-th-src="@{/iconos/configuracion.png}"
+                 alt="Configuración">
+
+        </a>
+
+        <div class="usuario-avatar"
+             data-th-text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">
+            U
+        </div>
+
+    </div>
+
+</header>
 
 </body>
 </html>
-
-

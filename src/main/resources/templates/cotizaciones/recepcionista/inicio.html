@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Cotizaciones</title>
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          data-th-href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="aplicacion">
+
+    <aside data-th-replace=
+           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    </aside>
+
+    <main class="area-principal">
+
+        <header data-th-replace=
+                "~{fragmentos/plantilla :: barra-superior}">
+        </header>
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+                <div class="titulo-pagina">
+
+                    <h1>Cotizaciones</h1>
+
+                    <p>
+                        Administre las cotizaciones solicitadas
+                        por los clientes.
+                    </p>
+
+                </div>
+
+                <a class="boton-nuevo"
+                   href="/cotizaciones/crear"
+                   data-th-href="@{/cotizaciones/crear}">
+
+                    <span>＋</span>
+                    Nueva cotización
+
+                </a>
+
+            </div>
+
+            <div class="mensaje mensaje-exito"
+                 data-th-if="${exito}"
+                 data-th-text="${exito}">
+            </div>
+
+            <div class="mensaje mensaje-error"
+                 data-th-if="${error}"
+                 data-th-text="${error}">
+            </div>
+
+            <div class="tarjeta">
+
+                <div class="filtros">
+
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/cotizaciones"
+                          data-th-action="@{/cotizaciones}">
+
+                        <div class="campo-busqueda">
+
+                            <span>⌕</span>
+
+                            <input type="search"
+                                   name="buscar"
+                                   data-th-value="${buscar}"
+                                   placeholder="Buscar por cliente o estado...">
+
+                        </div>
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+                        <a class="boton-limpiar"
+                           href="/cotizaciones"
+                           data-th-href="@{/cotizaciones}">
+                            Limpiar
+                        </a>
+
+                    </form>
+
+                </div>
+
+                <div class="tabla-contenedor">
+
+                    <table class="tabla-datos">
+
+                        <thead>
+
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Subtotal</th>
+                            <th>Total con IVA</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr data-th-each=
+                            "cotizacion : ${paginaCotizaciones.content}">
+
+                            <td data-th-text=
+                                "${#temporals.format(
+                                    cotizacion.fecha,
+                                    'dd/MM/yyyy'
+                                )}">
+                                Fecha
+                            </td>
+
+                            <td data-th-text=
+                                "${cotizacion.nombreCliente}">
+                                Cliente
+                            </td>
+
+                            <td data-th-text=
+                                "${'$ '
+                                + #numbers.formatDecimal(
+                                    cotizacion.subtotal,
+                                    1,
+                                    2
+                                )}">
+                                $ 0.00
+                            </td>
+
+                            <td data-th-text=
+                                "${'$ '
+                                + #numbers.formatDecimal(
+                                    cotizacion.total,
+                                    1,
+                                    2
+                                )}">
+                                $ 0.00
+                            </td>
+
+                            <td>
+
+                                <span class="etiqueta-estado"
+                                      data-th-text=
+                                      "${cotizacion.estado}">
+                                    Pendiente
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="acciones-tabla">
+
+                                    <a class="boton-accion boton-consultar"
+                                       data-th-href=
+                                       "@{/cotizaciones/consultar/{id}(
+                                            id=${cotizacion.idCotizacion}
+                                       )}">
+                                        Consultar
+                                    </a>
+
+                                    <a class="boton-accion boton-actualizar"
+                                       data-th-if=
+                                       "${!#strings.equalsIgnoreCase(
+                                            cotizacion.estado,
+                                            'Aprobada'
+                                       )}"
+                                       data-th-href=
+                                       "@{/cotizaciones/actualizar/{id}(
+                                            id=${cotizacion.idCotizacion}
+                                       )}">
+                                        Actualizar
+                                    </a>
+
+                                    <a class="boton-accion boton-eliminar"
+                                       data-th-if=
+                                       "${!#strings.equalsIgnoreCase(
+                                            cotizacion.estado,
+                                            'Aprobada'
+                                       )}"
+                                       data-th-href=
+                                       "@{/cotizaciones/eliminar/{id}(
+                                            id=${cotizacion.idCotizacion}
+                                       )}">
+                                        Eliminar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr data-th-if=
+                            "${paginaCotizaciones.empty}">
+
+                            <td class="celda-vacia"
+                                colspan="6">
+                                No se encontraron cotizaciones.
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="pie-tabla">
+
+                    <p class="informacion-pagina"
+                       data-th-text=
+                       "${'Mostrando '
+                       + paginaCotizaciones.numberOfElements
+                       + ' de '
+                       + paginaCotizaciones.totalElements
+                       + ' registros'}">
+                        Registros
+                    </p>
+
+                    <div class="paginacion">
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaCotizaciones.hasPrevious()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/cotizaciones(
+                                pagina=${paginaCotizaciones.number - 1},
+                                buscar=${buscar}
+                           )}">
+                            ‹
+                        </a>
+
+                        <span class="pagina-enlace activa"
+                              data-th-text=
+                              "${paginaCotizaciones.number + 1}">
+                            1
+                        </span>
+
+                        <a class="pagina-enlace"
+                           data-th-classappend=
+                           "${!paginaCotizaciones.hasNext()}
+                           ? 'deshabilitada'
+                           : ''"
+                           data-th-href=
+                           "@{/cotizaciones(
+                                pagina=${paginaCotizaciones.number + 1},
+                                buscar=${buscar}
+                           )}">
+                            ›
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

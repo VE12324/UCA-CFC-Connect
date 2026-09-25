@@ -22,10 +22,19 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
 
     boolean existsByDui(String dui);
 
-    Page<Cliente> findByNombreContainingIgnoreCaseOrDuiContainingIgnoreCaseOrEmpresaContainingIgnoreCase(
-            String nombre,
-            String dui,
-            String empresa,
-            Pageable pageable
+    Page<Cliente>
+            findByNombreContainingIgnoreCaseOrDuiContainingIgnoreCaseOrEmpresaContainingIgnoreCase(
+                    String nombre,
+                    String dui,
+                    String empresa,
+                    Pageable pageable
+            );
+
+    Optional<Cliente> findByUsuario_Id(
+            Integer idUsuario
+    );
+
+    Optional<Cliente> findByUsuario_EmailIgnoreCase(
+            String correo
     );
 }
