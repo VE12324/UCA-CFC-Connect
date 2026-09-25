@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Eliminar pago</title>
+
+
+    <link rel="stylesheet"
+          href="/css/estilos.css"
+          th:href="@{/css/estilos.css}">
+
+
+</head>
+
+
+<body>
+
+
+<div class="aplicacion">
+
+
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('pagos-contabilidad')}"></aside>
+
+
+    <section class="area-principal">
+
+
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
+
+        <main class="contenido">
+
+
+            <div class="eliminar-tarjeta">
+
+
+                <div class="tarjeta-encabezado">
+
+
+                    <h1>Eliminar pago</h1>
+
+
+                    <p>
+                        Confirme la eliminación del pago del sistema.
+                    </p>
+
+
+                </div>
+
+
+                <div class="tarjeta-cuerpo">
+
+
+                    <div class="advertencia-eliminar">
+
+
+                        <h2>
+                            ¿Está seguro de eliminar este pago?
+                        </h2>
+
+
+                        <p>
+                            Esta acción eliminará el pago de forma permanente.
+                            Los pagos ya marcados como Pagado no pueden eliminarse.
+                        </p>
+
+
+                    </div>
+
+
+                    <div class="detalles-cuadricula">
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Cliente</div>
+                            <div class="detalle-valor" th:text="${pago.nombreCliente}">Juan Pérez</div>
+                        </div>
+
+
+                        <div class="detalle-item">
+                            <div class="detalle-etiqueta">Estado</div>
+                            <div class="detalle-valor" th:text="${pago.estado}">Pendiente</div>
+                        </div>
+
+
+                        <div class="detalle-item ancho-completo">
+                            <div class="detalle-etiqueta">Monto</div>
+                            <div class="detalle-valor" th:text="${'$' + #numbers.formatDecimal(pago.monto, 1, 2)}">$150.00</div>
+                        </div>
+
+
+                    </div>
+
+
+                    <form method="post"
+                          th:action="@{/contabilidad/pagos/eliminar/{id}(id=${pago.idPago})}">
+
+
+                        <input type="hidden"
+                               th:if="${_csrf != null}"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+
+
+                        <div class="acciones-formulario">
+
+
+                            <a class="boton-secundario"
+                               href="/contabilidad/pagos"
+                               th:href="@{/contabilidad/pagos}">
+                                Cancelar
+                            </a>
+
+
+                            <button class="boton-confirmar"
+                                    type="submit">
+                                Confirmar y eliminar
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+
+
+</html>
