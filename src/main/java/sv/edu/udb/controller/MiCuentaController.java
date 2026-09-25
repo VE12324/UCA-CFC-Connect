@@ -36,12 +36,9 @@ import sv.edu.udb.service.PortalClienteService;
 @RequiredArgsConstructor
 public class MiCuentaController {
     
-     private final ClienteService clienteService;
-
+    private final ClienteService clienteService;
     private final CotizacionService cotizacionService;
-
     private final PagoService pagoService;
-
     private final PortalClienteService portalClienteService;
 
     @GetMapping
@@ -51,9 +48,7 @@ public class MiCuentaController {
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/inicio";
@@ -61,37 +56,35 @@ public class MiCuentaController {
 
     @GetMapping("/inscripciones")
     public String mostrarInscripciones(
-            @RequestParam(defaultValue = "0")
-            int pagina,
+            @RequestParam(defaultValue = "0") int pagina,
             Principal principal,
             Model modelo) {
 
         Pageable paginacion = PageRequest.of(
                 pagina,
                 10,
-                Sort.by("fecha")
-                        .descending()
+                Sort.by("fecha").descending()
         );
 
-        Page<Inscripcion> inscripciones =
-                portalClienteService
-                        .listarInscripciones(
-                                obtenerCorreo(
-                                        principal
-                                ),
-                                paginacion
-                        );
+        Page<Inscripcion> paginaInscripciones =
+                portalClienteService.listarInscripciones(
+                        obtenerCorreo(principal),
+                        paginacion
+                );
 
         modelo.addAttribute(
                 "paginaInscripciones",
-                inscripciones
+                paginaInscripciones
+        );
+
+        modelo.addAttribute(
+                "inscripciones",
+                paginaInscripciones.getContent()
         );
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/inscripciones";
@@ -99,37 +92,35 @@ public class MiCuentaController {
 
     @GetMapping("/cotizaciones")
     public String mostrarCotizaciones(
-            @RequestParam(defaultValue = "0")
-            int pagina,
+            @RequestParam(defaultValue = "0") int pagina,
             Principal principal,
             Model modelo) {
 
         Pageable paginacion = PageRequest.of(
                 pagina,
                 10,
-                Sort.by("fecha")
-                        .descending()
+                Sort.by("fecha").descending()
         );
 
-        Page<CotizacionRespuestaDTO> cotizaciones =
-                cotizacionService
-                        .listarPorCorreoCliente(
-                                obtenerCorreo(
-                                        principal
-                                ),
-                                paginacion
-                        );
+        Page<CotizacionRespuestaDTO> paginaCotizaciones =
+                cotizacionService.listarPorCorreoCliente(
+                        obtenerCorreo(principal),
+                        paginacion
+                );
 
         modelo.addAttribute(
                 "paginaCotizaciones",
-                cotizaciones
+                paginaCotizaciones
+        );
+
+        modelo.addAttribute(
+                "cotizaciones",
+                paginaCotizaciones.getContent()
         );
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/cotizaciones";
@@ -137,37 +128,35 @@ public class MiCuentaController {
 
     @GetMapping("/alquileres")
     public String mostrarAlquileres(
-            @RequestParam(defaultValue = "0")
-            int pagina,
+            @RequestParam(defaultValue = "0") int pagina,
             Principal principal,
             Model modelo) {
 
         Pageable paginacion = PageRequest.of(
                 pagina,
                 10,
-                Sort.by("horaInicio")
-                        .descending()
+                Sort.by("horaInicio").descending()
         );
 
-        Page<Alquiler> alquileres =
-                portalClienteService
-                        .listarAlquileres(
-                                obtenerCorreo(
-                                        principal
-                                ),
-                                paginacion
-                        );
+        Page<Alquiler> paginaAlquileres =
+                portalClienteService.listarAlquileres(
+                        obtenerCorreo(principal),
+                        paginacion
+                );
 
         modelo.addAttribute(
                 "paginaAlquileres",
-                alquileres
+                paginaAlquileres
+        );
+
+        modelo.addAttribute(
+                "alquileres",
+                paginaAlquileres.getContent()
         );
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/alquileres";
@@ -175,8 +164,7 @@ public class MiCuentaController {
 
     @GetMapping("/catering")
     public String mostrarCatering(
-            @RequestParam(defaultValue = "0")
-            int pagina,
+            @RequestParam(defaultValue = "0") int pagina,
             Principal principal,
             Model modelo) {
 
@@ -186,30 +174,29 @@ public class MiCuentaController {
                 Sort.by("fecha")
                         .descending()
                         .and(
-                                Sort.by("hora")
-                                        .descending()
+                                Sort.by("hora").descending()
                         )
         );
 
-        Page<SolicitudCatering> solicitudes =
-                portalClienteService
-                        .listarCatering(
-                                obtenerCorreo(
-                                        principal
-                                ),
-                                paginacion
-                        );
+        Page<SolicitudCatering> paginaCatering =
+                portalClienteService.listarCatering(
+                        obtenerCorreo(principal),
+                        paginacion
+                );
 
         modelo.addAttribute(
                 "paginaCatering",
-                solicitudes
+                paginaCatering
+        );
+
+        modelo.addAttribute(
+                "solicitudes",
+                paginaCatering.getContent()
         );
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/catering";
@@ -217,37 +204,35 @@ public class MiCuentaController {
 
     @GetMapping("/pagos")
     public String mostrarPagos(
-            @RequestParam(defaultValue = "0")
-            int pagina,
+            @RequestParam(defaultValue = "0") int pagina,
             Principal principal,
             Model modelo) {
 
         Pageable paginacion = PageRequest.of(
                 pagina,
                 10,
-                Sort.by("fecha")
-                        .descending()
+                Sort.by("fecha").descending()
         );
 
-        Page<PagoRespuestaDTO> pagos =
-                pagoService
-                        .listarPorCorreoCliente(
-                                obtenerCorreo(
-                                        principal
-                                ),
-                                paginacion
-                        );
+        Page<PagoRespuestaDTO> paginaPagos =
+                pagoService.listarPorCorreoCliente(
+                        obtenerCorreo(principal),
+                        paginacion
+                );
 
         modelo.addAttribute(
                 "paginaPagos",
-                pagos
+                paginaPagos
+        );
+
+        modelo.addAttribute(
+                "pagos",
+                paginaPagos.getContent()
         );
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/pagos";
@@ -259,12 +244,9 @@ public class MiCuentaController {
             Model modelo) {
 
         List<Actividad> actividades =
-                portalClienteService
-                        .listarAgenda(
-                                obtenerCorreo(
-                                        principal
-                                )
-                        );
+                portalClienteService.listarAgenda(
+                        obtenerCorreo(principal)
+                );
 
         modelo.addAttribute(
                 "actividades",
@@ -273,9 +255,7 @@ public class MiCuentaController {
 
         modelo.addAttribute(
                 "cliente",
-                obtenerCliente(
-                        principal
-                )
+                obtenerCliente(principal)
         );
 
         return "mi-cuenta/agenda";
@@ -284,12 +264,9 @@ public class MiCuentaController {
     private Cliente obtenerCliente(
             Principal principal) {
 
-        return clienteService
-                .buscarPorCorreoUsuario(
-                        obtenerCorreo(
-                                principal
-                        )
-                );
+        return clienteService.buscarPorCorreoUsuario(
+                obtenerCorreo(principal)
+        );
     }
 
     private String obtenerCorreo(

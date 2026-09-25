@@ -45,8 +45,7 @@
                 <div class="tarjeta-cuerpo"
                      style="overflow-x:auto;">
 
-                    <div th:if="${pagos == null
-                         or #lists.isEmpty(pagos)}"
+                    <div th:if="${pagos == null or #lists.isEmpty(pagos)}"
                          style="padding:30px;
                                 text-align:center;
                                 color:#687078;">
@@ -55,8 +54,7 @@
 
                     </div>
 
-                    <table th:if="${pagos != null
-                           and !#lists.isEmpty(pagos)}"
+                    <table th:if="${pagos != null and !#lists.isEmpty(pagos)}"
                            style="width:100%;
                                   border-collapse:collapse;">
 
@@ -83,9 +81,12 @@
                                 style="border-bottom:1px solid #ddd;">
 
                                 <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    pago.fecha,
-                                    'dd/MM/yyyy')}">
+                                    th:text="${pago.fecha != null
+                                    ? #temporals.format(
+                                        pago.fecha,
+                                        'dd/MM/yyyy'
+                                    )
+                                    : 'Sin fecha'}">
 
                                     01/01/2026
 
@@ -93,19 +94,27 @@
 
                                 <td style="padding:12px;">
 
-                                    <span th:text="${pago.tipoPago != null
-                                          ? pago.tipoPago.etiqueta
-                                          + ' #' + pago.idReferencia
-                                          : 'Sin concepto'}">
+                                    <span th:if="${pago.tipoPago != null}"
+                                          th:text="${pago.tipoPago.etiqueta
+                                          + (pago.idReferencia != null
+                                          ? ' #' + pago.idReferencia
+                                          : '')}">
 
                                         Concepto
 
                                     </span>
 
+                                    <span th:if="${pago.tipoPago == null}">
+                                        Sin concepto
+                                    </span>
+
                                 </td>
 
                                 <td style="padding:12px;"
-                                    th:text="${pago.nombreMetodoPago}">
+                                    th:text="${pago.metodoPago != null
+                                    and !pago.metodoPago.isBlank()
+                                    ? pago.metodoPago
+                                    : 'Sin método'}">
 
                                     Método
 
@@ -122,16 +131,22 @@
                                 </td>
 
                                 <td style="padding:12px;"
-                                    th:text="'$'
-                                    + ${#numbers.formatDecimal(
-                                    pago.monto, 1, 2)}">
+                                    th:text="${pago.monto != null
+                                    ? '$' + #numbers.formatDecimal(
+                                        pago.monto,
+                                        1,
+                                        2
+                                    )
+                                    : '$0.00'}">
 
                                     $0.00
 
                                 </td>
 
                                 <td style="padding:12px;"
-                                    th:text="${pago.estado}">
+                                    th:text="${pago.estado != null
+                                    ? pago.estado
+                                    : 'Sin estado'}">
 
                                     Pendiente
 
@@ -140,8 +155,9 @@
                                 <td style="padding:12px;"
                                     th:text="${pago.fechaEmision != null
                                     ? #temporals.format(
-                                    pago.fechaEmision,
-                                    'dd/MM/yyyy')
+                                        pago.fechaEmision,
+                                        'dd/MM/yyyy'
+                                    )
                                     : 'No emitido'}">
 
                                     No emitido
