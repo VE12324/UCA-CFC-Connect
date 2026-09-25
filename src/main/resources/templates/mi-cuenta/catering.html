@@ -3,192 +3,143 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Mi catering</title>
+    <title>Mis solicitudes de catering</title>
 
     <link rel="stylesheet"
           href="/css/estilos.css"
-          data-th-href="@{/css/estilos.css}">
-
+          th:href="@{/css/estilos.css}">
 </head>
 
 <body>
 
 <div class="aplicacion">
 
-    <aside data-th-replace=
-           "~{fragmentos/plantilla :: barra-lateral('mi-catering')}">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mi-catering')}">
     </aside>
 
     <main class="area-principal">
 
-        <header data-th-replace=
-                "~{fragmentos/plantilla :: barra-superior}">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
         </header>
 
         <section class="contenido">
 
-            <div class="encabezado-pagina">
+            <div style="margin-bottom:25px;">
 
-                <div class="titulo-pagina">
+                <h1 style="margin-bottom:6px;">
+                    Mis solicitudes de catering
+                </h1>
 
-                    <h1>Mis solicitudes de catering</h1>
-
-                    <p>
-                        Consulte los servicios de catering solicitados.
-                    </p>
-
-                </div>
-
-                <a class="boton-limpiar"
-                   href="/mi-cuenta"
-                   data-th-href="@{/mi-cuenta}">
-                    Regresar a mi cuenta
-                </a>
+                <p style="margin:0; color:#687078;">
+                    Consulte los servicios de catering solicitados.
+                </p>
 
             </div>
 
-            <div class="tarjeta">
+            <div class="formulario-tarjeta">
 
-                <div class="tabla-contenedor">
+                <div class="tarjeta-cuerpo"
+                     style="overflow-x:auto;">
 
-                    <table class="tabla-datos">
+                    <div th:if="${solicitudes == null
+                         or #lists.isEmpty(solicitudes)}"
+                         style="padding:30px;
+                                text-align:center;
+                                color:#687078;">
+
+                        No tiene solicitudes de catering registradas.
+
+                    </div>
+
+                    <table th:if="${solicitudes != null
+                           and !#lists.isEmpty(solicitudes)}"
+                           style="width:100%;
+                                  border-collapse:collapse;">
 
                         <thead>
 
-                        <tr>
-                            <th>Servicio</th>
-                            <th>Menú</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Lugar</th>
-                            <th>Asistentes</th>
-                            <th>Estado</th>
-                        </tr>
+                            <tr style="background:#00636d;
+                                       color:white;">
+
+                                <th style="padding:12px;">Fecha</th>
+                                <th style="padding:12px;">Hora</th>
+                                <th style="padding:12px;">Servicio</th>
+                                <th style="padding:12px;">Menú</th>
+                                <th style="padding:12px;">Lugar</th>
+                                <th style="padding:12px;">Asistentes</th>
+                                <th style="padding:12px;">Estado</th>
+
+                            </tr>
 
                         </thead>
 
                         <tbody>
 
-                        <tr data-th-each=
-                            "solicitud : ${paginaCatering.content}">
+                            <tr th:each="solicitud : ${solicitudes}"
+                                style="border-bottom:1px solid #ddd;">
 
-                            <td data-th-text=
-                                "${solicitud.servicioCatering.nombre}">
-                                Servicio
-                            </td>
-
-                            <td data-th-text=
-                                "${solicitud.menu}">
-                                Menú
-                            </td>
-
-                            <td data-th-text=
-                                "${#temporals.format(
+                                <td style="padding:12px;"
+                                    th:text="${#temporals.format(
                                     solicitud.fecha,
-                                    'dd/MM/yyyy'
-                                )}">
-                                Fecha
-                            </td>
+                                    'dd/MM/yyyy')}">
 
-                            <td data-th-text=
-                                "${#temporals.format(
+                                    01/01/2026
+
+                                </td>
+
+                                <td style="padding:12px;"
+                                    th:text="${#temporals.format(
                                     solicitud.hora,
-                                    'HH:mm'
-                                )}">
-                                Hora
-                            </td>
+                                    'HH:mm')}">
 
-                            <td data-th-text=
-                                "${solicitud.lugar}">
-                                Lugar
-                            </td>
+                                    08:00
 
-                            <td data-th-text=
-                                "${solicitud.cantidadAsistentes}">
-                                1
-                            </td>
+                                </td>
 
-                            <td>
+                                <td style="padding:12px;"
+                                    th:text="${solicitud.servicioCatering.nombre}">
 
-                                <span class="etiqueta-estado"
-                                      data-th-text=
-                                      "${solicitud.estado}">
-                                    Estado
-                                </span>
+                                    Servicio
 
-                            </td>
+                                </td>
 
-                        </tr>
+                                <td style="padding:12px;"
+                                    th:text="${solicitud.menu}">
 
-                        <tr data-th-if=
-                            "${paginaCatering.empty}">
+                                    Menú
 
-                            <td class="celda-vacia"
-                                colspan="7">
+                                </td>
 
-                                No tiene solicitudes de catering registradas.
+                                <td style="padding:12px;"
+                                    th:text="${solicitud.lugar}">
 
-                            </td>
+                                    Lugar
 
-                        </tr>
+                                </td>
+
+                                <td style="padding:12px;"
+                                    th:text="${solicitud.cantidadAsistentes}">
+
+                                    1
+
+                                </td>
+
+                                <td style="padding:12px;"
+                                    th:text="${solicitud.estado}">
+
+                                    PENDIENTE
+
+                                </td>
+
+                            </tr>
 
                         </tbody>
 
                     </table>
-
-                </div>
-
-                <div class="pie-tabla">
-
-                    <p class="informacion-pagina"
-                       data-th-text=
-                       "${'Mostrando '
-                       + paginaCatering.numberOfElements
-                       + ' de '
-                       + paginaCatering.totalElements
-                       + ' registros'}">
-                        Registros
-                    </p>
-
-                    <div class="paginacion">
-
-                        <a class="pagina-enlace"
-                           data-th-classappend=
-                           "${!paginaCatering.hasPrevious()}
-                           ? 'deshabilitada'
-                           : ''"
-                           data-th-href=
-                           "@{/mi-cuenta/catering(
-                                pagina=${paginaCatering.number - 1}
-                           )}">
-                            ‹
-                        </a>
-
-                        <span class="pagina-enlace activa"
-                              data-th-text=
-                              "${paginaCatering.number + 1}">
-                            1
-                        </span>
-
-                        <a class="pagina-enlace"
-                           data-th-classappend=
-                           "${!paginaCatering.hasNext()}
-                           ? 'deshabilitada'
-                           : ''"
-                           data-th-href=
-                           "@{/mi-cuenta/catering(
-                                pagina=${paginaCatering.number + 1}
-                           )}">
-                            ›
-                        </a>
-
-                    </div>
 
                 </div>
 
@@ -201,4 +152,4 @@
 </div>
 
 </body>
-</html> 
+</html>

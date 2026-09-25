@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -13,43 +12,32 @@
 
     <link rel="stylesheet"
           href="/css/estilos.css"
-          data-th-href="@{/css/estilos.css}">
-
+          th:href="@{/css/estilos.css}">
 </head>
 
 <body>
 
 <div class="aplicacion">
 
-    <aside data-th-replace=
-           "~{fragmentos/plantilla :: barra-lateral('mi-cuenta')}">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mi-cuenta')}">
     </aside>
 
     <main class="area-principal">
 
-        <header data-th-replace=
-                "~{fragmentos/plantilla :: barra-superior}">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
         </header>
 
         <section class="contenido">
 
-            <div class="encabezado-pagina">
+            <div style="margin-bottom:25px;">
 
-                <div>
+                <h1 style="margin-bottom:6px;">
+                    Mi cuenta
+                </h1>
 
-                    <h1>
-                        Bienvenido,
-                        <span data-th-text="${cliente.nombre}">
-                            Cliente
-                        </span>
-                    </h1>
-
-                    <p>
-                        Desde este portal puede consultar su información
-                        y los servicios asociados con su cuenta.
-                    </p>
-
-                </div>
+                <p style="margin:0; color:#687078;">
+                    Consulte la información asociada con su cuenta.
+                </p>
 
             </div>
 
@@ -57,65 +45,61 @@
 
                 <div class="tarjeta-encabezado">
 
-                    <h2>Mi información</h2>
+                    <h2 th:text="${cliente.nombre}">
+                        Nombre del cliente
+                    </h2>
 
-                    <p>
-                        Información personal registrada en el sistema.
-                    </p>
+                    <p>Información personal</p>
 
                 </div>
 
                 <div class="tarjeta-cuerpo">
 
+                    <div style="background:#e8f5e9;
+                                border:1px solid #28a745;
+                                color:#155724;
+                                padding:12px;
+                                margin-bottom:24px;
+                                border-radius:6px;">
+
+                        <strong>Cuenta activa</strong>
+
+                        <p style="margin:5px 0 0;">
+                            Ha iniciado sesión correctamente como cliente.
+                        </p>
+
+                    </div>
+
                     <div class="formulario-cuadricula">
-
-                        <div class="grupo-formulario">
-
-                            <label>Nombre</label>
-
-                            <p class="campo-formulario"
-                               data-th-text="${cliente.nombre}">
-                                Nombre
-                            </p>
-
-                        </div>
 
                         <div class="grupo-formulario">
 
                             <label>DUI o NIT</label>
 
-                            <p class="campo-formulario"
-                               data-th-text="${#strings.isEmpty(cliente.dui)
-                                    ? 'No registrado'
-                                    : cliente.dui}">
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.dui != null
+                                 and !cliente.dui.isBlank()
+                                 ? cliente.dui
+                                 : 'No registrado'}">
+
                                 No registrado
-                            </p>
+
+                            </div>
 
                         </div>
 
                         <div class="grupo-formulario">
 
-                            <label>Correo electrónico</label>
+                            <label>Nombre</label>
 
-                            <p class="campo-formulario"
-                               data-th-text="${#strings.isEmpty(cliente.correo)
-                                    ? 'No registrado'
-                                    : cliente.correo}">
-                                No registrado
-                            </p>
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.nombre}">
 
-                        </div>
+                                Nombre del cliente
 
-                        <div class="grupo-formulario">
-
-                            <label>Teléfono</label>
-
-                            <p class="campo-formulario"
-                               data-th-text="${#strings.isEmpty(cliente.telefono)
-                                    ? 'No registrado'
-                                    : cliente.telefono}">
-                                No registrado
-                            </p>
+                            </div>
 
                         </div>
 
@@ -123,12 +107,64 @@
 
                             <label>Empresa</label>
 
-                            <p class="campo-formulario"
-                               data-th-text="${#strings.isEmpty(cliente.empresa)
-                                    ? 'No registrada'
-                                    : cliente.empresa}">
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.empresa != null
+                                 and !cliente.empresa.isBlank()
+                                 ? cliente.empresa
+                                 : 'No registrada'}">
+
                                 No registrada
-                            </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Correo electrónico</label>
+
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.correo}">
+
+                                cliente@correo.com
+
+                            </div>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Teléfono</label>
+
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.telefono != null
+                                 and !cliente.telefono.isBlank()
+                                 ? cliente.telefono
+                                 : 'No registrado'}">
+
+                                No registrado
+
+                            </div>
+
+                        </div>
+
+                        <div class="grupo-formulario">
+
+                            <label>Rol de la cuenta</label>
+
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;"
+                                 th:text="${cliente.usuario != null
+                                 and cliente.usuario.rol != null
+                                 ? cliente.usuario.rol.nombre
+                                 : 'CLIENTE'}">
+
+                                CLIENTE
+
+                            </div>
 
                         </div>
 
@@ -136,14 +172,39 @@
 
                             <label>Dirección</label>
 
-                            <p class="campo-formulario"
-                               data-th-text="${#strings.isEmpty(cliente.direccion)
-                                    ? 'No registrada'
-                                    : cliente.direccion}">
+                            <div class="campo-formulario"
+                                 style="background:#f5f5f5;
+                                        min-height:75px;"
+                                 th:text="${cliente.direccion != null
+                                 and !cliente.direccion.isBlank()
+                                 ? cliente.direccion
+                                 : 'No registrada'}">
+
                                 No registrada
-                            </p>
+
+                            </div>
 
                         </div>
+
+                    </div>
+
+                    <div style="margin-top:25px;
+                                padding:15px;
+                                background:#f8f9fa;
+                                border-radius:6px;
+                                color:#687078;">
+
+                        <strong>
+                            Correo utilizado para iniciar sesión:
+                        </strong>
+
+                        <span th:text="${cliente.usuario != null
+                              ? cliente.usuario.email
+                              : cliente.correo}">
+
+                            cliente@correo.com
+
+                        </span>
 
                     </div>
 

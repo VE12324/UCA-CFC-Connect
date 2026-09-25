@@ -1,58 +1,58 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Nueva cotización</title>
+    <title>Nueva Cotización</title>
 
     <link rel="stylesheet"
           href="/css/estilos.css"
-          data-th-href="@{/css/estilos.css}">
+          th:href="@{/css/estilos.css}">
 </head>
 
 <body>
 
 <div class="aplicacion">
 
-    <aside data-th-replace=
-           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
     </aside>
 
-    <main class="area-principal">
+    <section class="area-principal">
 
-        <header data-th-replace=
-                "~{fragmentos/plantilla :: barra-superior}">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
         </header>
 
-        <section class="contenido">
+        <main class="contenido">
 
             <div class="formulario-tarjeta">
 
                 <div class="tarjeta-encabezado">
-                    <h1>Nueva cotización</h1>
+
+                    <h1>Nueva Cotización</h1>
 
                     <p>
-                        Registre los servicios solicitados
-                        por el cliente.
+                        Registre una cotización y agregue los servicios solicitados por el cliente.
                     </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
 
                     <form method="post"
-                          data-th-action="@{/cotizaciones/crear}"
-                          data-th-object="${cotizacion}">
+                          action="/cotizaciones/crear"
+                          th:action="@{/cotizaciones/crear}"
+                          th:object="${cotizacion}">
 
-                        <div class="mensaje-error"
-                             data-th-if="${#fields.hasGlobalErrors()}">
+                        <div class="mensaje mensaje-error"
+                             th:if="${#fields.hasGlobalErrors()}">
 
-                            <p data-th-each="error : ${#fields.globalErrors()}"
-                               data-th-text="${error}">
-                            </p>
+                            <div th:each="error : ${#fields.globalErrors()}"
+                                 th:text="${error}">
+                                Error
+                            </div>
 
                         </div>
 
@@ -60,49 +60,70 @@
 
                             <div class="grupo-formulario">
 
-                                <label for="idCliente">
-                                    Cliente
+                                <label for="fecha">
+                                    Fecha *
                                 </label>
 
-                                <select class="campo-formulario"
-                                        id="idCliente"
-                                        data-th-field="*{idCliente}"
-                                        required>
-
-                                    <option value="">
-                                        Seleccione un cliente
-                                    </option>
-
-                                    <option data-th-each="cliente : ${clientes}"
-                                            data-th-value="${cliente.idCliente}"
-                                            data-th-text="${cliente.nombre}">
-                                    </option>
-
-                                </select>
+                                <input class="campo-formulario"
+                                       id="fecha"
+                                       name="fecha"
+                                       type="date"
+                                       required
+                                       th:value="${cotizacion.fecha != null
+                                       ? #temporals.format(
+                                       cotizacion.fecha,
+                                       'yyyy-MM-dd')
+                                       : ''}">
 
                                 <span class="texto-error"
-                                      data-th-if="${#fields.hasErrors('idCliente')}"
-                                      data-th-errors="*{idCliente}">
+                                      th:if="${#fields.hasErrors('fecha')}"
+                                      th:errors="*{fecha}">
                                 </span>
 
                             </div>
 
                             <div class="grupo-formulario">
 
-                                <label for="fecha">
-                                    Fecha
+                                <label for="cliente">
+                                    Cliente *
                                 </label>
 
-                                <input class="campo-formulario"
-                                       type="date"
-                                       id="fecha"
-                                       data-th-field="*{fecha}"
-                                       required>
+                                <select class="campo-formulario"
+                                        id="cliente"
+                                        name="idCliente"
+                                        required>
+
+                                    <option value="">
+                                        Seleccione un cliente
+                                    </option>
+
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.idCliente}"
+                                            th:selected="${cotizacion.idCliente != null
+                                            and cotizacion.idCliente
+                                            == cliente.idCliente}"
+                                            th:text="${cliente.nombre
+                                            + (cliente.dui != null
+                                            and !cliente.dui.isBlank()
+                                            ? ' — DUI: ' + cliente.dui
+                                            : '')}">
+                                        Cliente
+                                    </option>
+
+                                </select>
 
                                 <span class="texto-error"
-                                      data-th-if="${#fields.hasErrors('fecha')}"
-                                      data-th-errors="*{fecha}">
+                                      th:if="${#fields.hasErrors('idCliente')}"
+                                      th:errors="*{idCliente}">
                                 </span>
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+                                <p style="color:#687078; margin:0;">
+                                    La cotización se registrará automáticamente con estado Pendiente.
+                                </p>
 
                             </div>
 
@@ -110,68 +131,161 @@
 
                         <div style="margin-top:25px;">
 
-                            <div class="encabezado-pagina">
+                            <div style="display:flex;
+                                        justify-content:space-between;
+                                        align-items:center;
+                                        margin-bottom:15px;">
 
                                 <div>
-                                    <h2>Detalles</h2>
-                                    <p>Agregue los productos o servicios.</p>
+
+                                    <h2>Detalles de la cotización</h2>
+
+                                    <p>
+                                        Agregue los productos o servicios incluidos.
+                                    </p>
+
                                 </div>
 
-                                <button class="boton-secundario"
-                                        id="agregarDetalle"
-                                        type="button">
-                                    + Agregar detalle
+                                <button type="button"
+                                        class="boton-nuevo"
+                                        onclick="agregarDetalle()">
+
+                                    ＋ Agregar detalle
+
                                 </button>
 
                             </div>
 
-                            <div class="tabla-responsive">
+                            <div class="tabla-contenedor">
 
-                                <table id="tablaDetalles">
+                                <table class="tabla-datos">
 
                                     <thead>
+
                                     <tr>
                                         <th>Descripción</th>
                                         <th>Cantidad</th>
                                         <th>Precio</th>
+                                        <th>Subtotal</th>
                                         <th>Acción</th>
                                     </tr>
+
                                     </thead>
 
                                     <tbody id="cuerpoDetalles">
 
-                                    <tr data-th-each="detalle, estado : *{detalles}">
+                                    <tr th:each="detalle, iterador
+                                        : ${cotizacion.detalles}">
 
                                         <td>
-                                            <input class="campo-formulario descripcion-detalle"
+
+                                            <input class="campo-formulario descripcion"
                                                    type="text"
-                                                   data-th-field="*{detalles[__${estado.index}__].descripcion}"
                                                    maxlength="255"
-                                                   required>
+                                                   required
+                                                   placeholder="Descripción"
+                                                   th:name="|detalles[${iterador.index}].descripcion|"
+                                                   th:value="${detalle.descripcion}">
+
                                         </td>
 
                                         <td>
-                                            <input class="campo-formulario cantidad-detalle"
+
+                                            <input class="campo-formulario cantidad"
                                                    type="number"
-                                                   data-th-field="*{detalles[__${estado.index}__].cantidad}"
                                                    min="1"
-                                                   required>
+                                                   required
+                                                   th:name="|detalles[${iterador.index}].cantidad|"
+                                                   th:value="${detalle.cantidad}"
+                                                   oninput="calcularFila(this)">
+
                                         </td>
 
                                         <td>
-                                            <input class="campo-formulario precio-detalle"
+
+                                            <input class="campo-formulario precio"
                                                    type="number"
-                                                   data-th-field="*{detalles[__${estado.index}__].precio}"
-                                                   min="0"
+                                                   min="0.01"
                                                    step="0.01"
-                                                   required>
+                                                   required
+                                                   placeholder="0.00"
+                                                   th:name="|detalles[${iterador.index}].precio|"
+                                                   th:value="${detalle.precio}"
+                                                   oninput="calcularFila(this)">
+
+                                        </td>
+
+                                        <td class="subtotal-fila">
+                                            $0.00
                                         </td>
 
                                         <td>
-                                            <button class="boton-eliminar eliminar-detalle"
-                                                    type="button">
+
+                                            <button type="button"
+                                                    class="boton-accion boton-eliminar"
+                                                    onclick="eliminarDetalle(this)">
+
                                                 Quitar
+
                                             </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr th:if="${cotizacion.detalles == null
+                                    or cotizacion.detalles.isEmpty()}">
+
+                                        <td>
+
+                                            <input class="campo-formulario descripcion"
+                                                   type="text"
+                                                   maxlength="255"
+                                                   required
+                                                   placeholder="Descripción"
+                                                   name="detalles[0].descripcion">
+
+                                        </td>
+
+                                        <td>
+
+                                            <input class="campo-formulario cantidad"
+                                                   type="number"
+                                                   min="1"
+                                                   value="1"
+                                                   required
+                                                   name="detalles[0].cantidad"
+                                                   oninput="calcularFila(this)">
+
+                                        </td>
+
+                                        <td>
+
+                                            <input class="campo-formulario precio"
+                                                   type="number"
+                                                   min="0.01"
+                                                   step="0.01"
+                                                   required
+                                                   placeholder="0.00"
+                                                   name="detalles[0].precio"
+                                                   oninput="calcularFila(this)">
+
+                                        </td>
+
+                                        <td class="subtotal-fila">
+                                            $0.00
+                                        </td>
+
+                                        <td>
+
+                                            <button type="button"
+                                                    class="boton-accion boton-eliminar"
+                                                    onclick="eliminarDetalle(this)">
+
+                                                Quitar
+
+                                            </button>
+
                                         </td>
 
                                     </tr>
@@ -182,23 +296,23 @@
 
                             </div>
 
-                            <span class="texto-error"
-                                  data-th-if="${#fields.hasErrors('detalles')}"
-                                  data-th-errors="*{detalles}">
-                            </span>
-
                         </div>
 
                         <div class="acciones-formulario">
 
                             <a class="boton-secundario"
-                               data-th-href="@{/cotizaciones}">
+                               href="/cotizaciones"
+                               th:href="@{/cotizaciones}">
+
                                 Cancelar
+
                             </a>
 
                             <button class="boton-guardar"
                                     type="submit">
-                                Guardar cotización
+
+                                Guardar Cotización
+
                             </button>
 
                         </div>
@@ -209,92 +323,130 @@
 
             </div>
 
-        </section>
+        </main>
 
-    </main>
+    </section>
 
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    function agregarDetalle() {
 
-        const cuerpo = document.getElementById("cuerpoDetalles");
-        const agregar = document.getElementById("agregarDetalle");
+        const cuerpo =
+            document.getElementById("cuerpoDetalles");
 
-        function renumerar() {
+        const indice =
+            cuerpo.querySelectorAll("tr").length;
 
-            const filas = cuerpo.querySelectorAll("tr");
+        const fila =
+            document.createElement("tr");
 
-            filas.forEach(function (fila, indice) {
+        fila.innerHTML =
+            '<td>' +
+                '<input class="campo-formulario descripcion" ' +
+                'type="text" maxlength="255" required ' +
+                'placeholder="Descripción" ' +
+                'name="detalles[' + indice + '].descripcion">' +
+            '</td>' +
 
-                fila.querySelector(".descripcion-detalle").name =
-                        "detalles[" + indice + "].descripcion";
+            '<td>' +
+                '<input class="campo-formulario cantidad" ' +
+                'type="number" min="1" value="1" required ' +
+                'name="detalles[' + indice + '].cantidad" ' +
+                'oninput="calcularFila(this)">' +
+            '</td>' +
 
-                fila.querySelector(".cantidad-detalle").name =
-                        "detalles[" + indice + "].cantidad";
+            '<td>' +
+                '<input class="campo-formulario precio" ' +
+                'type="number" min="0.01" step="0.01" required ' +
+                'placeholder="0.00" ' +
+                'name="detalles[' + indice + '].precio" ' +
+                'oninput="calcularFila(this)">' +
+            '</td>' +
 
-                fila.querySelector(".precio-detalle").name =
-                        "detalles[" + indice + "].precio";
+            '<td class="subtotal-fila">$0.00</td>' +
+
+            '<td>' +
+                '<button type="button" ' +
+                'class="boton-accion boton-eliminar" ' +
+                'onclick="eliminarDetalle(this)">' +
+                    'Quitar' +
+                '</button>' +
+            '</td>';
+
+        cuerpo.appendChild(fila);
+    }
+
+    function eliminarDetalle(boton) {
+
+        const cuerpo =
+            document.getElementById("cuerpoDetalles");
+
+        if (cuerpo.querySelectorAll("tr").length <= 1) {
+
+            alert(
+                "La cotización debe tener al menos un detalle."
+            );
+
+            return;
+        }
+
+        boton.closest("tr").remove();
+
+        renumerarDetalles();
+    }
+
+    function renumerarDetalles() {
+
+        document.querySelectorAll("#cuerpoDetalles tr")
+            .forEach(function (fila, indice) {
+
+                fila.querySelector(".descripcion").name =
+                    "detalles[" + indice + "].descripcion";
+
+                fila.querySelector(".cantidad").name =
+                    "detalles[" + indice + "].cantidad";
+
+                fila.querySelector(".precio").name =
+                    "detalles[" + indice + "].precio";
             });
+    }
+
+    function calcularFila(campo) {
+
+        const fila =
+            campo.closest("tr");
+
+        const cantidad =
+            parseFloat(
+                fila.querySelector(".cantidad").value
+            ) || 0;
+
+        const precio =
+            parseFloat(
+                fila.querySelector(".precio").value
+            ) || 0;
+
+        fila.querySelector(".subtotal-fila").textContent =
+            "$" + (cantidad * precio).toFixed(2);
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            document.querySelectorAll("#cuerpoDetalles tr")
+                .forEach(function (fila) {
+
+                    const cantidad =
+                        fila.querySelector(".cantidad");
+
+                    if (cantidad) {
+                        calcularFila(cantidad);
+                    }
+                });
         }
-
-        function agregarFila() {
-
-            const fila = document.createElement("tr");
-
-            fila.innerHTML = `
-                <td>
-                    <input class="campo-formulario descripcion-detalle"
-                           type="text"
-                           maxlength="255"
-                           required>
-                </td>
-                <td>
-                    <input class="campo-formulario cantidad-detalle"
-                           type="number"
-                           min="1"
-                           required>
-                </td>
-                <td>
-                    <input class="campo-formulario precio-detalle"
-                           type="number"
-                           min="0"
-                           step="0.01"
-                           required>
-                </td>
-                <td>
-                    <button class="boton-eliminar eliminar-detalle"
-                            type="button">
-                        Quitar
-                    </button>
-                </td>
-            `;
-
-            cuerpo.appendChild(fila);
-            renumerar();
-        }
-
-        agregar.addEventListener("click", agregarFila);
-
-        cuerpo.addEventListener("click", function (evento) {
-
-            if (!evento.target.classList.contains("eliminar-detalle")) {
-                return;
-            }
-
-            const filas = cuerpo.querySelectorAll("tr");
-
-            if (filas.length === 1) {
-                alert("La cotización debe tener al menos un detalle.");
-                return;
-            }
-
-            evento.target.closest("tr").remove();
-            renumerar();
-        });
-
-        renumerar();
-    });
+    );
 </script>
 
 </body>

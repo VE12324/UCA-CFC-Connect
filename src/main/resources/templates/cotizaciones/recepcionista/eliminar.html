@@ -1,114 +1,176 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Eliminar cotización</title>
+    <title>Eliminar Cotización</title>
 
     <link rel="stylesheet"
           href="/css/estilos.css"
-          data-th-href="@{/css/estilos.css}">
+          th:href="@{/css/estilos.css}">
 </head>
 
 <body>
 
 <div class="aplicacion">
 
-    <aside data-th-replace=
-           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
     </aside>
 
-    <main class="area-principal">
+    <section class="area-principal">
 
-        <header data-th-replace=
-                "~{fragmentos/plantilla :: barra-superior}">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
         </header>
 
-        <section class="contenido">
+        <main class="contenido">
 
-            <div class="formulario-tarjeta">
+            <div class="eliminar-tarjeta">
 
                 <div class="tarjeta-encabezado">
-                    <h1>Eliminar cotización</h1>
+
+                    <h1>Eliminar Cotización</h1>
 
                     <p>
-                        Esta acción eliminará la cotización
-                        y todos sus detalles.
+                        Confirme la eliminación de la cotización.
                     </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
 
-                    <div class="formulario-cuadricula">
+                    <div class="advertencia-eliminar">
 
-                        <div class="grupo-formulario">
-                            <label>Cliente</label>
+                        <h2>
+                            ¿Está seguro de eliminar esta cotización?
+                        </h2>
 
-                            <p class="campo-formulario"
-                               data-th-text="${cotizacion.nombreCliente}">
-                                Cliente
-                            </p>
+                        <p>
+                            También se eliminarán todos sus detalles.
+                            Si existen pagos asociados, la cotización no podrá eliminarse.
+                        </p>
+
+                    </div>
+
+                    <div class="detalles-cuadricula">
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.idCotizacion}">
+
+                                1
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Fecha</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${#temporals.format(cotizacion.fecha, 'dd/MM/yyyy')}">
+                            <div class="detalle-etiqueta">
                                 Fecha
-                            </p>
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 cotizacion.fecha,
+                                 'dd/MM/yyyy')}">
+
+                                01/01/2026
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Estado</label>
+                        <div class="detalle-item ancho-completo">
 
-                            <p class="campo-formulario"
-                               data-th-text="${cotizacion.estado}">
+                            <div class="detalle-etiqueta">
+                                Cliente
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.nombreCliente}">
+
+                                Cliente
+
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
                                 Estado
-                            </p>
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.estado}">
+
+                                Pendiente
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Total</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${'$ ' + #numbers.formatDecimal(cotizacion.total, 1, 2)}">
-                                $ 0.00
-                            </p>
+                            <div class="detalle-etiqueta">
+                                Total
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${'$'
+                                 + #numbers.formatDecimal(
+                                 cotizacion.total,
+                                 1,
+                                 2)}">
+
+                                $0.00
+
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <div class="acciones-formulario">
+                    <form method="post"
+                          th:action="@{/cotizaciones/eliminar/{id}
+                          (id=${cotizacion.idCotizacion})}">
 
-                        <a class="boton-secundario"
-                           data-th-href="@{/cotizaciones}">
-                            Cancelar
-                        </a>
+                        <div class="acciones-formulario">
 
-                        <form method="post"
-                              data-th-action="@{/cotizaciones/eliminar/{id}(id=${cotizacion.idCotizacion})}">
+                            <a class="boton-secundario"
+                               href="/cotizaciones"
+                               th:href="@{/cotizaciones}">
 
-                            <button class="boton-eliminar"
+                                Cancelar
+
+                            </a>
+
+                            <button class="boton-confirmar"
                                     type="submit">
-                                Confirmar eliminación
+
+                                Confirmar y Eliminar
+
                             </button>
 
-                        </form>
+                        </div>
 
-                    </div>
+                    </form>
 
                 </div>
 
             </div>
 
-        </section>
+        </main>
 
-    </main>
+    </section>
 
 </div>
 

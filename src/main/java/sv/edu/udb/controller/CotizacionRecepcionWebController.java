@@ -20,24 +20,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sv.edu.udb.dto.CotizacionRequestDTO;
 import sv.edu.udb.dto.CotizacionRespuestaDTO;
 import sv.edu.udb.dto.DetalleCotizacionItemDTO;
 import sv.edu.udb.dto.DetalleCotizacionRespuestaDTO;
+import sv.edu.udb.model.Cliente;
+import sv.edu.udb.repository.ClienteRepository;
 import sv.edu.udb.service.CotizacionService;
 /**
  *
  * @author crist
  */
 @Controller
+@RequestMapping("/cotizaciones")
 @RequiredArgsConstructor
 public class CotizacionRecepcionWebController {
     
-     private final CotizacionService cotizacionService;
+      private final CotizacionService cotizacionService;
+    private final ClienteRepository clienteRepository;
 
-    @GetMapping("/cotizaciones")
+    @GetMapping
     public String mostrarInicio(
             @RequestParam(defaultValue = "") String buscar,
             @RequestParam(defaultValue = "0") int pagina,
@@ -45,16 +50,11 @@ public class CotizacionRecepcionWebController {
 
         Pageable paginacion = PageRequest.of(
                 pagina,
-                10,
-                Sort.by("fecha")
-                        .descending()
+                10
         );
 
         Page<CotizacionRespuestaDTO> cotizaciones =
-                cotizacionService.listarCotizaciones(
-                        buscar,
-                        paginacion
-                );
+                cotizacionService.listarTodas(paginacion);
 
         modelo.addAttribute(
                 "paginaCotizaciones",
@@ -69,41 +69,37 @@ public class CotizacionRecepcionWebController {
         return "cotizaciones/recepcionista/inicio";
     }
 
-    @GetMapping("/cotizaciones/crear")
-    public String mostrarCrear(
-            Model modelo) {
+    @GetMapping("/crear")
+    public String mostrarCrear(Model modelo) {
 
         CotizacionRequestDTO cotizacion =
                 new CotizacionRequestDTO();
 
-        cotizacion.setFecha(
-                LocalDate.now()
-        );
+        cotizacion.setFecha(LocalDate.now());
+
+        DetalleCotizacionItemDTO detalle =
+                new DetalleCotizacionItemDTO();
+
+        detalle.setCantidad(1);
 
         List<DetalleCotizacionItemDTO> detalles =
                 new ArrayList<>();
 
-        detalles.add(
-                new DetalleCotizacionItemDTO()
-        );
+        detalles.add(detalle);
 
-        cotizacion.setDetalles(
-                detalles
-        );
+        cotizacion.setDetalles(detalles);
 
         modelo.addAttribute(
                 "cotizacion",
                 cotizacion
         );
 
-        cargarClientes(
-                modelo
-        );
+        cargarClientes(modelo);
 
         return "cotizaciones/recepcionista/crear";
     }
 
-    @PostMapping("/cotizaciones/crear")
+    @PostMapping("/crear")
     public String crearCotizacion(
             @Valid
             @ModelAttribute("cotizacion")
@@ -112,28 +108,10 @@ public class CotizacionRecepcionWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
-        eliminarDetallesVacios(
-                cotizacion
-        );
-
-        if (cotizacion.getDetalles() == null
-                || cotizacion.getDetalles().isEmpty()) {
-
-            resultado.reject(
-                    "detalles.requeridos",
-                    "Debe agregar al menos un detalle."
-            );
-        }
-
         if (resultado.hasErrors()) {
 
-            garantizarDetalle(
-                    cotizacion
-            );
-
-            cargarClientes(
-                    modelo
-            );
+            asegurarDetalle(cotizacion);
+            cargarClientes(modelo);
 
             return "cotizaciones/recepcionista/crear";
         }
@@ -146,7 +124,7 @@ public class CotizacionRecepcionWebController {
 
             mensaje.addFlashAttribute(
                     "exito",
-                    "Cotización registrada correctamente."
+                    "Cotización registrada correctamente"
             );
 
             return "redirect:/cotizaciones";
@@ -158,27 +136,20 @@ public class CotizacionRecepcionWebController {
                     excepcion.getMessage()
             );
 
-            garantizarDetalle(
-                    cotizacion
-            );
-
-            cargarClientes(
-                    modelo
-            );
+            asegurarDetalle(cotizacion);
+            cargarClientes(modelo);
 
             return "cotizaciones/recepcionista/crear";
         }
     }
 
-    @GetMapping("/cotizaciones/consultar/{id}")
+    @GetMapping("/consultar/{id}")
     public String mostrarCotizacion(
             @PathVariable Integer id,
             Model modelo) {
 
         CotizacionRespuestaDTO cotizacion =
-                cotizacionService.buscarPorId(
-                        id
-                );
+                cotizacionService.buscarPorId(id);
 
         modelo.addAttribute(
                 "cotizacion",
@@ -188,44 +159,33 @@ public class CotizacionRecepcionWebController {
         return "cotizaciones/recepcionista/consultar";
     }
 
-    @GetMapping("/cotizaciones/actualizar/{id}")
+    @GetMapping("/actualizar/{id}")
     public String mostrarActualizar(
             @PathVariable Integer id,
             Model modelo) {
 
         CotizacionRespuestaDTO respuesta =
-                cotizacionService.buscarPorId(
-                        id
-                );
+                cotizacionService.buscarPorId(id);
 
         CotizacionRequestDTO cotizacion =
-                convertirAFormulario(
-                        respuesta
-                );
-
-        modelo.addAttribute(
-                "idCotizacion",
-                id
-        );
-
-        modelo.addAttribute(
-                "estadoCotizacion",
-                respuesta.estado()
-        );
+                convertirAFormulario(respuesta);
 
         modelo.addAttribute(
                 "cotizacion",
                 cotizacion
         );
 
-        cargarClientes(
-                modelo
+        modelo.addAttribute(
+                "idCotizacion",
+                id
         );
+
+        cargarClientes(modelo);
 
         return "cotizaciones/recepcionista/actualizar";
     }
 
-    @PostMapping("/cotizaciones/actualizar/{id}")
+    @PostMapping("/actualizar/{id}")
     public String actualizarCotizacion(
             @PathVariable Integer id,
             @Valid
@@ -235,26 +195,15 @@ public class CotizacionRecepcionWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
-        eliminarDetallesVacios(
-                cotizacion
-        );
-
-        if (cotizacion.getDetalles() == null
-                || cotizacion.getDetalles().isEmpty()) {
-
-            resultado.reject(
-                    "detalles.requeridos",
-                    "Debe agregar al menos un detalle."
-            );
-        }
-
         if (resultado.hasErrors()) {
 
-            prepararActualizacionConError(
-                    id,
-                    cotizacion,
-                    modelo
+            modelo.addAttribute(
+                    "idCotizacion",
+                    id
             );
+
+            asegurarDetalle(cotizacion);
+            cargarClientes(modelo);
 
             return "cotizaciones/recepcionista/actualizar";
         }
@@ -268,7 +217,7 @@ public class CotizacionRecepcionWebController {
 
             mensaje.addFlashAttribute(
                     "exito",
-                    "Cotización actualizada correctamente."
+                    "Cotización actualizada correctamente"
             );
 
             return "redirect:/cotizaciones";
@@ -280,25 +229,25 @@ public class CotizacionRecepcionWebController {
                     excepcion.getMessage()
             );
 
-            prepararActualizacionConError(
-                    id,
-                    cotizacion,
-                    modelo
+            modelo.addAttribute(
+                    "idCotizacion",
+                    id
             );
+
+            asegurarDetalle(cotizacion);
+            cargarClientes(modelo);
 
             return "cotizaciones/recepcionista/actualizar";
         }
     }
 
-    @GetMapping("/cotizaciones/eliminar/{id}")
+    @GetMapping("/eliminar/{id}")
     public String mostrarEliminar(
             @PathVariable Integer id,
             Model modelo) {
 
         CotizacionRespuestaDTO cotizacion =
-                cotizacionService.buscarPorId(
-                        id
-                );
+                cotizacionService.buscarPorId(id);
 
         modelo.addAttribute(
                 "cotizacion",
@@ -308,20 +257,18 @@ public class CotizacionRecepcionWebController {
         return "cotizaciones/recepcionista/eliminar";
     }
 
-    @PostMapping("/cotizaciones/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public String eliminarCotizacion(
             @PathVariable Integer id,
             RedirectAttributes mensaje) {
 
         try {
 
-            cotizacionService.eliminarCotizacion(
-                    id
-            );
+            cotizacionService.eliminarCotizacion(id);
 
             mensaje.addFlashAttribute(
                     "exito",
-                    "Cotización eliminada correctamente."
+                    "Cotización eliminada correctamente"
             );
 
         } catch (IllegalArgumentException excepcion) {
@@ -335,147 +282,99 @@ public class CotizacionRecepcionWebController {
 
             mensaje.addFlashAttribute(
                     "error",
-                    "No se pudo eliminar la cotización."
+                    "No se pudo eliminar la cotización"
             );
         }
 
         return "redirect:/cotizaciones";
     }
 
-    private void cargarClientes(
-            Model modelo) {
+    private void cargarClientes(Model modelo) {
+
+        List<Cliente> clientes =
+                clienteRepository.findAll(
+                        Sort.by("nombre").ascending()
+                );
 
         modelo.addAttribute(
                 "clientes",
-                cotizacionService.listarClientes()
+                clientes
         );
     }
 
     private CotizacionRequestDTO convertirAFormulario(
             CotizacionRespuestaDTO respuesta) {
 
-        CotizacionRequestDTO formulario =
+        CotizacionRequestDTO cotizacion =
                 new CotizacionRequestDTO();
 
-        formulario.setIdCliente(
+        cotizacion.setIdCliente(
                 respuesta.idCliente()
         );
 
-        formulario.setFecha(
+        cotizacion.setFecha(
                 respuesta.fecha()
         );
 
         List<DetalleCotizacionItemDTO> detalles =
                 new ArrayList<>();
 
-        for (DetalleCotizacionRespuestaDTO detalle
-                : respuesta.detalles()) {
+        if (respuesta.detalles() != null) {
 
-            DetalleCotizacionItemDTO item =
+            for (DetalleCotizacionRespuestaDTO detalleRespuesta
+                    : respuesta.detalles()) {
+
+                DetalleCotizacionItemDTO detalle =
+                        new DetalleCotizacionItemDTO();
+
+                detalle.setDescripcion(
+                        detalleRespuesta.descripcion()
+                );
+
+                detalle.setCantidad(
+                        detalleRespuesta.cantidad()
+                );
+
+                detalle.setPrecio(
+                        detalleRespuesta.precio()
+                );
+
+                detalles.add(detalle);
+            }
+        }
+
+        if (detalles.isEmpty()) {
+
+            DetalleCotizacionItemDTO detalle =
                     new DetalleCotizacionItemDTO();
 
-            item.setDescripcion(
-                    detalle.descripcion()
-            );
+            detalle.setCantidad(1);
 
-            item.setCantidad(
-                    detalle.cantidad()
-            );
-
-            item.setPrecio(
-                    detalle.precio()
-            );
-
-            detalles.add(
-                    item
-            );
+            detalles.add(detalle);
         }
 
-        formulario.setDetalles(
-                detalles
-        );
+        cotizacion.setDetalles(detalles);
 
-        garantizarDetalle(
-                formulario
-        );
-
-        return formulario;
+        return cotizacion;
     }
 
-    private void prepararActualizacionConError(
-            Integer id,
-            CotizacionRequestDTO cotizacion,
-            Model modelo) {
-
-        garantizarDetalle(
-                cotizacion
-        );
-
-        modelo.addAttribute(
-                "idCotizacion",
-                id
-        );
-
-        try {
-
-            CotizacionRespuestaDTO respuesta =
-                    cotizacionService.buscarPorId(
-                            id
-                    );
-
-            modelo.addAttribute(
-                    "estadoCotizacion",
-                    respuesta.estado()
-            );
-
-        } catch (Exception excepcion) {
-
-            modelo.addAttribute(
-                    "estadoCotizacion",
-                    ""
-            );
-        }
-
-        cargarClientes(
-                modelo
-        );
-    }
-
-    private void garantizarDetalle(
+    private void asegurarDetalle(
             CotizacionRequestDTO cotizacion) {
 
-        if (cotizacion.getDetalles() == null) {
+        if (cotizacion.getDetalles() == null
+                || cotizacion.getDetalles().isEmpty()) {
 
-            cotizacion.setDetalles(
-                    new ArrayList<>()
-            );
-        }
+            DetalleCotizacionItemDTO detalle =
+                    new DetalleCotizacionItemDTO();
 
-        if (cotizacion.getDetalles().isEmpty()) {
+            detalle.setCantidad(1);
 
-            cotizacion.getDetalles().add(
-                    new DetalleCotizacionItemDTO()
-            );
+            List<DetalleCotizacionItemDTO> detalles =
+                    new ArrayList<>();
+
+            detalles.add(detalle);
+
+            cotizacion.setDetalles(detalles);
         }
     }
-
-    private void eliminarDetallesVacios(
-            CotizacionRequestDTO cotizacion) {
-
-        if (cotizacion.getDetalles() == null) {
-            return;
-        }
-
-        cotizacion.getDetalles().removeIf(
-                detalle ->
-                        detalle == null
-                        || (
-                                detalle.getDescripcion() == null
-                                || detalle.getDescripcion().isBlank()
-                        )
-                        && detalle.getCantidad() == null
-                        && detalle.getPrecio() == null
-        );
-    }
-    
 }

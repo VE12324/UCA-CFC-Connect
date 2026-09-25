@@ -1,146 +1,240 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Consultar cotización</title>
+    <title>Detalle de la Cotización</title>
 
     <link rel="stylesheet"
           href="/css/estilos.css"
-          data-th-href="@{/css/estilos.css}">
+          th:href="@{/css/estilos.css}">
 </head>
 
 <body>
 
 <div class="aplicacion">
 
-    <aside data-th-replace=
-           "~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('cotizaciones')}">
     </aside>
 
-    <main class="area-principal">
+    <section class="area-principal">
 
-        <header data-th-replace=
-                "~{fragmentos/plantilla :: barra-superior}">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
         </header>
 
-        <section class="contenido">
+        <main class="contenido">
 
-            <div class="formulario-tarjeta">
+            <div class="detalle-tarjeta">
 
                 <div class="tarjeta-encabezado">
-                    <h1>Detalle de cotización</h1>
-                    <p>Información completa de la cotización.</p>
+
+                    <h1>Detalle de la Cotización</h1>
+
+                    <p>
+                        Información completa de la cotización seleccionada.
+                    </p>
+
                 </div>
 
                 <div class="tarjeta-cuerpo">
 
-                    <div class="formulario-cuadricula">
+                    <div class="detalles-cuadricula">
 
-                        <div class="grupo-formulario">
-                            <label>Cliente</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${cotizacion.nombreCliente}">
-                                Cliente
-                            </p>
+                            <div class="detalle-etiqueta">
+                                ID
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.idCotizacion}">
+
+                                1
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Fecha</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${#temporals.format(cotizacion.fecha, 'dd/MM/yyyy')}">
+                            <div class="detalle-etiqueta">
                                 Fecha
-                            </p>
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${#temporals.format(
+                                 cotizacion.fecha,
+                                 'dd/MM/yyyy')}">
+
+                                01/01/2026
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Estado</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${cotizacion.estado}">
+                            <div class="detalle-etiqueta">
                                 Estado
-                            </p>
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.estado}">
+
+                                Pendiente
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Subtotal</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${'$ ' + #numbers.formatDecimal(cotizacion.subtotal, 1, 2)}">
-                                $ 0.00
-                            </p>
+                            <div class="detalle-etiqueta">
+                                Cliente
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${cotizacion.nombreCliente}">
+
+                                Cliente
+
+                            </div>
+
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label>Total con IVA</label>
+                        <div class="detalle-item">
 
-                            <p class="campo-formulario"
-                               data-th-text="${'$ ' + #numbers.formatDecimal(cotizacion.total, 1, 2)}">
-                                $ 0.00
-                            </p>
+                            <div class="detalle-etiqueta">
+                                Subtotal
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${'$'
+                                 + #numbers.formatDecimal(
+                                 cotizacion.subtotal,
+                                 1,
+                                 2)}">
+
+                                $0.00
+
+                            </div>
+
+                        </div>
+
+                        <div class="detalle-item">
+
+                            <div class="detalle-etiqueta">
+                                Total
+                            </div>
+
+                            <div class="detalle-valor"
+                                 th:text="${'$'
+                                 + #numbers.formatDecimal(
+                                 cotizacion.total,
+                                 1,
+                                 2)}">
+
+                                $0.00
+
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <div class="tabla-responsive"
-                         style="margin-top:25px;">
+                    <div style="margin-top:25px;">
 
-                        <table>
+                        <h2>Detalles incluidos</h2>
 
-                            <thead>
-                            <tr>
-                                <th>Descripción</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Subtotal</th>
-                            </tr>
-                            </thead>
+                        <div class="tabla-contenedor"
+                             style="margin-top:15px;">
 
-                            <tbody>
+                            <table class="tabla-datos">
 
-                            <tr data-th-each="detalle : ${cotizacion.detalles}">
+                                <thead>
 
-                                <td data-th-text="${detalle.descripcion}">
-                                    Descripción
-                                </td>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
+                                </tr>
 
-                                <td data-th-text="${detalle.cantidad}">
-                                    1
-                                </td>
+                                </thead>
 
-                                <td data-th-text="${'$ ' + #numbers.formatDecimal(detalle.precio, 1, 2)}">
-                                    $ 0.00
-                                </td>
+                                <tbody>
 
-                                <td data-th-text="${'$ ' + #numbers.formatDecimal(detalle.subtotal, 1, 2)}">
-                                    $ 0.00
-                                </td>
+                                <tr th:each="detalle : ${cotizacion.detalles}">
 
-                            </tr>
+                                    <td th:text="${detalle.descripcion}">
+                                        Descripción
+                                    </td>
 
-                            </tbody>
+                                    <td th:text="${detalle.cantidad}">
+                                        1
+                                    </td>
 
-                        </table>
+                                    <td th:text="${'$'
+                                    + #numbers.formatDecimal(
+                                    detalle.precio,
+                                    1,
+                                    2)}">
+
+                                        $0.00
+
+                                    </td>
+
+                                    <td th:text="${'$'
+                                    + #numbers.formatDecimal(
+                                    detalle.subtotal,
+                                    1,
+                                    2)}">
+
+                                        $0.00
+
+                                    </td>
+
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(cotizacion.detalles)}">
+
+                                    <td class="celda-vacia"
+                                        colspan="4">
+
+                                        No hay detalles registrados.
+
+                                    </td>
+
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
 
                     </div>
 
                     <div class="acciones-formulario">
 
                         <a class="boton-secundario"
-                           data-th-href="@{/cotizaciones}">
-                            Regresar
+                           href="/cotizaciones"
+                           th:href="@{/cotizaciones}">
+
+                            Volver al listado
+
                         </a>
 
-                        <a class="boton-actualizar"
-                           data-th-if="${!#strings.equalsIgnoreCase(cotizacion.estado, 'Aprobada')}"
-                           data-th-href="@{/cotizaciones/actualizar/{id}(id=${cotizacion.idCotizacion})}">
-                            Actualizar
+                        <a class="boton-guardar"
+                           th:if="${cotizacion.estado != 'Aprobada'}"
+                           th:href="@{/cotizaciones/actualizar/{id}
+                           (id=${cotizacion.idCotizacion})}">
+
+                            Editar Cotización
+
                         </a>
 
                     </div>
@@ -149,9 +243,9 @@
 
             </div>
 
-        </section>
+        </main>
 
-    </main>
+    </section>
 
 </div>
 
