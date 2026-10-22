@@ -25,7 +25,10 @@
                 </a>
             </div>
 
+
             <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+            <div class="mensaje mensaje-error" th:if="${error}" th:text="${error}"></div>
+
 
             <section class="tarjeta">
                 <div class="filtros">
@@ -38,6 +41,7 @@
                         <a class="boton-limpiar" href="/diplomados" th:href="@{/diplomados}">Limpiar</a>
                     </form>
                 </div>
+
 
                 <div class="tabla-contenedor">
                     <table class="tabla-datos">
@@ -64,11 +68,11 @@
                             <td th:text="${diplomado.cupoMaximo}">30</td>
                             <td th:text="${'$' + diplomado.costo}">$0.00</td>
                             <td>
-                                <span th:text="${diplomado.estado}"
-                                      style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
-                                      th:style="${diplomado.estado == 'ACTIVO' ? 'background: #e5f8ed; color: #198754;' : 'background: #f1f3f4; color: #697277;'}">
+                               <span th:text="${diplomado.estado}"
+                                     style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;"
+                                     th:style="${diplomado.estado == 'ACTIVO' ? 'background: #e5f8ed; color: #198754;' : 'background: #f1f3f4; color: #697277;'}">
 ACTIVO
-        </span>
+       </span>
                             </td>
                             <td>
                                 <div class="acciones-tabla">
@@ -85,16 +89,17 @@ ACTIVO
                     </table>
                 </div>
 
+
                 <div class="pie-tabla" th:if="${paginaDiplomados.totalElements > 0}">
                     <p class="informacion-pagina">
                         Mostrando <span th:text="${paginaDiplomados.numberOfElements}">1</span>
                         de <span th:text="${paginaDiplomados.totalElements}">1</span> registros
                     </p>
                     <div class="paginacion">
-                        <a class="pagina-enlace" th:if="${!paginaDiplomados.first}" th:href="@{/diplomados(buscar=${buscar},pagina=${paginaDiplomados.number - 1})}">‹</a>
+                        <a class="pagina-enlace" th:if="${!paginaDiplomados.first}" th:href="@{/diplomados(buscar=buscar,pagina={paginaDiplomados.number - 1})}">‹</a>
                         <span class="pagina-enlace deshabilitada" th:if="${paginaDiplomados.first}">‹</span>
                         <span class="pagina-enlace activa" th:text="${paginaDiplomados.number + 1}">1</span>
-                        <a class="pagina-enlace" th:if="${!paginaDiplomados.last}" th:href="@{/diplomados(buscar=${buscar},pagina=${paginaDiplomados.number + 1})}">›</a>
+                        <a class="pagina-enlace" th:if="${!paginaDiplomados.last}" th:href="@{/diplomados(buscar=buscar,pagina={paginaDiplomados.number + 1})}">›</a>
                         <span class="pagina-enlace deshabilitada" th:if="${paginaDiplomados.last}">›</span>
                     </div>
                 </div>
@@ -104,3 +109,5 @@ ACTIVO
 </div>
 </body>
 </html>
+
+

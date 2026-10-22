@@ -1,5 +1,6 @@
 package sv.edu.udb.controller;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,14 +18,17 @@ import sv.edu.udb.repository.DocenteRepository;
 import sv.edu.udb.repository.ModalidadRepository;
 import sv.edu.udb.service.DiplomadoService;
 
+
 @Controller
 @RequiredArgsConstructor
 public class DiplomadoWebController {
+
 
     private final DiplomadoService diplomadoService;
     private final CategoriaRepository categoriaRepository;
     private final ModalidadRepository modalidadRepository;
     private final DocenteRepository docenteRepository;
+
 
     private void cargarCatalogos(Model modelo) {
         modelo.addAttribute("categorias", categoriaRepository.findAll());
@@ -32,19 +36,23 @@ public class DiplomadoWebController {
         modelo.addAttribute("docentes", docenteRepository.findAll());
     }
 
+
     @GetMapping("/diplomados")
     public String mostrarInicio(
             @RequestParam(defaultValue = "") String buscar,
             @RequestParam(defaultValue = "0") int pagina,
             Model modelo) {
 
+
         Pageable paginacion = PageRequest.of(pagina, 10, Sort.by("nombre").ascending());
         Page<Diplomado> diplomados = diplomadoService.listarDiplomados(buscar, paginacion);
+
 
         modelo.addAttribute("paginaDiplomados", diplomados);
         modelo.addAttribute("buscar", buscar);
         return "diplomados/inicio";
     }
+
 
     @GetMapping("/diplomados/crear")
     public String mostrarCrear(Model modelo) {
@@ -53,6 +61,7 @@ public class DiplomadoWebController {
         return "diplomados/crear";
     }
 
+
     @PostMapping("/diplomados/crear")
     public String crearDiplomado(
             @Valid @ModelAttribute("diplomado") Diplomado diplomado,
@@ -60,10 +69,12 @@ public class DiplomadoWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             cargarCatalogos(modelo);
             return "diplomados/crear";
         }
+
 
         try {
             diplomadoService.registrarDiplomado(diplomado);
@@ -76,12 +87,14 @@ public class DiplomadoWebController {
         }
     }
 
+
     @GetMapping("/diplomados/actualizar/{id}")
     public String mostrarActualizar(@PathVariable Integer id, Model modelo) {
         modelo.addAttribute("diplomado", diplomadoService.buscarPorId(id));
         cargarCatalogos(modelo);
         return "diplomados/actualizar";
     }
+
 
     @PostMapping("/diplomados/actualizar/{id}")
     public String actualizarDiplomado(
@@ -91,10 +104,12 @@ public class DiplomadoWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             cargarCatalogos(modelo);
             return "diplomados/actualizar";
         }
+
 
         try {
             diplomadoService.actualizarDiplomado(id, diplomado);
@@ -107,11 +122,13 @@ public class DiplomadoWebController {
         }
     }
 
+
     @GetMapping("/diplomados/consultar/{id}")
     public String mostrarDiplomado(@PathVariable Integer id, Model modelo) {
         modelo.addAttribute("diplomado", diplomadoService.buscarPorId(id));
         return "diplomados/consultar";
     }
+
 
     @GetMapping("/diplomados/eliminar/{id}")
     public String mostrarEliminar(@PathVariable Integer id, Model modelo) {
@@ -119,10 +136,17 @@ public class DiplomadoWebController {
         return "diplomados/eliminar";
     }
 
+
     @PostMapping("/diplomados/eliminar/{id}")
     public String eliminarDiplomado(@PathVariable Integer id, RedirectAttributes mensaje) {
-        diplomadoService.eliminarDiplomado(id);
-        mensaje.addFlashAttribute("exito", "Diplomado eliminado correctamente");
+        try {
+            diplomadoService.eliminarDiplomado(id);
+            mensaje.addFlashAttribute("exito", "Diplomado eliminado correctamente");
+        } catch (IllegalArgumentException excepcion) {
+            mensaje.addFlashAttribute("error", excepcion.getMessage());
+        }
         return "redirect:/diplomados";
     }
 }
+
+

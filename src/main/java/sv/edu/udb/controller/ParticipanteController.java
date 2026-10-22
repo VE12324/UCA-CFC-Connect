@@ -1,9 +1,12 @@
 package sv.edu.udb.controller;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import sv.edu.udb.dto.RespuestaError;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +34,23 @@ import sv.edu.udb.service.ParticipanteService;
 @RestController
 @RequestMapping("/api/participantes")
 @RequiredArgsConstructor
+@Tag(name = "Participantes", description = "Participantes de las inscripciones (ADMIN y RECEPCIONISTA)")
 public class ParticipanteController {
-    
+
     private final ParticipanteService participanteServicio;
 
+
+    @Operation(
+            summary = "Listar los participantes",
+            description = "Paginado con los parámetros pagina (desde 0), tamano, ordenarPor y direccion (asc/desc). El parámetro buscar filtra por nombre, apellido o DUI. Orden por defecto: nombre ascendente."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Página de resultados"),
+            @ApiResponse(responseCode = "401", description = "No autenticado: falta el token JWT o no es válido",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "403", description = "El rol del usuario no tiene permiso para esta operación",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class)))
+    })
     @GetMapping
     public ResponseEntity<Page<Participante>> listarParticipantes(
             @RequestParam(defaultValue = "") String buscar,
@@ -43,7 +59,9 @@ public class ParticipanteController {
             @RequestParam(defaultValue = "nombre") String ordenarPor,
             @RequestParam(defaultValue = "asc") String direccion) {
 
+
         Sort orden;
+
 
         if (direccion.equalsIgnoreCase("desc")) {
             orden = Sort.by(ordenarPor).descending();
@@ -51,11 +69,13 @@ public class ParticipanteController {
             orden = Sort.by(ordenarPor).ascending();
         }
 
+
         Pageable paginacion = PageRequest.of(
                 pagina,
                 tamano,
                 orden
         );
+
 
         Page<Participante> participantes =
                 participanteServicio.listarParticipantes(
@@ -63,37 +83,87 @@ public class ParticipanteController {
                         paginacion
                 );
 
+
         return ResponseEntity.ok(participantes);
     }
 
+
+    @Operation(
+            summary = "Consultar el participante por ID",
+            description = "Devuelve el participante con el ID indicado."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Registro encontrado"),
+            @ApiResponse(responseCode = "401", description = "No autenticado: falta el token JWT o no es válido",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "403", description = "El rol del usuario no tiene permiso para esta operación",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "404", description = "No existe un registro con ese ID",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Participante> buscarParticipantePorId(
             @PathVariable Integer id) {
 
+
         Participante participante =
                 participanteServicio.buscarPorId(id);
+
 
         return ResponseEntity.ok(participante);
     }
 
+
+    @Operation(
+            summary = "Registrar un participante",
+            description = "El DUI es obligatorio, con formato 00000000-0, y no puede repetirse."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Registro creado"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o regla de negocio no cumplida",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "401", description = "No autenticado: falta el token JWT o no es válido",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "403", description = "El rol del usuario no tiene permiso para esta operación",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class)))
+    })
     @PostMapping
     public ResponseEntity<Participante> registrarParticipante(
             @Valid @RequestBody Participante participante) {
+
 
         Participante participanteRegistrado =
                 participanteServicio.registrarParticipante(
                         participante
                 );
 
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(participanteRegistrado);
     }
 
+
+    @Operation(
+            summary = "Actualizar un participante",
+            description = "El DUI no puede repetirse con otro participante."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Registro actualizado"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o regla de negocio no cumplida",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "401", description = "No autenticado: falta el token JWT o no es válido",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "403", description = "El rol del usuario no tiene permiso para esta operación",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "404", description = "No existe un registro con ese ID",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class)))
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Participante> actualizarParticipante(
             @PathVariable Integer id,
             @Valid @RequestBody Participante participante) {
+
 
         Participante participanteActualizado =
                 participanteServicio.actualizarParticipante(
@@ -101,16 +171,37 @@ public class ParticipanteController {
                         participante
                 );
 
+
         return ResponseEntity.ok(participanteActualizado);
     }
 
+
+    @Operation(
+            summary = "Eliminar el participante",
+            description = "Elimina el participante. No se permite si tiene registros relacionados."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Registro eliminado"),
+            @ApiResponse(responseCode = "409", description = "No se puede eliminar: tiene registros relacionados",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "401", description = "No autenticado: falta el token JWT o no es válido",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "403", description = "El rol del usuario no tiene permiso para esta operación",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class))),
+            @ApiResponse(responseCode = "404", description = "No existe un registro con ese ID",
+                    content = @Content(schema = @Schema(implementation = RespuestaError.class)))
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarParticipante(
             @PathVariable Integer id) {
 
+
         participanteServicio.eliminarParticipante(id);
+
 
         return ResponseEntity.noContent().build();
     }
-    
+
 }
+
+

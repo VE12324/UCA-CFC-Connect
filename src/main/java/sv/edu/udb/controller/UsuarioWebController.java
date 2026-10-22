@@ -37,10 +37,12 @@ public class UsuarioWebController {
             Model model,
             RedirectAttributes mensaje) {
 
+
         if (result.hasErrors()) {
             model.addAttribute("roles", usuarioService.listarRoles());
             return "usuarios/crear";
         }
+
 
         try {
             usuarioService.guardar(dto);
@@ -53,11 +55,13 @@ public class UsuarioWebController {
         }
     }
 
+
     @GetMapping("/consultar/{id}")
     public String mostrarUsuario(@PathVariable Integer id, Model model) {
         model.addAttribute("usuario", usuarioService.obtenerPorId(id));
         return "usuarios/consultar";
     }
+
 
     @GetMapping("/actualizar/{id}")
     public String mostrarActualizar(@PathVariable Integer id, Model model) {
@@ -68,10 +72,12 @@ public class UsuarioWebController {
         dto.setCorreo(usuario.getEmail());
         dto.setIdRol(usuario.getRol().getIdRol());
 
+
         model.addAttribute("usuario", dto);
         model.addAttribute("roles", usuarioService.listarRoles());
         return "usuarios/actualizar";
     }
+
 
     @PostMapping("/actualizar/{id}")
     public String actualizarUsuario(
@@ -81,7 +87,9 @@ public class UsuarioWebController {
             Model model,
             RedirectAttributes mensaje) {
 
+
         dto.setId(id);
+
 
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {
             result.rejectValue("nombre", "nombre.requerido", "El nombre es obligatorio");
@@ -93,10 +101,12 @@ public class UsuarioWebController {
             result.rejectValue("idRol", "rol.requerido", "Debe seleccionar un rol");
         }
 
+
         if (result.hasErrors()) {
             model.addAttribute("roles", usuarioService.listarRoles());
             return "usuarios/actualizar";
         }
+
 
         try {
             usuarioService.guardar(dto);
@@ -109,16 +119,24 @@ public class UsuarioWebController {
         }
     }
 
+
     @GetMapping("/eliminar/{id}")
     public String mostrarEliminar(@PathVariable Integer id, Model model) {
         model.addAttribute("usuario", usuarioService.obtenerPorId(id));
         return "usuarios/eliminar";
     }
 
+
     @PostMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Integer id, RedirectAttributes mensaje) {
-        usuarioService.eliminar(id);
-        mensaje.addFlashAttribute("exito", "Usuario eliminado correctamente");
+        try {
+            usuarioService.eliminar(id);
+            mensaje.addFlashAttribute("exito", "Usuario eliminado correctamente");
+        } catch (IllegalArgumentException excepcion) {
+            mensaje.addFlashAttribute("error", excepcion.getMessage());
+        }
         return "redirect:/usuarios";
     }
 }
+
+

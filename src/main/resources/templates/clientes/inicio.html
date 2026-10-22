@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -14,239 +10,304 @@
     <link rel="stylesheet"
           href="/css/estilos.css"
           data-th-href="@{/css/estilos.css}">
-
 </head>
 
 <body>
 
-    <div class="aplicacion">
+<div class="aplicacion">
+    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
+    <section class="area-principal">
+        <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+        <main class="contenido">
+            <div class="encabezado-pagina">
+                <div class="titulo-pagina">
+                    <h1>
+                        Gestión de clientes
+                    </h1>
 
-        <aside th:replace="~{fragmentos/plantilla :: barra-lateral('clientes')}"></aside>
 
-        <section class="area-principal">
+                    <p>
+                        Gestión de empresas y clientes individuales.
+                    </p>
 
-            <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
 
-            <main class="contenido">
-
-                <div class="encabezado-pagina">
-
-                    <div class="titulo-pagina">
-
-                        <h1>
-                            Gestión de clientes
-                        </h1>
-
-                        <p>
-                            Gestión de empresas y clientes individuales.
-                        </p>
-
-                    </div>
-
-                        <a class="boton-nuevo"
-                           href="/clientes/crear"
-                           data-th-href="@{/clientes/crear}">
-
-                            <span>＋</span>
-                            <span>Nuevo cliente</span>
-                        </a>
                 </div>
 
-                <div class="mensaje mensaje-exito"
-                     data-th-if="${exito}"
-                     data-th-text="${exito}">
-                </div>
 
-                <section class="tarjeta">
+                <a class="boton-nuevo"
+                   href="/clientes/crear"
+                   data-th-href="@{/clientes/crear}">
 
-                    <div class="filtros">
 
-                        <form class="formulario-busqueda"
-                              method="get"
-                              action="/clientes"
-                              data-th-action="@{/clientes}">
+                    <span>＋</span>
+                    <span>Nuevo cliente</span>
+                </a>
+            </div>
 
-                            <div class="campo-busqueda">
 
-                                <span>⌕</span>
+            <div class="mensaje mensaje-exito"
+                 data-th-if="${exito}"
+                 data-th-text="${exito}">
+            </div>
 
-                                <input type="text"
-                                       name="buscar"
-                                       data-th-value="${buscar}"
-                                       placeholder="Buscar por nombre, DUI, NIT o empresa">
 
-                            </div>
+            <div class="mensaje mensaje-error"
+                 data-th-if="${error}"
+                 data-th-text="${error}">
+            </div>
 
-                            <button class="boton-buscar"
-                                    type="submit">
-                                Buscar
-                            </button>
 
-                            <a class="boton-limpiar"
-                               href="/clientes"
-                               data-th-href="@{/clientes}">
-                                Limpiar
-                            </a>
+            <section class="tarjeta">
 
-                        </form>
 
-                    </div>
+                <div class="filtros">
 
-                    <div class="tabla-contenedor">
 
-                        <table class="tabla-datos">
+                    <form class="formulario-busqueda"
+                          method="get"
+                          action="/clientes"
+                          data-th-action="@{/clientes}">
 
-                            <thead>
 
-                                <tr>
+                        <div class="campo-busqueda">
 
-                                    <th>ID</th>
-                                    <th>DUI / NIT</th>
-                                    <th>Nombre</th>
-                                    <th>Empresa</th>
-                                    <th>Correo</th>
-                                    <th>Teléfono</th>
-                                    <th>Acciones</th>
 
-                                </tr>
+                            <span>⌕</span>
 
-                            </thead>
 
-                            <tbody>
+                            <input type="text"
+                                   name="buscar"
+                                   data-th-value="${buscar}"
+                                   placeholder="Buscar por nombre, DUI, NIT o empresa">
 
-                                <tr data-th-each="cliente : ${paginaClientes.content}">
-
-                                    <td data-th-text="${cliente.idCliente}">
-                                        1
-                                    </td>
-
-                                    <td data-th-text="${cliente.dui}">
-                                        00000000-0
-                                    </td>
-
-                                    <td data-th-text="${cliente.nombre}">
-                                        Nombre del cliente
-                                    </td>
-
-                                    <td data-th-text="${cliente.empresa}">
-                                        Empresa
-                                    </td>
-
-                                    <td data-th-text="${cliente.correo}">
-                                        correo@ejemplo.com
-                                    </td>
-
-                                    <td data-th-text="${cliente.telefono}">
-                                        7000-0000
-                                    </td>
-
-                                    <td>
-
-                                        <div class="acciones-tabla">
-
-                                            <a class="boton-accion boton-consultar"
-                                               href="#"
-                                               data-th-href="@{/clientes/consultar/{id}(id=${cliente.idCliente})}">
-                                                Consultar
-                                            </a>
-
-                                            <a class="boton-accion boton-actualizar"
-                                               href="#"
-                                               data-th-href="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}">
-                                                Actualizar
-                                            </a>
-
-                                            <a class="boton-accion boton-eliminar"
-                                               href="#"
-                                               data-th-href="@{/clientes/eliminar/{id}(id=${cliente.idCliente})}">
-                                                Eliminar
-                                            </a>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr data-th-if="${paginaClientes.empty}">
-
-                                    <td class="celda-vacia"
-                                        colspan="7">
-                                        No se encontraron clientes registrados.
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                    <div class="pie-tabla"
-                         data-th-if="${paginaClientes.totalElements > 0}">
-
-                        <p class="informacion-pagina">
-
-                            Mostrando
-
-                            <span data-th-text="${paginaClientes.numberOfElements}">
-                                1
-                            </span>
-
-                            de
-
-                            <span data-th-text="${paginaClientes.totalElements}">
-                                1
-                            </span>
-
-                            registros
-
-                        </p>
-
-                        <div class="paginacion">
-
-                            <a class="pagina-enlace"
-                               href="#"
-                               data-th-if="${!paginaClientes.first}"
-                               data-th-href="@{/clientes(buscar=${buscar},pagina=${paginaClientes.number - 1})}">
-                                ‹
-                            </a>
-
-                            <span class="pagina-enlace deshabilitada"
-                                  data-th-if="${paginaClientes.first}">
-                                ‹
-                            </span>
-
-                            <span class="pagina-enlace activa"
-                                  data-th-text="${paginaClientes.number + 1}">
-                                1
-                            </span>
-
-                            <a class="pagina-enlace"
-                               href="#"
-                               data-th-if="${!paginaClientes.last}"
-                               data-th-href="@{/clientes(buscar=${buscar},pagina=${paginaClientes.number + 1})}">
-                                ›
-                            </a>
-
-                            <span class="pagina-enlace deshabilitada"
-                                  data-th-if="${paginaClientes.last}">
-                                ›
-                            </span>
 
                         </div>
 
+
+                        <button class="boton-buscar"
+                                type="submit">
+                            Buscar
+                        </button>
+
+
+                        <a class="boton-limpiar"
+                           href="/clientes"
+                           data-th-href="@{/clientes}">
+                            Limpiar
+                        </a>
+
+
+                    </form>
+
+
+                </div>
+
+
+                <div class="tabla-contenedor">
+
+
+                    <table class="tabla-datos">
+
+
+                        <thead>
+
+
+                        <tr>
+
+
+                            <th>ID</th>
+                            <th>DUI / NIT</th>
+                            <th>Nombre</th>
+                            <th>Empresa</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+
+
+                        </tr>
+
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        <tr data-th-each="cliente : ${paginaClientes.content}">
+
+
+                            <td data-th-text="${cliente.idCliente}">
+                                1
+                            </td>
+
+
+                            <td data-th-text="${cliente.dui}">
+                                00000000-0
+                            </td>
+
+
+                            <td data-th-text="${cliente.nombre}">
+                                Nombre del cliente
+                            </td>
+
+
+                            <td data-th-text="${cliente.empresa}">
+                                Empresa
+                            </td>
+
+
+                            <td data-th-text="${cliente.correo}">
+                                correo@ejemplo.com
+                            </td>
+
+
+                            <td data-th-text="${cliente.telefono}">
+                                7000-0000
+                            </td>
+
+
+                            <td>
+
+
+                                <div class="acciones-tabla">
+
+
+                                    <a class="boton-accion boton-consultar"
+                                       href="#"
+                                       data-th-href="@{/clientes/consultar/{id}(id=${cliente.idCliente})}">
+                                        Consultar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-actualizar"
+                                       href="#"
+                                       data-th-href="@{/clientes/actualizar/{id}(id=${cliente.idCliente})}">
+                                        Actualizar
+                                    </a>
+
+
+                                    <a class="boton-accion boton-eliminar"
+                                       href="#"
+                                       data-th-href="@{/clientes/eliminar/{id}(id=${cliente.idCliente})}">
+                                        Eliminar
+                                    </a>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <tr data-th-if="${paginaClientes.empty}">
+
+
+                            <td class="celda-vacia"
+                                colspan="7">
+                                No se encontraron clientes registrados.
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+                <div class="pie-tabla"
+                     data-th-if="${paginaClientes.totalElements > 0}">
+
+
+                    <p class="informacion-pagina">
+
+
+                        Mostrando
+
+
+                        <span data-th-text="${paginaClientes.numberOfElements}">
+                               1
+                           </span>
+
+
+                        de
+
+
+                        <span data-th-text="${paginaClientes.totalElements}">
+                               1
+                           </span>
+
+
+                        registros
+
+
+                    </p>
+
+
+                    <div class="paginacion">
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           data-th-if="${!paginaClientes.first}"
+                           data-th-href="@{/clientes(buscar=buscar,pagina={paginaClientes.number - 1})}">
+                            ‹
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              data-th-if="${paginaClientes.first}">
+                               ‹
+                           </span>
+
+
+                        <span class="pagina-enlace activa"
+                              data-th-text="${paginaClientes.number + 1}">
+                               1
+                           </span>
+
+
+                        <a class="pagina-enlace"
+                           href="#"
+                           data-th-if="${!paginaClientes.last}"
+                           data-th-href="@{/clientes(buscar=buscar,pagina={paginaClientes.number + 1})}">
+                            ›
+                        </a>
+
+
+                        <span class="pagina-enlace deshabilitada"
+                              data-th-if="${paginaClientes.last}">
+                               ›
+                           </span>
+
+
                     </div>
 
-                </section>
 
-            </main>
+                </div>
 
-        </section>
 
-    </div>
+            </section>
+
+
+        </main>
+
+
+    </section>
+
+
+</div>
+
 
 </body>
 
+
 </html>
+
+

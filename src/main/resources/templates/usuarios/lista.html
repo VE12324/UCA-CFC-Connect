@@ -10,8 +10,10 @@
 <div class="aplicacion">
     <aside th:replace="~{fragmentos/plantilla :: barra-lateral('usuarios')}"></aside>
 
+
     <section class="area-principal">
         <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
+
 
         <main class="contenido">
             <div class="encabezado-pagina">
@@ -25,7 +27,10 @@
                 </a>
             </div>
 
+
             <div class="mensaje mensaje-exito" th:if="${exito}" th:text="${exito}"></div>
+            <div class="mensaje mensaje-error" th:if="${error}" th:text="${error}"></div>
+
 
             <section class="tarjeta">
                 <div class="tabla-contenedor">
@@ -68,3 +73,5 @@
 </div>
 </body>
 </html>
+
+

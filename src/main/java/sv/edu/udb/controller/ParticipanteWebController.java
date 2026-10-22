@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.udb.controller;
 
 import jakarta.validation.Valid;
@@ -26,12 +22,14 @@ import sv.edu.udb.service.ParticipanteService;
  *
  * @author crist
  */
+
 @Controller
 @RequiredArgsConstructor
 public class ParticipanteWebController {
-    
-    
+
+
     private final ParticipanteService participanteServicio;
+
 
     @GetMapping("/participantes")
     public String mostrarInicio(
@@ -39,11 +37,13 @@ public class ParticipanteWebController {
             @RequestParam(defaultValue = "0") int pagina,
             Model modelo) {
 
+
         Pageable paginacion = PageRequest.of(
                 pagina,
                 10,
                 Sort.by("nombre").ascending()
         );
+
 
         Page<Participante> participantes =
                 participanteServicio.listarParticipantes(
@@ -51,26 +51,33 @@ public class ParticipanteWebController {
                         paginacion
                 );
 
+
         modelo.addAttribute(
                 "paginaParticipantes",
                 participantes
         );
 
+
         modelo.addAttribute("buscar", buscar);
+
 
         return "participantes/inicio";
     }
 
+
     @GetMapping("/participantes/crear")
     public String mostrarCrear(Model modelo) {
+
 
         modelo.addAttribute(
                 "participante",
                 new Participante()
         );
 
+
         return "participantes/crear";
     }
+
 
     @PostMapping("/participantes/crear")
     public String crearParticipante(
@@ -80,23 +87,29 @@ public class ParticipanteWebController {
             BindingResult resultado,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             return "participantes/crear";
         }
+
 
         try {
             participanteServicio.registrarParticipante(
                     participante
             );
 
+
             mensaje.addFlashAttribute(
                     "exito",
                     "Participante registrado correctamente"
             );
 
+
             return "redirect:/participantes";
 
+
         } catch (IllegalArgumentException excepcion) {
+
 
             resultado.rejectValue(
                     "dui",
@@ -104,41 +117,51 @@ public class ParticipanteWebController {
                     excepcion.getMessage()
             );
 
+
             return "participantes/crear";
         }
     }
+
 
     @GetMapping("/participantes/consultar/{id}")
     public String mostrarParticipante(
             @PathVariable Integer id,
             Model modelo) {
 
+
         Participante participante =
                 participanteServicio.buscarPorId(id);
+
 
         modelo.addAttribute(
                 "participante",
                 participante
         );
 
+
         return "participantes/consultar";
     }
+
 
     @GetMapping("/participantes/actualizar/{id}")
     public String mostrarActualizar(
             @PathVariable Integer id,
             Model modelo) {
 
+
         Participante participante =
                 participanteServicio.buscarPorId(id);
+
 
         modelo.addAttribute(
                 "participante",
                 participante
         );
 
+
         return "participantes/actualizar";
     }
+
 
     @PostMapping("/participantes/actualizar/{id}")
     public String actualizarParticipante(
@@ -149,9 +172,11 @@ public class ParticipanteWebController {
             BindingResult resultado,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             return "participantes/actualizar";
         }
+
 
         try {
             participanteServicio.actualizarParticipante(
@@ -159,14 +184,18 @@ public class ParticipanteWebController {
                     participante
             );
 
+
             mensaje.addFlashAttribute(
                     "exito",
                     "Participante actualizado correctamente"
             );
 
+
             return "redirect:/participantes";
 
+
         } catch (IllegalArgumentException excepcion) {
+
 
             resultado.rejectValue(
                     "dui",
@@ -174,38 +203,60 @@ public class ParticipanteWebController {
                     excepcion.getMessage()
             );
 
+
             return "participantes/actualizar";
         }
     }
+
 
     @GetMapping("/participantes/eliminar/{id}")
     public String mostrarEliminar(
             @PathVariable Integer id,
             Model modelo) {
 
+
         Participante participante =
                 participanteServicio.buscarPorId(id);
+
 
         modelo.addAttribute(
                 "participante",
                 participante
         );
 
+
         return "participantes/eliminar";
     }
+
 
     @PostMapping("/participantes/eliminar/{id}")
     public String eliminarParticipante(
             @PathVariable Integer id,
             RedirectAttributes mensaje) {
 
-        participanteServicio.eliminarParticipante(id);
 
-        mensaje.addFlashAttribute(
-                "exito",
-                "Participante eliminado correctamente"
-        );
+        try {
+            participanteServicio.eliminarParticipante(id);
+
+
+            mensaje.addFlashAttribute(
+                    "exito",
+                    "Participante eliminado correctamente"
+            );
+
+
+        } catch (IllegalArgumentException excepcion) {
+
+
+            mensaje.addFlashAttribute(
+                    "error",
+                    excepcion.getMessage()
+            );
+        }
+
 
         return "redirect:/participantes";
-    } 
+    }
 }
+
+

@@ -31,19 +31,23 @@ public class CursoWebController {
         modelo.addAttribute("docentes", docenteRepository.findAll());
     }
 
+
     @GetMapping("/cursos")
     public String mostrarInicio(
             @RequestParam(defaultValue = "") String buscar,
             @RequestParam(defaultValue = "0") int pagina,
             Model modelo) {
 
+
         Pageable paginacion = PageRequest.of(pagina, 10, Sort.by("nombre").ascending());
         Page<Curso> cursos = cursoService.listarCursos(buscar, paginacion);
+
 
         modelo.addAttribute("paginaCursos", cursos);
         modelo.addAttribute("buscar", buscar);
         return "cursos/inicio";
     }
+
 
     @GetMapping("/cursos/crear")
     public String mostrarCrear(Model modelo) {
@@ -53,6 +57,8 @@ public class CursoWebController {
     }
 
 
+
+
     @PostMapping("/cursos/crear")
     public String crearCurso(
             @Valid @ModelAttribute("curso") Curso curso,
@@ -60,10 +66,12 @@ public class CursoWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             cargarCatalogos(modelo);
             return "cursos/crear";
         }
+
 
         try {
             cursoService.registrarCurso(curso);
@@ -76,6 +84,7 @@ public class CursoWebController {
         }
     }
 
+
     @GetMapping("/cursos/actualizar/{id}")
     public String mostrarActualizar(@PathVariable Integer id, Model modelo) {
         Curso curso = cursoService.buscarPorId(id);
@@ -83,6 +92,7 @@ public class CursoWebController {
         cargarCatalogos(modelo);
         return "cursos/actualizar";
     }
+
 
     @PostMapping("/cursos/actualizar/{id}")
     public String actualizarCurso(
@@ -92,10 +102,12 @@ public class CursoWebController {
             Model modelo,
             RedirectAttributes mensaje) {
 
+
         if (resultado.hasErrors()) {
             cargarCatalogos(modelo);
             return "cursos/actualizar";
         }
+
 
         try {
             cursoService.actualizarCurso(id, curso);
@@ -108,11 +120,13 @@ public class CursoWebController {
         }
     }
 
+
     @GetMapping("/cursos/consultar/{id}")
     public String mostrarCurso(@PathVariable Integer id, Model modelo) {
         modelo.addAttribute("curso", cursoService.buscarPorId(id));
         return "cursos/consultar";
     }
+
 
     @GetMapping("/cursos/eliminar/{id}")
     public String mostrarEliminar(@PathVariable Integer id, Model modelo) {
@@ -121,10 +135,17 @@ public class CursoWebController {
         return "cursos/eliminar";
     }
 
+
     @PostMapping("/cursos/eliminar/{id}")
     public String eliminarCurso(@PathVariable Integer id, RedirectAttributes mensaje) {
-        cursoService.eliminarCurso(id);
-        mensaje.addFlashAttribute("exito", "Curso eliminado correctamente");
+        try {
+            cursoService.eliminarCurso(id);
+            mensaje.addFlashAttribute("exito", "Curso eliminado correctamente");
+        } catch (IllegalArgumentException excepcion) {
+            mensaje.addFlashAttribute("error", excepcion.getMessage());
+        }
         return "redirect:/cursos";
     }
 }
+
+
