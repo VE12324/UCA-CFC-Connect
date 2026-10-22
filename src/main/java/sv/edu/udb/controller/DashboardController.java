@@ -1,5 +1,6 @@
 package sv.edu.udb.controller;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,16 +9,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import sv.edu.udb.service.DashboardService;
 
+
 @Controller
 @RequiredArgsConstructor
 public class DashboardController {
 
+
     private final DashboardService dashboardService;
+
 
     @GetMapping("/")
     public String raiz(Authentication authentication) {
+        // Anónimos y clientes ven la portada del sitio público (PortalController).
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return "forward:/portal/inicio";
         }
         String rol = authentication.getAuthorities().stream()
                 .findFirst()
@@ -27,9 +32,11 @@ public class DashboardController {
             case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
             case "ROLE_CONTABILIDAD" -> "redirect:/contabilidad/dashboard";
             case "ROLE_RECEPCIONISTA" -> "redirect:/recepcionista/dashboard";
+            case "ROLE_CLIENTE" -> "forward:/portal/inicio";
             default -> "redirect:/login?sin-acceso";
         };
     }
+
 
     @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
@@ -41,3 +48,5 @@ public class DashboardController {
         return "admin/dashboard";
     }
 }
+
+

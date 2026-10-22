@@ -4,6 +4,7 @@
  */
 package sv.edu.udb.exception;
 
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sv.edu.udb.dto.RespuestaError;
 
+
 @RestControllerAdvice
 public class ManejoErrores {
+
 
     @ExceptionHandler(RecursoNoEncontrado.class)
     public ResponseEntity<RespuestaError> manejarRecursoNoEncontrado(
             RecursoNoEncontrado excepcion) {
+
 
         RespuestaError error = new RespuestaError(
                 LocalDateTime.now(),
@@ -29,14 +33,37 @@ public class ManejoErrores {
                 null
         );
 
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(error);
     }
 
+
+    @ExceptionHandler(EspacioOcupadoException.class)
+    public ResponseEntity<RespuestaError> manejarEspacioOcupado(
+            EspacioOcupadoException excepcion) {
+
+
+        RespuestaError error = new RespuestaError(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Espacio ocupado",
+                excepcion.getMessage(),
+                null
+        );
+
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<RespuestaError> manejarArgumentoInvalido(
             IllegalArgumentException excepcion) {
+
 
         RespuestaError error = new RespuestaError(
                 LocalDateTime.now(),
@@ -46,16 +73,40 @@ public class ManejoErrores {
                 null
         );
 
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
 
+
+    @ExceptionHandler(CorreoEnUsoException.class)
+    public ResponseEntity<RespuestaError> manejarCorreoEnUso(
+            CorreoEnUsoException excepcion) {
+
+
+        RespuestaError error = new RespuestaError(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Correo en uso",
+                excepcion.getMessage(),
+                null
+        );
+
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RespuestaError> manejarValidaciones(
             MethodArgumentNotValidException excepcion) {
 
+
         Map<String, String> validaciones = new HashMap<>();
+
 
         excepcion.getBindingResult()
                 .getFieldErrors()
@@ -63,6 +114,7 @@ public class ManejoErrores {
                         error.getField(),
                         error.getDefaultMessage()
                 ));
+
 
         RespuestaError error = new RespuestaError(
                 LocalDateTime.now(),
@@ -72,14 +124,37 @@ public class ManejoErrores {
                 validaciones
         );
 
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
 
+
+    @ExceptionHandler(RegistroEnUsoException.class)
+    public ResponseEntity<RespuestaError> manejarRegistroEnUso(
+            RegistroEnUsoException excepcion) {
+
+
+        RespuestaError error = new RespuestaError(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Registro en uso",
+                excepcion.getMessage(),
+                null
+        );
+
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RespuestaError> manejarErrorGeneral(
             Exception excepcion) {
+
 
         RespuestaError error = new RespuestaError(
                 LocalDateTime.now(),
@@ -89,8 +164,11 @@ public class ManejoErrores {
                 null
         );
 
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(error);
     }
 }
+
+
