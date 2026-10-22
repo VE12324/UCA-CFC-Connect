@@ -1,147 +1,61 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Agenda institucional</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mi-agenda')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
+        <div class="portal-encabezado">
+            <h1>Agenda institucional</h1>
+            <p>Consulta las actividades institucionales y las relacionadas con tus servicios.</p>
+        </div>
 
-            <div style="margin-bottom:25px;">
 
-                <h1 style="margin-bottom:6px;">
-                    Agenda institucional
-                </h1>
+        <section class="tarjeta">
+            <p class="vacio" th:if="${actividades == null or #lists.isEmpty(actividades)}">
+                No hay actividades disponibles.
+            </p>
 
-                <p style="margin:0; color:#687078;">
-                    Consulte las actividades institucionales y las relacionadas con sus servicios.
-                </p>
 
+            <div class="tabla-envoltura" th:if="${actividades != null and !#lists.isEmpty(actividades)}">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Actividad</th><th>Tipo</th><th>Horario</th><th>Descripción</th></tr></thead>
+                    <tbody>
+                    <tr th:each="actividad : ${actividades}">
+                        <td th:text="${#temporals.format(actividad.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${actividad.nombre}">Actividad</td>
+                        <td th:text="${actividad.tipo}">Tipo</td>
+                        <td th:text="${actividad.horario != null and !actividad.horario.isBlank()
+                                   ? actividad.horario
+                                   : actividad.horaInicio != null
+                                       ? #temporals.format(actividad.horaInicio, 'dd/MM/yyyy HH:mm')
+                                       : 'No especificado'}">No especificado</td>
+                        <td th:text="${actividad.descripcion != null and !actividad.descripcion.isBlank()
+                                   ? actividad.descripcion
+                                   : 'Sin descripción'}">Sin descripción</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-
-            <div class="formulario-tarjeta">
-
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <div th:if="${actividades == null
-                         or #lists.isEmpty(actividades)}"
-                         style="padding:30px;
-                                text-align:center;
-                                color:#687078;">
-
-                        No hay actividades disponibles.
-
-                    </div>
-
-                    <table th:if="${actividades != null
-                           and !#lists.isEmpty(actividades)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:12px;">Fecha</th>
-                                <th style="padding:12px;">Actividad</th>
-                                <th style="padding:12px;">Tipo</th>
-                                <th style="padding:12px;">Horario</th>
-                                <th style="padding:12px;">Descripción</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="actividad : ${actividades}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    actividad.fecha,
-                                    'dd/MM/yyyy')}">
-
-                                    01/01/2026
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${actividad.nombre}">
-
-                                    Actividad
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${actividad.tipo}">
-
-                                    Tipo
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${actividad.horario != null
-                                    and !actividad.horario.isBlank()
-                                    ? actividad.horario
-                                    : actividad.horaInicio != null
-                                    ? #temporals.format(
-                                    actividad.horaInicio,
-                                    'dd/MM/yyyy HH:mm')
-                                    : 'No especificado'}">
-
-                                    No especificado
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${actividad.descripcion != null
-                                    and !actividad.descripcion.isBlank()
-                                    ? actividad.descripcion
-                                    : 'Sin descripción'}">
-
-                                    Sin descripción
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
         </section>
+    </div>
+</main>
 
-    </main>
 
-</div>
-
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+

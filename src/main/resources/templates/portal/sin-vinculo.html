@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta sin vincular — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+        <div class="tarjeta pagina-mensaje">
+            <h1>Tu cuenta aún no está lista</h1>
+            <p th:text="${mensaje}">Tu cuenta aún no está vinculada a un cliente. Comunícate con recepción.</p>
+            <a class="boton-primario" th:href="@{/}">Volver al inicio</a>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+
+
+</body>
+</html>
+
+

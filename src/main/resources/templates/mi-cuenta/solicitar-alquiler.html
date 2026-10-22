@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar espacio — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('espacios')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+
+
+        <p class="migas"><a th:href="@{/portal/espacios}">Espacios</a> / Reservar</p>
+
+
+        <div class="portal-encabezado">
+            <h1>Reservar espacio</h1>
+            <p>Elige la fecha y el horario. Tu solicitud quedará en estado Pendiente hasta que el centro la confirme.</p>
+        </div>
+
+
+        <div class="disposicion-dos">
+
+
+            <div>
+                <section class="tarjeta">
+                    <h2 th:text="${espacio.nombre}">Auditorio</h2>
+                    <p class="texto-ayuda" style="margin-bottom:12px;" th:text="${espacio.descripcion ?: 'Sin descripción.'}">Descripción</p>
+                    <dl class="datos-lista">
+                        <div><dt>Ubicación</dt><dd th:text="${espacio.ubicacion ?: 'Por confirmar'}">Edificio A</dd></div>
+                        <div><dt>Capacidad</dt><dd th:text="${espacio.capacidad} + ' personas'">80 personas</dd></div>
+                        <div><dt>Costo por hora</dt><dd th:text="${@formatoPortal.dinero(espacio.costoHora)}">$250.00</dd></div>
+                        <div><dt>Estado</dt>
+                            <dd><span th:class="${@formatoPortal.claseEstado(espacio.estado)}"
+                                      th:text="${espacio.estado == 'MANTENIMIENTO' ? 'En mantenimiento' : @formatoPortal.estado(espacio.estado)}">Disponible</span></dd></div>
+                    </dl>
+                </section>
+
+
+                <section class="tarjeta">
+                    <h2>Próximas reservas de este espacio</h2>
+                    <p class="texto-ayuda" style="margin-bottom:10px;">Elige un horario que no se cruce con estos.</p>
+                    <p class="vacio" th:if="${#lists.isEmpty(reservas)}">No hay reservas próximas. ¡Todos los horarios están libres!</p>
+                    <div class="tabla-envoltura" th:unless="${#lists.isEmpty(reservas)}">
+                        <table class="tabla">
+                            <thead><tr><th>Fecha</th><th>Horario</th></tr></thead>
+                            <tbody>
+                            <tr th:each="reserva : ${reservas}">
+                                <td th:text="${@formatoPortal.fechaLarga(reserva.fecha())}">20 de octubre de 2026</td>
+                                <td th:text="${@formatoPortal.hora(reserva.horaInicio())} + ' – ' + ${@formatoPortal.hora(reserva.horaFin())}">08:00 – 10:00</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+
+            <section class="tarjeta">
+                <h2>Datos de la reserva</h2>
+
+
+                <div class="alerta alerta-error" th:unless="${reservable}">
+                    Este espacio está en mantenimiento y no se puede reservar por ahora.
+                </div>
+
+
+                <form th:action="@{/mi-cuenta/alquileres/solicitar(espacio=${espacio.idEspacio})}"
+                      th:object="${solicitud}"
+                      method="post"
+                      data-validar-fecha
+                      data-campo-hora="horaInicio"
+                      th:attr="data-costo-hora=${espacio.costoHora}">
+
+
+                    <div class="alerta alerta-error"
+                         th:each="error : ${#fields.globalErrors()}"
+                         th:text="${error}"></div>
+
+
+                    <div class="formulario-cuadricula">
+                        <div class="campo completo">
+                            <label for="fecha">Fecha <span class="requerido">*</span></label>
+                            <input class="entrada" type="date" th:field="*{fecha}" required
+                                   th:classappend="${#fields.hasErrors('fecha')} ? 'invalido'">
+                            <span class="texto-error" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></span>
+                        </div>
+
+
+                        <div class="campo">
+                            <label for="horaInicio">Hora de inicio <span class="requerido">*</span></label>
+                            <input class="entrada" type="time" th:field="*{horaInicio}" required
+                                   th:classappend="${#fields.hasErrors('horaInicio')} ? 'invalido'">
+                            <span class="texto-error" th:if="${#fields.hasErrors('horaInicio')}" th:errors="*{horaInicio}"></span>
+                        </div>
+
+
+                        <div class="campo">
+                            <label for="horaFin">Hora de fin <span class="requerido">*</span></label>
+                            <input class="entrada" type="time" th:field="*{horaFin}" required
+                                   th:classappend="${#fields.hasErrors('horaFin')} ? 'invalido'">
+                            <span class="texto-error" th:if="${#fields.hasErrors('horaFin')}" th:errors="*{horaFin}"></span>
+                        </div>
+
+
+                        <div class="campo completo">
+                            <label for="cantidadPersonas">Cantidad de personas <span class="requerido">*</span></label>
+                            <input class="entrada" type="number" min="1" th:max="${espacio.capacidad}"
+                                   th:field="*{cantidadPersonas}" required
+                                   th:classappend="${#fields.hasErrors('cantidadPersonas')} ? 'invalido'">
+                            <span class="texto-ayuda" th:text="'Máximo ' + ${espacio.capacidad} + ' personas.'">Máximo 80 personas.</span>
+                            <span class="texto-error" th:if="${#fields.hasErrors('cantidadPersonas')}" th:errors="*{cantidadPersonas}"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="estimado">
+                        <span>Costo estimado <small class="texto-ayuda" id="horasEstimadas">Elige el horario</small></span>
+                        <strong id="costoEstimado">$0.00</strong>
+                    </div>
+                    <p class="texto-ayuda" style="margin-top:6px;">
+                        Es una referencia (costo por hora × horas); el monto final lo confirma el centro.
+                    </p>
+
+
+                    <div class="acciones-formulario">
+                        <a class="boton-contorno" th:href="@{/portal/espacios}">Cancelar</a>
+                        <button class="boton-lima" type="submit" th:disabled="${!reservable}">Enviar solicitud</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+<script th:src="@{/js/cliente.js}" src="/js/cliente.js"></script>
+</body>
+</html>
+
+

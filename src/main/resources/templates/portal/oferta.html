@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta académica — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('oferta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+
+
+        <div class="portal-encabezado">
+            <h1>Oferta académica</h1>
+            <p>Cursos y diplomados disponibles, ordenados por fecha de inicio.</p>
+        </div>
+
+
+        <form class="filtros" th:action="@{/portal/oferta}" method="get">
+            <div class="campo">
+                <label for="buscar">Buscar por nombre</label>
+                <input class="entrada" type="search" id="buscar" name="buscar"
+                       th:value="${buscar}" placeholder="Ej. Ciberseguridad">
+            </div>
+            <div class="campo">
+                <label for="tipo">Tipo</label>
+                <select class="entrada" id="tipo" name="tipo">
+                    <option value="" th:selected="${tipo == null or tipo == ''}">Todos</option>
+                    <option value="cursos" th:selected="${tipo == 'cursos'}">Cursos</option>
+                    <option value="diplomados" th:selected="${tipo == 'diplomados'}">Diplomados</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="categoria">Categoría</label>
+                <select class="entrada" id="categoria" name="categoria">
+                    <option value="">Todas</option>
+                    <option th:each="c : ${categorias}"
+                            th:value="${c.idCategoria}"
+                            th:text="${c.nombre}"
+                            th:selected="${categoria == c.idCategoria}">Categoría</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="modalidad">Modalidad</label>
+                <select class="entrada" id="modalidad" name="modalidad">
+                    <option value="">Todas</option>
+                    <option th:each="m : ${modalidades}"
+                            th:value="${m.idModalidad}"
+                            th:text="${m.nombre}"
+                            th:selected="${modalidad == m.idModalidad}">Modalidad</option>
+                </select>
+            </div>
+            <button class="boton-primario" type="submit">Filtrar</button>
+        </form>
+
+
+        <div class="tarjeta vacio" th:if="${#lists.isEmpty(programas)}">
+            No encontramos programas con esos filtros.
+            <a class="enlace-flecha" th:href="@{/portal/oferta}">Ver todos</a>
+        </div>
+
+
+        <div class="programas-cuadricula" th:unless="${#lists.isEmpty(programas)}">
+            <article class="programa-tarjeta"
+                     th:each="programa : ${programas}"
+                     th:insert="~{fragmentos/plantilla-cliente :: tarjeta-programa(${programa})}">
+            </article>
+        </div>
+
+
+        <nav class="paginacion" th:if="${paginaOferta.totalPages > 1}" aria-label="Paginación">
+            <a th:if="${paginaOferta.hasPrevious()}"
+               th:href="@{/portal/oferta(tipo=tipo,categoria={categoria},modalidad=modalidad,buscar={buscar},pagina=${paginaOferta.number - 1})}">‹</a>
+            <th:block th:each="i : ${#numbers.sequence(0, paginaOferta.totalPages - 1)}">
+                <span class="actual" th:if="${i == paginaOferta.number}" th:text="${i + 1}">1</span>
+                <a th:unless="${i == paginaOferta.number}"
+                   th:href="@{/portal/oferta(tipo=tipo,categoria={categoria},modalidad=modalidad,buscar={buscar},pagina=${i})}"
+                   th:text="${i + 1}">2</a>
+            </th:block>
+            <a th:if="${paginaOferta.hasNext()}"
+               th:href="@{/portal/oferta(tipo=tipo,categoria={categoria},modalidad=modalidad,buscar={buscar},pagina=${paginaOferta.number + 1})}">›</a>
+        </nav>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+
+
+</body>
+</html>
+
+

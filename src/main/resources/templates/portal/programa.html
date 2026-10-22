@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${programa.nombre()} + ' — CFC UCA'">Programa — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('oferta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+
+
+        <p class="migas">
+            <a th:href="@{/portal/oferta}">Oferta académica</a> /
+            <span th:text="${programa.nombre()}">Programa</span>
+        </p>
+
+
+        <div class="detalle-programa">
+            <section class="tarjeta">
+                <span class="etiqueta-tipo" th:text="${programa.tipo()}">CURSO</span>
+                <h1 style="margin:10px 0 12px; color:var(--pc-primario); font-size:28px; line-height:1.2;"
+                    th:text="${programa.nombre()}">Nombre del programa</h1>
+                <p style="color:var(--pc-texto-suave);"
+                   th:text="${programa.descripcion() != null and !programa.descripcion().isBlank()
+                           ? programa.descripcion()
+                           : 'Pronto publicaremos la descripción de este programa.'}">Descripción</p>
+
+
+                <h2 style="margin-top:24px;">Información del programa</h2>
+                <dl class="datos-lista">
+                    <div><dt>Categoría</dt><dd th:text="${programa.categoria() ?: 'Sin categoría'}">Tecnología</dd></div>
+                    <div><dt>Modalidad</dt><dd th:text="${programa.modalidad() ?: 'Por definir'}">Virtual</dd></div>
+                    <div><dt>Docente</dt><dd th:text="${programa.docente() ?: 'Por asignar'}">Nombre Apellido</dd></div>
+                    <div><dt>Fecha de inicio</dt><dd th:text="${@formatoPortal.fechaLarga(programa.fechaInicio())}">15 de octubre de 2026</dd></div>
+                    <div><dt>Fecha de finalización</dt><dd th:text="${@formatoPortal.fechaLarga(programa.fechaFin())}">15 de diciembre de 2026</dd></div>
+                    <div><dt>Cupo máximo</dt><dd th:text="${programa.cupoMaximo()} + ' participantes'">30 participantes</dd></div>
+                </dl>
+            </section>
+
+
+            <aside class="tarjeta">
+                <p class="texto-ayuda">Inversión por participante</p>
+                <p class="precio-grande" th:text="${@formatoPortal.dinero(programa.costo())}">$850.00</p>
+                <p class="texto-ayuda" style="margin:6px 0 18px;">Precio sin IVA. La cotización incluye el IVA (13 %).</p>
+                <a class="boton-lima boton-bloque"
+                   th:href="@{'/mi-cuenta/cotizaciones/solicitar?' + ${programa.parametroCotizacion()}}">Solicitar cotización</a>
+                <p class="texto-ayuda" style="margin-top:12px;">
+                    La inscripción la realiza el equipo de recepción del centro.
+                </p>
+            </aside>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+
+
+</body>
+</html>
+
+

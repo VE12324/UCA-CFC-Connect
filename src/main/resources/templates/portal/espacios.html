@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacios — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('espacios')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+
+
+        <div class="portal-encabezado">
+            <h1>Alquiler de espacios</h1>
+            <p>Auditorios, salas y laboratorios del centro. Elige uno y reserva tu horario.</p>
+        </div>
+
+
+        <div class="tarjeta vacio" th:if="${#lists.isEmpty(espacios)}">
+            No hay espacios publicados por el momento.
+        </div>
+
+
+        <div class="catalogo-cuadricula" th:unless="${#lists.isEmpty(espacios)}">
+            <article class="catalogo-tarjeta" th:each="espacio : ${espacios}"
+                     th:with="reservable=${@formatoPortal.espacioReservable(espacio)}">
+                <div class="catalogo-tarjeta-cabecera">
+                    <h3 th:text="${espacio.nombre}">Auditorio</h3>
+                    <span th:class="${@formatoPortal.claseEstado(espacio.estado)}"
+                          th:text="${espacio.estado == 'MANTENIMIENTO' ? 'En mantenimiento' : @formatoPortal.estado(espacio.estado)}">Disponible</span>
+                </div>
+                <p th:text="${espacio.descripcion ?: 'Sin descripción.'}">Descripción</p>
+                <dl class="datos-lista">
+                    <div><dt>Ubicación</dt><dd th:text="${espacio.ubicacion ?: 'Por confirmar'}">Edificio A</dd></div>
+                    <div><dt>Capacidad</dt><dd th:text="${espacio.capacidad} + ' personas'">80 personas</dd></div>
+                    <div><dt>Costo por hora</dt><dd th:text="${@formatoPortal.dinero(espacio.costoHora)}">$250.00</dd></div>
+                </dl>
+                <a th:if="${reservable}"
+                   class="boton-primario"
+                   th:href="@{/mi-cuenta/alquileres/solicitar(espacio=${espacio.idEspacio})}">Reservar</a>
+                <button th:unless="${reservable}" class="boton-primario" type="button" disabled>No disponible</button>
+            </article>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+
+
+</body>
+</html>
+
+

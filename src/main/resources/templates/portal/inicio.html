@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Formación Continua — UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('inicio')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal" style="padding-top:0;">
+
+
+    <div class="portal-contenedor">
+        <section class="hero">
+            <div>
+                <h1>Formación, espacios y servicios para impulsar tus proyectos</h1>
+                <p>
+                    Descubre una plataforma integral diseñada para profesionales e
+                    instituciones. Soluciones académicas, infraestructura de primer
+                    nivel y servicios corporativos en un solo lugar.
+                </p>
+                <div class="hero-botones">
+                    <a class="boton-lima" th:href="@{/portal/oferta}">Ver oferta académica</a>
+                    <a class="boton-contorno" th:href="@{/mi-cuenta/cotizaciones/solicitar}">Solicitar cotización</a>
+                </div>
+            </div>
+
+
+            <div class="hero-imagen" role="img" aria-label="Centro de Formación Continua">
+                <img th:src="@{/iconos/logo.png}" src="/iconos/logo.png" alt="">
+                <div class="hero-evento" th:if="${proximoEvento != null}">
+                    <small th:text="${etiquetaEvento}">PRÓXIMO EVENTO</small>
+                    <a th:href="@{${proximoEvento.ruta()}}" th:text="${proximoEvento.nombre()}">Programa</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <section class="seccion-gris" id="servicios">
+        <div class="portal-contenedor">
+            <div class="seccion-titulo">
+                <h2>Servicios Integrales</h2>
+                <p>Soluciones diseñadas para cubrir todas las necesidades de tu desarrollo profesional y corporativo.</p>
+            </div>
+
+
+            <div class="servicios-cuadricula">
+                <article class="servicio-tarjeta servicio-grande">
+                   <span class="servicio-icono">
+                       <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>
+                   </span>
+                    <h3>Cursos y Diplomados</h3>
+                    <p>Programas académicos de excelencia diseñados para potenciar tus habilidades en un entorno cambiante.</p>
+                    <a class="enlace-flecha" th:href="@{/portal/oferta}">Ver catálogo completo →</a>
+                </article>
+
+
+                <article class="servicio-tarjeta servicio-lima">
+                   <span class="servicio-icono">
+                       <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><path d="M2 21h20M12 12h.01"/></svg>
+                   </span>
+                    <h3>Alquiler de Espacios</h3>
+                    <p>Auditorios y salas equipadas con última tecnología.</p>
+                    <a class="enlace-flecha" th:href="@{/portal/espacios}">Ver espacios →</a>
+                </article>
+
+
+                <article class="servicio-tarjeta">
+                   <span class="servicio-icono">
+                       <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2 1-3 4-3 7s1 4 3 4"/></svg>
+                   </span>
+                    <h3>Catering</h3>
+                    <p>Servicios de alimentación para eventos institucionales.</p>
+                    <a class="enlace-flecha" th:href="@{/portal/catering}">Opciones de menú →</a>
+                </article>
+
+
+                <article class="servicio-tarjeta servicio-oscuro">
+                   <span class="servicio-icono">
+                       <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M10 21v-4h4v4"/></svg>
+                   </span>
+                    <h3>Cursos Empresariales</h3>
+                    <p>Formación in-company adaptada a las necesidades específicas de tu organización.</p>
+                    <a class="enlace-flecha" th:href="@{/mi-cuenta/cotizaciones/solicitar(empresarial=1)}">Contactar asesor →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="seccion">
+        <div class="portal-contenedor">
+            <div class="seccion-encabezado">
+                <div>
+                    <h2>Oferta Académica Destacada</h2>
+                    <p>Impulsa tu carrera con nuestros programas más próximos.</p>
+                </div>
+                <a class="enlace-flecha" th:href="@{/portal/oferta}">Ver todos los programas →</a>
+            </div>
+
+
+            <div class="vacio tarjeta" th:if="${#lists.isEmpty(destacados)}">
+                Pronto publicaremos nuevos programas.
+            </div>
+
+
+            <div class="programas-cuadricula" th:unless="${#lists.isEmpty(destacados)}">
+                <article class="programa-tarjeta"
+                         th:each="programa : ${destacados}"
+                         th:insert="~{fragmentos/plantilla-cliente :: tarjeta-programa(${programa})}">
+                </article>
+            </div>
+        </div>
+    </section>
+
+
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+
+
+</body>
+</html>
+
+

@@ -1,155 +1,64 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mis solicitudes de catering</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi catering — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mi-catering')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
+        <div class="seccion-encabezado">
+            <div class="portal-encabezado" style="margin:0;">
+                <h1>Mi catering</h1>
+                <p>Consulta tus solicitudes de catering y su estado.</p>
+            </div>
+            <a class="boton-lima" th:href="@{/portal/catering}">Solicitar catering</a>
+        </div>
 
-            <div style="margin-bottom:25px;">
 
-                <h1 style="margin-bottom:6px;">
-                    Mis solicitudes de catering
-                </h1>
+        <section class="tarjeta">
+            <p class="vacio" th:if="${solicitudes == null or #lists.isEmpty(solicitudes)}">
+                No tienes solicitudes de catering registradas.
+            </p>
 
-                <p style="margin:0; color:#687078;">
-                    Consulte los servicios de catering solicitados.
-                </p>
 
+            <div class="tabla-envoltura" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Hora</th><th>Servicio</th><th>Menú</th><th>Lugar</th><th>Asistentes</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="solicitud : ${solicitudes}">
+                        <td th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${@formatoPortal.hora(solicitud.hora)}">10:00</td>
+                        <td th:text="${solicitud.servicioCatering.nombre}">Servicio</td>
+                        <td th:text="${solicitud.menu}">Menú</td>
+                        <td th:text="${solicitud.lugar}">Lugar</td>
+                        <td th:text="${solicitud.cantidadAsistentes}">20</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(solicitud.estado)}"
+                                  th:text="${@formatoPortal.estado(solicitud.estado)}">Pendiente</span></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="formulario-tarjeta">
 
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <div th:if="${solicitudes == null
-                         or #lists.isEmpty(solicitudes)}"
-                         style="padding:30px;
-                                text-align:center;
-                                color:#687078;">
-
-                        No tiene solicitudes de catering registradas.
-
-                    </div>
-
-                    <table th:if="${solicitudes != null
-                           and !#lists.isEmpty(solicitudes)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:12px;">Fecha</th>
-                                <th style="padding:12px;">Hora</th>
-                                <th style="padding:12px;">Servicio</th>
-                                <th style="padding:12px;">Menú</th>
-                                <th style="padding:12px;">Lugar</th>
-                                <th style="padding:12px;">Asistentes</th>
-                                <th style="padding:12px;">Estado</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="solicitud : ${solicitudes}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    solicitud.fecha,
-                                    'dd/MM/yyyy')}">
-
-                                    01/01/2026
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    solicitud.hora,
-                                    'HH:mm')}">
-
-                                    08:00
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${solicitud.servicioCatering.nombre}">
-
-                                    Servicio
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${solicitud.menu}">
-
-                                    Menú
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${solicitud.lugar}">
-
-                                    Lugar
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${solicitud.cantidadAsistentes}">
-
-                                    1
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${solicitud.estado}">
-
-                                    PENDIENTE
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
+            <nav th:replace="~{fragmentos/plantilla-cliente :: paginacion(${paginaCatering}, '/mi-cuenta/catering')}"></nav>
         </section>
+    </div>
+</main>
 
-    </main>
 
-</div>
-
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+

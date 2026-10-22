@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis solicitudes — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor">
+
+
+        <div class="portal-encabezado">
+            <h1>Mis solicitudes</h1>
+            <p>Estado de tus cotizaciones, reservas de espacios y solicitudes de catering (las 10 más recientes de cada una).</p>
+        </div>
+
+
+        <th:block th:replace="~{fragmentos/plantilla-cliente :: mensajes}"></th:block>
+
+
+        <section class="tarjeta">
+            <div class="seccion-encabezado" style="margin-bottom:12px;">
+                <h2 style="margin:0;">Cotizaciones</h2>
+                <div style="display:flex; gap:14px; flex-wrap:wrap;">
+                    <a class="enlace-flecha" th:href="@{/mi-cuenta/cotizaciones/solicitar}">+ Nueva</a>
+                    <a class="enlace-flecha" th:href="@{/mi-cuenta/cotizaciones}">Ver todas →</a>
+                </div>
+            </div>
+            <p class="vacio" th:if="${#lists.isEmpty(cotizaciones)}">Aún no has solicitado cotizaciones.</p>
+            <div class="tabla-envoltura" th:unless="${#lists.isEmpty(cotizaciones)}">
+                <table class="tabla">
+                    <thead><tr><th>N.º</th><th>Fecha</th><th>Detalle</th><th class="numero">Total</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="c : ${cotizaciones}">
+                        <td th:text="'#' + ${c.idCotizacion()}">#1</td>
+                        <td th:text="${@formatoPortal.fechaLarga(c.fecha())}">20 de octubre de 2026</td>
+                        <td th:text="${c.detalles() == null ? 0 : c.detalles().size()} + ' línea(s)'">2 línea(s)</td>
+                        <td class="numero" th:text="${@formatoPortal.dinero(c.total())}">$0.00</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(c.estado())}" th:text="${c.estado()}">Pendiente</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <section class="tarjeta">
+            <div class="seccion-encabezado" style="margin-bottom:12px;">
+                <h2 style="margin:0;">Alquileres de espacios</h2>
+                <div style="display:flex; gap:14px; flex-wrap:wrap;">
+                    <a class="enlace-flecha" th:href="@{/portal/espacios}">+ Nueva</a>
+                    <a class="enlace-flecha" th:href="@{/mi-cuenta/alquileres}">Ver todas →</a>
+                </div>
+            </div>
+            <p class="vacio" th:if="${#lists.isEmpty(alquileres)}">Aún no has reservado espacios.</p>
+            <div class="tabla-envoltura" th:unless="${#lists.isEmpty(alquileres)}">
+                <table class="tabla">
+                    <thead><tr><th>Espacio</th><th>Fecha</th><th>Horario</th><th>Personas</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="a : ${alquileres}">
+                        <td th:text="${a.espacio != null ? a.espacio.nombre : 'Sin espacio'}">Auditorio</td>
+                        <td th:text="${@formatoPortal.fechaLarga(a.fecha)}">20 de octubre de 2026</td>
+                        <td th:text="${@formatoPortal.hora(a.horaInicio)} + ' – ' + ${@formatoPortal.hora(a.horaFin)}">08:00 – 10:00</td>
+                        <td th:text="${a.cantidadPersonas}">50</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(a.estado)}" th:text="${@formatoPortal.estado(a.estado)}">Pendiente</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <section class="tarjeta">
+            <div class="seccion-encabezado" style="margin-bottom:12px;">
+                <h2 style="margin:0;">Catering</h2>
+                <div style="display:flex; gap:14px; flex-wrap:wrap;">
+                    <a class="enlace-flecha" th:href="@{/portal/catering}">+ Nueva</a>
+                    <a class="enlace-flecha" th:href="@{/mi-cuenta/catering}">Ver todas →</a>
+                </div>
+            </div>
+            <p class="vacio" th:if="${#lists.isEmpty(solicitudesCatering)}">Aún no has solicitado catering.</p>
+            <div class="tabla-envoltura" th:unless="${#lists.isEmpty(solicitudesCatering)}">
+                <table class="tabla">
+                    <thead><tr><th>Servicio</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Asistentes</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="s : ${solicitudesCatering}">
+                        <td th:text="${s.servicioCatering != null ? s.servicioCatering.nombre : 'Sin servicio'}">Coffee Break</td>
+                        <td th:text="${@formatoPortal.fechaLarga(s.fecha)}">20 de octubre de 2026</td>
+                        <td th:text="${@formatoPortal.hora(s.hora)}">10:00</td>
+                        <td th:text="${s.lugar}">Auditorio</td>
+                        <td th:text="${s.cantidadAsistentes}">40</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(s.estado)}" th:text="${@formatoPortal.estado(s.estado)}">Pendiente</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+</body>
+</html>
+
+

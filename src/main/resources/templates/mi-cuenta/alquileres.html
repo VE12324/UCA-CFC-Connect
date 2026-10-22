@@ -1,149 +1,63 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mis alquileres</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis alquileres — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mis-alquileres')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
+        <div class="seccion-encabezado">
+            <div class="portal-encabezado" style="margin:0;">
+                <h1>Mis alquileres</h1>
+                <p>Consulta tus reservas de espacios y su estado.</p>
+            </div>
+            <a class="boton-lima" th:href="@{/portal/espacios}">Reservar un espacio</a>
+        </div>
 
-            <div style="margin-bottom:25px;">
 
-                <h1 style="margin-bottom:6px;">
-                    Mis alquileres
-                </h1>
+        <section class="tarjeta">
+            <p class="vacio" th:if="${alquileres == null or #lists.isEmpty(alquileres)}">
+                No tienes alquileres registrados.
+            </p>
 
-                <p style="margin:0; color:#687078;">
-                    Consulte sus reservaciones de espacios.
-                </p>
 
+            <div class="tabla-envoltura" th:if="${alquileres != null and !#lists.isEmpty(alquileres)}">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Espacio</th><th>Inicio</th><th>Finalización</th><th>Personas</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="alquiler : ${alquileres}">
+                        <td th:text="${#temporals.format(alquiler.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${alquiler.espacio.nombre}">Espacio</td>
+                        <td th:text="${#temporals.format(alquiler.horaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 08:00</td>
+                        <td th:text="${#temporals.format(alquiler.horaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                        <td th:text="${alquiler.cantidadPersonas}">10</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(alquiler.estado)}"
+                                  th:text="${@formatoPortal.estado(alquiler.estado)}">Pendiente</span></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="formulario-tarjeta">
 
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <div th:if="${alquileres == null
-                         or #lists.isEmpty(alquileres)}"
-                         style="padding:30px;
-                                text-align:center;
-                                color:#687078;">
-
-                        No tiene alquileres registrados.
-
-                    </div>
-
-                    <table th:if="${alquileres != null
-                           and !#lists.isEmpty(alquileres)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:12px;">Fecha</th>
-                                <th style="padding:12px;">Espacio</th>
-                                <th style="padding:12px;">Inicio</th>
-                                <th style="padding:12px;">Finalización</th>
-                                <th style="padding:12px;">Personas</th>
-                                <th style="padding:12px;">Estado</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="alquiler : ${alquileres}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    alquiler.fecha,
-                                    'dd/MM/yyyy')}">
-
-                                    01/01/2026
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${alquiler.espacio.nombre}">
-
-                                    Espacio
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    alquiler.horaInicio,
-                                    'dd/MM/yyyy HH:mm')}">
-
-                                    01/01/2026 08:00
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${#temporals.format(
-                                    alquiler.horaFin,
-                                    'dd/MM/yyyy HH:mm')}">
-
-                                    01/01/2026 10:00
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${alquiler.cantidadPersonas}">
-
-                                    1
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${alquiler.estado}">
-
-                                    PENDIENTE
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
+            <nav th:replace="~{fragmentos/plantilla-cliente :: paginacion(${paginaAlquileres}, '/mi-cuenta/alquileres')}"></nav>
         </section>
+    </div>
+</main>
 
-    </main>
 
-</div>
-
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+

@@ -1,184 +1,89 @@
 <!DOCTYPE html>
 <html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mis pagos</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis pagos — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mis-pagos')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
+        <div class="portal-encabezado">
+            <h1>Mis pagos</h1>
+            <p>Consulta el historial de pagos de tu cuenta.</p>
+        </div>
 
-            <div style="margin-bottom:25px;">
 
-                <h1 style="margin-bottom:6px;">
-                    Mis pagos
-                </h1>
+        <!-- Resumen calculado sobre todos los pagos del cliente de la sesión. -->
+        <div class="resumen-cuadricula"
+             th:with="resumen=${@solicitudClienteService.resumenPagos(#authentication.name)}">
+            <div class="resumen-tarjeta lima">
+                <small>Total pagado</small>
+                <strong th:text="${@formatoPortal.dinero(resumen.totalPagado())}">$0.00</strong>
+            </div>
+            <div class="resumen-tarjeta">
+                <small>Pendiente de validar</small>
+                <strong th:text="${@formatoPortal.dinero(resumen.totalPorValidar())}">$0.00</strong>
+            </div>
+            <div class="resumen-tarjeta">
+                <small>Pagos registrados</small>
+                <strong th:text="${resumen.cantidadPagos()}">0</strong>
+            </div>
+        </div>
 
-                <p style="margin:0; color:#687078;">
-                    Consulte el historial de pagos de su cuenta.
-                </p>
 
+        <section class="tarjeta">
+            <p class="vacio" th:if="${pagos == null or #lists.isEmpty(pagos)}">
+                No tienes pagos registrados.
+            </p>
+
+
+            <div class="tabla-envoltura" th:if="${pagos != null and !#lists.isEmpty(pagos)}">
+                <table class="tabla">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th><th>Concepto</th><th>Método</th>
+                        <th class="numero">Monto</th><th>Estado</th><th>Comprobante</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pago : ${pagos}">
+                        <td th:text="${pago.fecha != null ? #temporals.format(pago.fecha, 'dd/MM/yyyy') : 'Sin fecha'}">01/01/2026</td>
+                        <td>
+                           <span th:if="${pago.tipoPago != null}"
+                                 th:text="${pago.tipoPago.etiqueta + (pago.idReferencia != null ? ' #' + pago.idReferencia : '')}">Concepto</span>
+                            <span th:if="${pago.tipoPago == null}">Sin concepto</span>
+                        </td>
+                        <td th:text="${pago.metodoPago != null and !pago.metodoPago.isBlank() ? pago.metodoPago : 'Sin método'}">Método</td>
+                        <td class="numero" th:text="${@formatoPortal.dinero(pago.monto)}">$0.00</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(pago.estado)}"
+                                  th:text="${pago.estado != null ? pago.estado : 'Sin estado'}">Pendiente</span></td>
+                        <td th:text="${pago.fechaEmision != null ? #temporals.format(pago.fechaEmision, 'dd/MM/yyyy') : 'No emitido'}">No emitido</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="formulario-tarjeta">
 
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <div th:if="${pagos == null or #lists.isEmpty(pagos)}"
-                         style="padding:30px;
-                                text-align:center;
-                                color:#687078;">
-
-                        No tiene pagos registrados.
-
-                    </div>
-
-                    <table th:if="${pagos != null and !#lists.isEmpty(pagos)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:12px;">Fecha</th>
-                                <th style="padding:12px;">Concepto</th>
-                                <th style="padding:12px;">Método</th>
-                                <th style="padding:12px;">Referencia</th>
-                                <th style="padding:12px;">Monto</th>
-                                <th style="padding:12px;">Estado</th>
-                                <th style="padding:12px;">Comprobante</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="pago : ${pagos}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.fecha != null
-                                    ? #temporals.format(
-                                        pago.fecha,
-                                        'dd/MM/yyyy'
-                                    )
-                                    : 'Sin fecha'}">
-
-                                    01/01/2026
-
-                                </td>
-
-                                <td style="padding:12px;">
-
-                                    <span th:if="${pago.tipoPago != null}"
-                                          th:text="${pago.tipoPago.etiqueta
-                                          + (pago.idReferencia != null
-                                          ? ' #' + pago.idReferencia
-                                          : '')}">
-
-                                        Concepto
-
-                                    </span>
-
-                                    <span th:if="${pago.tipoPago == null}">
-                                        Sin concepto
-                                    </span>
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.metodoPago != null
-                                    and !pago.metodoPago.isBlank()
-                                    ? pago.metodoPago
-                                    : 'Sin método'}">
-
-                                    Método
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.numeroReferenciaExterna != null
-                                    and !pago.numeroReferenciaExterna.isBlank()
-                                    ? pago.numeroReferenciaExterna
-                                    : 'Sin referencia'}">
-
-                                    Sin referencia
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.monto != null
-                                    ? '$' + #numbers.formatDecimal(
-                                        pago.monto,
-                                        1,
-                                        2
-                                    )
-                                    : '$0.00'}">
-
-                                    $0.00
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.estado != null
-                                    ? pago.estado
-                                    : 'Sin estado'}">
-
-                                    Pendiente
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${pago.fechaEmision != null
-                                    ? #temporals.format(
-                                        pago.fechaEmision,
-                                        'dd/MM/yyyy'
-                                    )
-                                    : 'No emitido'}">
-
-                                    No emitido
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
+            <nav th:replace="~{fragmentos/plantilla-cliente :: paginacion(${paginaPagos}, '/mi-cuenta/pagos')}"></nav>
         </section>
+    </div>
+</main>
 
-    </main>
 
-</div>
-
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+

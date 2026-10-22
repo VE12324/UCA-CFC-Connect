@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis datos — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
+</head>
+<body class="portal">
+
+
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
+
+
+<main class="portal-principal">
+    <div class="portal-contenedor" style="max-width:820px;">
+
+
+        <p class="migas"><a th:href="@{/mi-cuenta}">Mi cuenta</a> / Mis datos</p>
+
+
+        <div class="portal-encabezado">
+            <h1>Mis datos</h1>
+            <p>Completa o actualiza tu información de contacto. Los campos con <span style="color:var(--pc-peligro)">*</span> son obligatorios.</p>
+        </div>
+
+
+        <th:block th:replace="~{fragmentos/plantilla-cliente :: mensajes}"></th:block>
+
+
+        <form class="tarjeta" th:action="@{/mi-cuenta/datos}" th:object="${perfil}" method="post">
+
+
+            <div class="alerta alerta-error"
+                 th:each="error : ${#fields.globalErrors()}"
+                 th:text="${error}"></div>
+
+
+            <div class="formulario-cuadricula">
+                <div class="campo completo">
+                    <label for="nombre">Nombre <span class="requerido">*</span></label>
+                    <input class="entrada" type="text" th:field="*{nombre}" maxlength="80" required
+                           th:classappend="${#fields.hasErrors('nombre')} ? 'invalido'">
+                    <span class="texto-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                </div>
+
+
+                <div class="campo">
+                    <label for="dui">DUI/NIT <span class="requerido">*</span></label>
+                    <input class="entrada" type="text" th:field="*{dui}" maxlength="20" required
+                           placeholder="00000000-0" inputmode="numeric" autocomplete="off"
+                           th:pattern="${formatoContacto.duiNit}"
+                           data-formato="dui"
+                           th:data-mensaje="${formatoContacto.mensajeDuiNit}"
+                           th:classappend="${#fields.hasErrors('dui')} ? 'invalido'">
+                    <span class="texto-ayuda">DUI 00000000-0 o NIT 0000-000000-000-0.</span>
+                    <span class="texto-error" th:if="${#fields.hasErrors('dui')}" th:errors="*{dui}"></span>
+                </div>
+
+
+                <div class="campo">
+                    <label for="empresa">Empresa</label>
+                    <input class="entrada" type="text" th:field="*{empresa}" maxlength="150"
+                           placeholder="Opcional"
+                           th:classappend="${#fields.hasErrors('empresa')} ? 'invalido'">
+                    <span class="texto-error" th:if="${#fields.hasErrors('empresa')}" th:errors="*{empresa}"></span>
+                </div>
+
+
+                <div class="campo">
+                    <label for="telefono">Teléfono <span class="requerido">*</span></label>
+                    <input class="entrada" type="tel" th:field="*{telefono}" maxlength="30" required
+                           placeholder="7000-0000" inputmode="tel" autocomplete="tel"
+                           th:pattern="${formatoContacto.telefono}"
+                           data-formato="telefono"
+                           th:data-mensaje="${formatoContacto.mensajeTelefono}"
+                           th:classappend="${#fields.hasErrors('telefono')} ? 'invalido'">
+                    <span class="texto-ayuda">8 dígitos (0000-0000); puedes anteponer +503.</span>
+                    <span class="texto-error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                </div>
+
+
+                <div class="campo">
+                    <label for="correo">Correo electrónico <span class="requerido">*</span></label>
+                    <input class="entrada" type="email" th:field="*{correo}" maxlength="100" required
+                           th:classappend="${#fields.hasErrors('correo')} ? 'invalido'">
+                    <span class="texto-ayuda">Es tu usuario para iniciar sesión.</span>
+                    <span class="texto-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></span>
+                </div>
+
+
+                <div class="campo completo">
+                    <label for="direccion">Dirección <span class="requerido">*</span></label>
+                    <textarea class="entrada" th:field="*{direccion}" maxlength="255" required
+                              th:classappend="${#fields.hasErrors('direccion')} ? 'invalido'"></textarea>
+                    <span class="texto-error" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></span>
+                </div>
+
+
+                <div class="campo completo">
+                    <label for="passwordActual">Contraseña actual</label>
+                    <input class="entrada" type="password" id="passwordActual" name="passwordActual"
+                           autocomplete="current-password"
+                           th:classappend="${#fields.hasErrors('passwordActual')} ? 'invalido'">
+                    <span class="texto-ayuda">Solo es necesaria si cambias tu correo. Al cambiarlo tendrás que iniciar sesión de nuevo.</span>
+                    <span class="texto-error" th:if="${#fields.hasErrors('passwordActual')}" th:errors="*{passwordActual}"></span>
+                </div>
+            </div>
+
+
+            <div class="acciones-formulario">
+                <a class="boton-contorno" th:href="@{/mi-cuenta}">Cancelar</a>
+                <button class="boton-lima" type="submit">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
+<script th:src="@{/js/cliente.js}" src="/js/cliente.js"></script>
+</body>
+</html>
+
+

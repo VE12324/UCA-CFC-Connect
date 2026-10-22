@@ -1,142 +1,58 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mis inscripciones</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis inscripciones — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mis-inscripciones')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
+        <div class="portal-encabezado">
+            <h1>Mis inscripciones</h1>
+            <p>Consulta los cursos en los que estás inscrito. Las inscripciones las registra el equipo de recepción.</p>
+        </div>
 
-            <div style="margin-bottom:25px;">
 
-                <h1 style="margin-bottom:6px;">
-                    Mis inscripciones
-                </h1>
+        <section class="tarjeta">
+            <p class="vacio" th:if="${inscripciones == null or #lists.isEmpty(inscripciones)}">
+                No tienes inscripciones registradas.
+            </p>
 
-                <p style="margin:0; color:#687078;">
-                    Consulte los cursos en los que está inscrito.
-                </p>
 
+            <div class="tabla-envoltura" th:if="${inscripciones != null and !#lists.isEmpty(inscripciones)}">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Curso</th><th>Estado</th><th>Participantes</th></tr></thead>
+                    <tbody>
+                    <tr th:each="inscripcion : ${inscripciones}">
+                        <td th:text="${#temporals.format(inscripcion.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${inscripcion.curso.nombre}">Curso</td>
+                        <td><span th:class="${@formatoPortal.claseEstado(inscripcion.estadoInscripcion.nombre)}"
+                                  th:text="${inscripcion.estadoInscripcion.nombre}">Pendiente</span></td>
+                        <td th:text="${inscripcion.participantes != null ? #sets.size(inscripcion.participantes) : 0}">0</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="formulario-tarjeta">
 
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <div th:if="${inscripciones == null
-                         or #lists.isEmpty(inscripciones)}"
-                         style="padding:30px;
-                                text-align:center;
-                                color:#687078;">
-
-                        No tiene inscripciones registradas.
-
-                    </div>
-
-                    <table th:if="${inscripciones != null
-                           and !#lists.isEmpty(inscripciones)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:14px;">
-                                    Fecha
-                                </th>
-
-                                <th style="padding:14px;">
-                                    Curso
-                                </th>
-
-                                <th style="padding:14px;">
-                                    Estado
-                                </th>
-
-                                <th style="padding:14px;">
-                                    Participantes
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="inscripcion : ${inscripciones}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:14px;"
-                                    th:text="${#temporals.format(
-                                    inscripcion.fecha,
-                                    'dd/MM/yyyy')}">
-
-                                    01/01/2026
-
-                                </td>
-
-                                <td style="padding:14px;"
-                                    th:text="${inscripcion.curso.nombre}">
-
-                                    Nombre del curso
-
-                                </td>
-
-                                <td style="padding:14px;"
-                                    th:text="${inscripcion.estadoInscripcion.nombre}">
-
-                                    Pendiente
-
-                                </td>
-
-                                <td style="padding:14px;"
-                                    th:text="${inscripcion.participantes != null
-                                    ? #sets.size(inscripcion.participantes)
-                                    : 0}">
-
-                                    0
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
+            <nav th:replace="~{fragmentos/plantilla-cliente :: paginacion(${paginaInscripciones}, '/mi-cuenta/inscripciones')}"></nav>
         </section>
+    </div>
+</main>
 
-    </main>
 
-</div>
-
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+

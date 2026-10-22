@@ -1,223 +1,80 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mis cotizaciones</title>
-
-    <link rel="stylesheet"
-          href="/css/estilos.css"
-          th:href="@{/css/estilos.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis cotizaciones — CFC UCA</title>
+    <link rel="stylesheet" th:href="@{/css/cliente.css}" href="/css/cliente.css">
 </head>
+<body class="portal">
 
-<body>
 
-<div class="aplicacion">
+<div th:replace="~{fragmentos/plantilla-cliente :: barra('cuenta')}"></div>
+<div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-    <aside th:replace="~{fragmentos/plantilla :: barra-lateral('mis-cotizaciones')}">
-    </aside>
 
-    <main class="area-principal">
+<main class="portal-principal">
+    <div class="portal-contenedor">
 
-        <header th:replace="~{fragmentos/plantilla :: barra-superior}">
-        </header>
 
-        <section class="contenido">
-
-            <div style="margin-bottom:25px;">
-
-                <h1 style="margin-bottom:6px;">
-                    Mis cotizaciones
-                </h1>
-
-                <p style="margin:0; color:#687078;">
-                    Consulte sus cotizaciones y el detalle de cada una.
-                </p>
-
+        <div class="seccion-encabezado">
+            <div class="portal-encabezado" style="margin:0;">
+                <h1>Mis cotizaciones</h1>
+                <p>Consulta tus cotizaciones y el detalle de cada una.</p>
             </div>
+            <a class="boton-lima" th:href="@{/mi-cuenta/cotizaciones/solicitar}">Solicitar cotización</a>
+        </div>
 
-            <div th:if="${cotizaciones == null
-                 or #lists.isEmpty(cotizaciones)}"
-                 class="formulario-tarjeta">
 
-                <div class="tarjeta-cuerpo"
-                     style="padding:30px;
-                            text-align:center;
-                            color:#687078;">
-
-                    No tiene cotizaciones registradas.
-
-                </div>
-
-            </div>
-
-            <div th:each="cotizacion : ${cotizaciones}"
-                 class="formulario-tarjeta"
-                 style="margin-bottom:20px;">
-
-                <div class="tarjeta-encabezado">
-
-                    <h2 th:text="'Cotización #'
-                        + ${cotizacion.idCotizacion}">
-
-                        Cotización #1
-
-                    </h2>
-
-                    <p>
-                        Fecha:
-
-                        <span th:text="${#temporals.format(
-                              cotizacion.fecha,
-                              'dd/MM/yyyy')}">
-
-                            01/01/2026
-
-                        </span>
-                    </p>
-
-                </div>
-
-                <div class="tarjeta-cuerpo"
-                     style="overflow-x:auto;">
-
-                    <p style="margin-bottom:18px;">
-
-                        <strong>Estado:</strong>
-
-                        <span th:text="${cotizacion.estado}">
-                            Pendiente
-                        </span>
-
-                    </p>
-
-                    <div th:if="${cotizacion.detalles == null
-                         or #lists.isEmpty(cotizacion.detalles)}"
-                         style="padding:20px;
-                                text-align:center;
-                                color:#687078;">
-
-                        La cotización no tiene detalles registrados.
-
-                    </div>
-
-                    <table th:if="${cotizacion.detalles != null
-                           and !#lists.isEmpty(cotizacion.detalles)}"
-                           style="width:100%;
-                                  border-collapse:collapse;">
-
-                        <thead>
-
-                            <tr style="background:#00636d;
-                                       color:white;">
-
-                                <th style="padding:12px;">
-                                    Descripción
-                                </th>
-
-                                <th style="padding:12px;">
-                                    Cantidad
-                                </th>
-
-                                <th style="padding:12px;">
-                                    Precio
-                                </th>
-
-                                <th style="padding:12px;">
-                                    Subtotal
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="detalle : ${cotizacion.detalles}"
-                                style="border-bottom:1px solid #ddd;">
-
-                                <td style="padding:12px;"
-                                    th:text="${detalle.descripcion}">
-
-                                    Descripción
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="${detalle.cantidad}">
-
-                                    1
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="'$'
-                                    + ${#numbers.formatDecimal(
-                                    detalle.precio, 1, 2)}">
-
-                                    $0.00
-
-                                </td>
-
-                                <td style="padding:12px;"
-                                    th:text="'$'
-                                    + ${#numbers.formatDecimal(
-                                    detalle.subtotal, 1, 2)}">
-
-                                    $0.00
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                    <div style="margin-top:18px;
-                                text-align:right;">
-
-                        <p>
-                            <strong>Subtotal:</strong>
-
-                            <span th:text="'$'
-                                  + ${#numbers.formatDecimal(
-                                  cotizacion.subtotal, 1, 2)}">
-
-                                $0.00
-
-                            </span>
-                        </p>
-
-                        <p style="font-size:18px;
-                                  margin-top:8px;">
-
-                            <strong>Total:</strong>
-
-                            <span th:text="'$'
-                                  + ${#numbers.formatDecimal(
-                                  cotizacion.total, 1, 2)}">
-
-                                $0.00
-
-                            </span>
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <section class="tarjeta vacio" th:if="${cotizaciones == null or #lists.isEmpty(cotizaciones)}">
+            No tienes cotizaciones registradas.
         </section>
 
-    </main>
 
-</div>
+        <section class="tarjeta" th:each="cotizacion : ${cotizaciones}">
+            <div class="seccion-encabezado" style="margin-bottom:12px;">
+                <div>
+                    <h2 style="margin:0;" th:text="'Cotización #' + ${cotizacion.idCotizacion}">Cotización #1</h2>
+                    <p class="texto-ayuda" th:text="'Fecha: ' + ${#temporals.format(cotizacion.fecha, 'dd/MM/yyyy')}">Fecha: 01/01/2026</p>
+                </div>
+                <span th:class="${@formatoPortal.claseEstado(cotizacion.estado)}" th:text="${cotizacion.estado}">Pendiente</span>
+            </div>
 
+
+            <p class="vacio" th:if="${cotizacion.detalles == null or #lists.isEmpty(cotizacion.detalles)}">
+                La cotización no tiene detalles registrados.
+            </p>
+
+
+            <div class="tabla-envoltura" th:if="${cotizacion.detalles != null and !#lists.isEmpty(cotizacion.detalles)}">
+                <table class="tabla">
+                    <thead><tr><th>Descripción</th><th class="numero">Cantidad</th><th class="numero">Precio</th><th class="numero">Subtotal</th></tr></thead>
+                    <tbody>
+                    <tr th:each="detalle : ${cotizacion.detalles}">
+                        <td th:text="${detalle.descripcion}">Descripción</td>
+                        <td class="numero" th:text="${detalle.cantidad}">1</td>
+                        <td class="numero" th:text="${@formatoPortal.dinero(detalle.precio)}">$0.00</td>
+                        <td class="numero" th:text="${@formatoPortal.dinero(detalle.subtotal)}">$0.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <dl class="datos-lista" style="margin-top:14px; max-width:280px; margin-left:auto;">
+                <div><dt>Subtotal</dt><dd th:text="${@formatoPortal.dinero(cotizacion.subtotal)}">$0.00</dd></div>
+                <div><dt>Total (IVA incluido)</dt><dd class="precio" th:text="${@formatoPortal.dinero(cotizacion.total)}">$0.00</dd></div>
+            </dl>
+        </section>
+
+
+        <nav th:replace="~{fragmentos/plantilla-cliente :: paginacion(${paginaCotizaciones}, '/mi-cuenta/cotizaciones')}"></nav>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 </body>
 </html>
+
+
