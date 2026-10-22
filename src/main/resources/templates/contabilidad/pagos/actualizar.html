@@ -1,67 +1,35 @@
 <!DOCTYPE html>
-
-
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-
 <head>
-
-
     <meta charset="UTF-8">
-
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-
-
     <title>Actualizar pago</title>
-
-
     <link rel="stylesheet"
           href="/css/estilos.css"
           th:href="@{/css/estilos.css}">
-
-
 </head>
-
-
 <body>
-
-
 <div class="aplicacion">
-
 
     <aside th:replace="~{fragmentos/plantilla :: barra-lateral('pagos-contabilidad')}"></aside>
 
-
     <section class="area-principal">
 
-
         <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
-
-
         <main class="contenido">
-
-
             <div class="formulario-tarjeta">
-
 
                 <div class="tarjeta-encabezado">
 
-
                     <h1>Actualizar pago</h1>
 
-
                     <p>
-                        Modifique la información del pago seleccionado.
+                        Puede corregir la fecha, el monto y el método de pago. El cliente y el concepto no cambian.
                     </p>
-
-
                 </div>
 
-
                 <div class="tarjeta-cuerpo">
-
 
                     <form th:action="@{/contabilidad/pagos/actualizar/{id}(id=${idPago})}"
                           th:object="${pago}"
@@ -74,41 +42,55 @@
                              th:text="${errorGlobal}">
                         </div>
 
-
                         <div class="formulario-cuadricula">
-
 
                             <div class="grupo-formulario">
 
 
-                                <label for="idCliente">
-                                    Cliente *
+                                <label for="nombreCliente">
+                                    Cliente
+                                </label>
+
+                                <input class="campo-formulario"
+                                       id="nombreCliente"
+                                       type="text"
+                                       th:value="${nombreCliente}"
+                                       readonly>
+
+
+                                <input type="hidden" th:field="*{idCliente}">
+
+                            </div>
+
+                            <div class="grupo-formulario ancho-completo">
+
+
+                                <label for="descripcionConcepto">
+                                    Concepto del pago
                                 </label>
 
 
-                                <select class="campo-formulario"
-                                        id="idCliente"
-                                        th:field="*{idCliente}"
-                                        th:classappend="${#fields.hasErrors('idCliente')} ? 'invalido' : ''">
+                                <input class="campo-formulario"
+                                       id="descripcionConcepto"
+                                       type="text"
+                                       th:value="${concepto != null ? concepto.etiquetaTipo + ' — ' + concepto.descripcion : 'Sin especificar'}"
+                                       readonly>
 
 
-                                    <option value="">Seleccione un cliente</option>
+                                <small class="texto-ayuda"
+                                       th:if="${concepto != null}"
+                                       th:text="${'Total ' + '$' + #numbers.formatDecimal(concepto.total, 1, 2)
+                                                 + ' · pagado en otros pagos ' + '$' + #numbers.formatDecimal(concepto.pagado, 1, 2)
+                                                 + ' · este pago puede ser de hasta ' + '$' + #numbers.formatDecimal(concepto.saldo, 1, 2)}">
+                                </small>
+
+                                <small class="texto-ayuda">
+                                    El cliente y el concepto no se pueden cambiar. Si el pago se registró mal, elimínelo y regístrelo de nuevo.
+                                </small>
 
 
-                                    <option th:each="cliente : ${clientes}"
-                                            th:value="${cliente.idCliente}"
-                                            th:text="${cliente.nombre}">
-                                        Nombre del cliente
-                                    </option>
-
-
-                                </select>
-
-
-                                <span class="texto-error"
-                                      th:if="${#fields.hasErrors('idCliente')}"
-                                      th:errors="*{idCliente}">
-                               </span>
+                                <input type="hidden" th:field="*{tipoPago}">
+                                <input type="hidden" th:field="*{idReferencia}">
 
 
                             </div>
@@ -137,18 +119,14 @@
                                         Efectivo
                                     </option>
 
-
                                 </select>
-
 
                                 <span class="texto-error"
                                       th:if="${#fields.hasErrors('idMetodoPago')}"
                                       th:errors="*{idMetodoPago}">
                                </span>
 
-
                             </div>
-
 
                             <div class="grupo-formulario">
 
@@ -170,17 +148,13 @@
                                       th:errors="*{fecha}">
                                </span>
 
-
                             </div>
 
-
                             <div class="grupo-formulario">
-
 
                                 <label for="monto">
                                     Monto (USD) *
                                 </label>
-
 
                                 <input class="campo-formulario"
                                        id="monto"
@@ -188,6 +162,7 @@
                                        step="0.01"
                                        min="0.01"
                                        th:field="*{monto}"
+                                       th:attr="max=${concepto != null ? concepto.saldo : null}"
                                        th:classappend="${#fields.hasErrors('monto')} ? 'invalido' : ''"
                                        placeholder="0.00">
 
@@ -197,113 +172,9 @@
                                       th:errors="*{monto}">
                                </span>
 
-
                             </div>
-
-
-                            <div class="grupo-formulario">
-
-
-                                <label for="tipoPago">
-                                    Tipo de pago (concepto) *
-                                </label>
-
-
-                                <select class="campo-formulario"
-                                        id="tipoPago"
-                                        th:field="*{tipoPago}"
-                                        th:classappend="${#fields.hasErrors('tipoPago')} ? 'invalido' : ''">
-
-
-                                    <option value="">Seleccione qué se está pagando</option>
-
-
-                                    <option th:each="tipo : ${tiposPago}"
-                                            th:value="${tipo}"
-                                            th:text="${tipo.etiqueta}">
-                                        Inscripción
-                                    </option>
-
-
-                                </select>
-
-
-                                <span class="texto-error"
-                                      th:if="${#fields.hasErrors('tipoPago')}"
-                                      th:errors="*{tipoPago}">
-                               </span>
-
-
-                            </div>
-
-
-                            <div class="grupo-formulario">
-
-
-                                <label for="idReferencia" id="etiquetaIdReferencia">
-                                    ID del registro pagado *
-                                </label>
-
-
-                                <input class="campo-formulario"
-                                       id="idReferencia"
-                                       type="number"
-                                       min="1"
-                                       step="1"
-                                       th:field="*{idReferencia}"
-                                       th:classappend="${#fields.hasErrors('idReferencia')} ? 'invalido' : ''"
-                                       placeholder="Ej. 1">
-
-
-                                <small class="texto-ayuda">
-                                    ID de la inscripción, cotización, alquiler o solicitud de catering que se está pagando.
-                                </small>
-
-
-                                <span class="texto-error"
-                                      th:if="${#fields.hasErrors('idReferencia')}"
-                                      th:errors="*{idReferencia}">
-                               </span>
-
-
-                            </div>
-
-
-                            <div class="grupo-formulario ancho-completo">
-
-
-                                <label for="numeroReferenciaExterna">
-                                    Número de referencia externa
-                                    <span id="indicadorReferencia">(opcional)</span>
-                                </label>
-
-
-                                <input class="campo-formulario"
-                                       id="numeroReferenciaExterna"
-                                       type="text"
-                                       th:field="*{numeroReferenciaExterna}"
-                                       th:classappend="${#fields.hasErrors('numeroReferenciaExterna')} ? 'invalido' : ''"
-                                       maxlength="150"
-                                       placeholder="Ej. número de autorización, transferencia o depósito">
-
-
-                                <small class="texto-ayuda">
-                                    Número de referencia bancaria o de autorización (aplica para tarjeta, transferencia o depósito).
-                                    No es necesario para pagos en efectivo.
-                                </small>
-
-
-                                <span class="texto-error"
-                                      th:if="${#fields.hasErrors('numeroReferenciaExterna')}"
-                                      th:errors="*{numeroReferenciaExterna}">
-                               </span>
-
-
-                            </div>
-
 
                         </div>
-
 
                         <div class="acciones-formulario">
 
@@ -314,71 +185,16 @@
                                 Cancelar
                             </a>
 
-
                             <button class="boton-guardar"
                                     type="submit">
                                 Guardar cambios
                             </button>
-
-
                         </div>
-
-
                     </form>
-
-
                 </div>
-
-
             </div>
-
-
         </main>
-
-
     </section>
-
-
 </div>
-
-
-<script>
-    // Ayuda contextual: etiqueta del ID según el tipo de pago y si la referencia externa aplica según el método
-    (function () {
-        const etiquetasId = {
-            INSCRIPCION: 'ID de la inscripción *',
-            COTIZACION: 'ID de la cotización *',
-            ALQUILER: 'ID del alquiler *',
-            CATERING: 'ID de la solicitud de catering *'
-        };
-        const tipo = document.getElementById('tipoPago');
-        const etiquetaId = document.getElementById('etiquetaIdReferencia');
-        const metodo = document.getElementById('idMetodoPago');
-        const indicador = document.getElementById('indicadorReferencia');
-
-
-        function actualizarTipo() {
-            etiquetaId.textContent = etiquetasId[tipo.value] || 'ID del registro pagado *';
-        }
-
-
-        function actualizarMetodo() {
-            const texto = metodo.selectedIndex > 0 ? metodo.options[metodo.selectedIndex].text.trim() : '';
-            indicador.textContent = (texto === '' || texto.toLowerCase() === 'efectivo')
-                ? '(opcional)'
-                : '(recomendado)';
-        }
-
-
-        tipo.addEventListener('change', actualizarTipo);
-        metodo.addEventListener('change', actualizarMetodo);
-        actualizarTipo();
-        actualizarMetodo();
-    })();
-</script>
-
-
 </body>
-
-
 </html>

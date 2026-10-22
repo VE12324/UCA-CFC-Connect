@@ -1,62 +1,28 @@
 <!DOCTYPE html>
-
-
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-
 <head>
-
-
     <meta charset="UTF-8">
-
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-
-
     <title>Gestión de pagos</title>
-
-
     <link rel="stylesheet"
           href="/css/estilos.css"
           th:href="@{/css/estilos.css}">
-
-
 </head>
-
-
 <body>
-
-
 <div class="aplicacion">
-
 
     <aside th:replace="~{fragmentos/plantilla :: barra-lateral('pagos-contabilidad')}"></aside>
 
-
     <section class="area-principal">
-
-
         <header th:replace="~{fragmentos/plantilla :: barra-superior}"></header>
-
-
         <main class="contenido">
-
-
             <div class="encabezado-pagina">
-
-
                 <div class="titulo-pagina">
-
-
                     <h1>Pagos</h1>
-
-
                     <p>
                         Registra, valida y emite comprobantes de los pagos de los clientes.
                     </p>
-
-
                 </div>
 
 
@@ -108,7 +74,7 @@
                             <input type="text"
                                    name="buscar"
                                    th:value="${buscar}"
-                                   placeholder="Buscar por cliente o número de referencia">
+                                   placeholder="Buscar por cliente">
 
 
                         </div>
@@ -148,7 +114,6 @@
                             <th>Monto</th>
                             <th>Concepto</th>
                             <th>Método</th>
-                            <th>Ref. externa</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -186,11 +151,6 @@
 
                             <td th:text="${pago.metodoPago}">
                                 Efectivo
-                            </td>
-
-
-                            <td th:text="${pago.numeroReferenciaExterna != null && !pago.numeroReferenciaExterna.isBlank() ? pago.numeroReferenciaExterna : 'Sin referencia'}">
-                                TRX-0001
                             </td>
 
 
@@ -299,7 +259,7 @@
 
 
                             <td class="celda-vacia"
-                                colspan="8">
+                                colspan="7">
                                 No se encontraron pagos registrados.
                             </td>
 
@@ -387,26 +347,15 @@
                            ›
                        </span>
 
-
                     </div>
 
-
                 </div>
-
-
             </section>
-
-
         </main>
-
-
     </section>
-
 
 </div>
 
-
 </body>
-
 
 </html>

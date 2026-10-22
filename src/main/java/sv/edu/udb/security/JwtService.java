@@ -68,11 +68,7 @@ public class JwtService {
     }
 
 
-    /**
-     * Devuelve los claims si la firma es correcta y el token no ha expirado.
-     *
-     * @throws JwtException si el token está manipulado, mal formado o expirado
-     */
+
     public Claims validarYObtenerClaims(String token) {
 
 

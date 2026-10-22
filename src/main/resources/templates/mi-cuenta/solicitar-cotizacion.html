@@ -8,14 +8,11 @@
 </head>
 <body class="portal">
 
-
 <div th:replace="~{fragmentos/plantilla-cliente :: barra('cotizaciones')}"></div>
 <div th:replace="~{fragmentos/plantilla-cliente :: aviso-perfil}"></div>
 
-
 <main class="portal-principal">
     <div class="portal-contenedor">
-
 
         <div class="portal-encabezado">
             <h1>Solicitar cotización</h1>
@@ -27,14 +24,11 @@
             </p>
         </div>
 
-
         <form class="tarjeta" th:action="@{/mi-cuenta/cotizaciones/solicitar}" th:object="${solicitud}" method="post">
-
 
             <div class="alerta alerta-error"
                  th:each="error : ${#fields.globalErrors()}"
                  th:text="${error}"></div>
-
 
             <div class="tabla-envoltura">
                 <table class="tabla">
@@ -55,11 +49,9 @@
                 </table>
             </div>
 
-
             <button class="boton-contorno boton-pequeno" type="button" id="agregarLinea" style="margin-top:14px;">
                 + Agregar línea
             </button>
-
 
             <div class="estimado" style="flex-wrap:wrap;">
                 <span>Subtotal estimado: <strong id="subtotalEstimado">$0.00</strong></span>
@@ -69,7 +61,6 @@
                 Montos de referencia. El centro revisará tu solicitud y te enviará la cotización final.
             </p>
 
-
             <div class="acciones-formulario">
                 <a class="boton-contorno" th:href="@{/}">Cancelar</a>
                 <button class="boton-lima" type="submit">Enviar solicitud</button>
@@ -77,7 +68,6 @@
         </form>
     </div>
 </main>
-
 
 <!-- Fila de línea: se usa para las filas iniciales y como plantilla de "Agregar línea". -->
 <template id="plantillaLinea">
@@ -97,7 +87,7 @@
                 <option value="">Selecciona…</option>
                 <option th:each="p : ${programas}"
                         th:value="${p.id()}"
-                        th:attr="data-tipo=p.tipo(),data-precio={p.costo()}"
+                        th:attr="data-tipo=${p.tipo()},data-precio=${p.costo()}"
                         th:selected="${linea != null and linea.tipo == p.tipo() and linea.idItem == p.id()}"
                         th:text="${p.nombre()} + ' — ' + ${@formatoPortal.dinero(p.costo())} + ' por participante'">Programa</option>
                 <option th:each="e : ${espaciosCotizables}"
@@ -125,10 +115,7 @@
     </tr>
 </template>
 
-
 <footer th:replace="~{fragmentos/plantilla-cliente :: pie}"></footer>
 <script th:src="@{/js/cliente.js}" src="/js/cliente.js"></script>
 </body>
 </html>
-
-

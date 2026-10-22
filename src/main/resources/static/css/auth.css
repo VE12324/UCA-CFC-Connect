@@ -1,0 +1,172 @@
+/* Estilos compartidos por las vistas de autenticación (login y registro). */
+
+body.auth-pagina {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0b2f6b 0%, #1565c0 55%, #168aad 100%);
+    background-color: #1565c0;
+}
+
+.auth-barra {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 24px;
+}
+
+.auth-boton-cambio {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--blanco);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-boton-cambio:hover {
+    background-color: var(--blanco);
+    color: #0b2f6b;
+}
+
+.auth-contenedor {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px 48px;
+}
+
+.auth-tarjeta {
+    width: 100%;
+    max-width: 420px;
+    padding: 36px;
+    border-radius: var(--radio);
+    background-color: var(--blanco);
+    box-shadow: 0 18px 45px rgba(5, 25, 60, 0.28);
+}
+
+.auth-logo {
+    display: block;
+    width: 120px;
+    height: auto;
+    margin: 0 auto 18px;
+    object-fit: contain;
+}
+
+.auth-titulo {
+    margin-bottom: 6px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.auth-subtitulo {
+    margin-bottom: 26px;
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 13px;
+}
+
+.auth-tarjeta .grupo-formulario {
+    margin-bottom: 18px;
+}
+
+.auth-campo-password {
+    position: relative;
+}
+
+.auth-campo-password .campo-formulario {
+    padding-right: 46px;
+}
+
+.auth-ojo {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--texto-suave);
+    cursor: pointer;
+}
+
+.auth-ojo:hover,
+.auth-ojo:focus-visible {
+    background-color: var(--neutral);
+    color: var(--texto);
+}
+
+.auth-ojo svg {
+    width: 20px;
+    height: 20px;
+}
+
+.auth-ojo .icono-ocultar {
+    display: none;
+}
+
+.auth-ojo[aria-pressed="true"] .icono-mostrar {
+    display: none;
+}
+
+.auth-ojo[aria-pressed="true"] .icono-ocultar {
+    display: block;
+}
+
+.auth-boton {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 6px;
+    padding: 0 20px;
+    border: 1px solid var(--secundario);
+    border-radius: 8px;
+    background-color: var(--secundario);
+    color: #1d2a05;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.auth-boton:hover {
+    border-color: var(--secundario-oscuro);
+    background-color: var(--secundario-oscuro);
+}
+
+.auth-enlace-alterno {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 13px;
+}
+
+.auth-enlace-alterno a {
+    color: var(--primario);
+    font-weight: 600;
+}
+
+.auth-enlace-alterno a:hover {
+    text-decoration: underline;
+}
+
+.auth-pie {
+    padding: 0 16px 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    .auth-tarjeta {
+        padding: 28px 22px;
+    }
+}

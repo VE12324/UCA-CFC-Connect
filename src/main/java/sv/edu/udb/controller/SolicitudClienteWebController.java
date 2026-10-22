@@ -41,9 +41,8 @@ public class SolicitudClienteWebController implements PaginaPortalCliente {
     private final CotizacionService cotizacionService;
     private final PortalClienteService portalClienteService;
 
-    // ------------------------------------------------------------------
     // Alquiler de espacios
-    // ------------------------------------------------------------------
+
 
     @GetMapping("/alquileres/solicitar")
     public String formularioAlquiler(
@@ -107,9 +106,7 @@ public class SolicitudClienteWebController implements PaginaPortalCliente {
         );
     }
 
-    // ------------------------------------------------------------------
     // Catering
-    // ------------------------------------------------------------------
 
     @GetMapping("/catering/solicitar")
     public String formularioCatering(
@@ -181,9 +178,7 @@ public class SolicitudClienteWebController implements PaginaPortalCliente {
         return servicio;
     }
 
-    // ------------------------------------------------------------------
     // Cotización
-    // ------------------------------------------------------------------
 
     @GetMapping("/cotizaciones/solicitar")
     public String formularioCotizacion(
@@ -281,9 +276,7 @@ public class SolicitudClienteWebController implements PaginaPortalCliente {
         );
     }
 
-    // ------------------------------------------------------------------
     // Estado de solicitudes
-    // ------------------------------------------------------------------
 
     @GetMapping("/solicitudes")
     public String solicitudes(

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="barra(activa)" class="portal-barra-envoltura">
+    <header class="portal-barra">
+
+        <a class="portal-marca" th:href="@{/}" href="/">
+            <img th:src="@{/iconos/logo.png}" src="/iconos/logo.png" alt="Logo UCA">
+            <span class="portal-marca-texto">
+                <strong>Centro de Formación Continua</strong>
+                <span>Universidad Centroamericana</span>
+            </span>
+        </a>
+
+        <nav class="portal-nav" aria-label="Navegación principal">
+            <ul>
+                <li><a th:href="@{/}" th:classappend="${activa == 'inicio'} ? 'activo'">Inicio</a></li>
+                <li><a th:href="@{/portal/oferta}" th:classappend="${activa == 'oferta'} ? 'activo'">Oferta académica</a></li>
+                <li><a th:href="@{/portal/espacios}" th:classappend="${activa == 'espacios'} ? 'activo'">Espacios</a></li>
+                <li><a th:href="@{/portal/catering}" th:classappend="${activa == 'catering'} ? 'activo'">Catering</a></li>
+                <li><a th:href="@{/#servicios}">Servicios</a></li>
+                <li><a th:href="@{/mi-cuenta/cotizaciones/solicitar}" th:classappend="${activa == 'cotizaciones'} ? 'activo'">Cotizaciones</a></li>
+            </ul>
+        </nav>
+
+        <div class="portal-acciones">
+
+            <a sec:authorize="isAnonymous()"
+               class="boton-lima boton-pequeno"
+               th:href="@{/login}">
+                <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                Iniciar sesión
+            </a>
+
+            <details sec:authorize="hasRole('CLIENTE')" class="menu-cuenta">
+                <summary class="boton-lima boton-pequeno">
+                    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                    Mi cuenta
+                </summary>
+                <div class="menu-cuenta-lista">
+                    <a th:href="@{/mi-cuenta/solicitudes}">Mis solicitudes</a>
+                    <a th:href="@{/mi-cuenta/pagos}">Mis pagos</a>
+                    <a th:href="@{/mi-cuenta/inscripciones}">Mis inscripciones</a>
+                    <a th:href="@{/mi-cuenta/agenda}">Agenda</a>
+                    <a th:href="@{/mi-cuenta/datos}">Mis datos</a>
+                    <hr>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="salir" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
+            </details>
+
+            <th:block sec:authorize="hasAnyRole('ADMIN','RECEPCIONISTA','CONTABILIDAD')">
+                <a class="boton-lima boton-pequeno" th:href="@{/}">Ir a mi panel</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="boton-claro boton-pequeno" type="submit">Cerrar sesión</button>
+                </form>
+            </th:block>
+
+        </div>
+    </header>
+</div>
+
+<div th:fragment="aviso-perfil"
+     class="aviso-perfil-envoltura"
+     th:if="${perfilIncompleto != null and perfilIncompleto}">
+    <div class="aviso-perfil" role="status">
+        <span>Termina tu registro rellenando tu información.</span>
+        <a th:href="@{/mi-cuenta/datos}">Ir a Mis datos</a>
+    </div>
+</div>
+
+<nav th:fragment="paginacion(pagina, ruta)"
+     class="paginacion"
+     th:if="${pagina != null and pagina.totalPages > 1}"
+     aria-label="Paginación">
+    <a th:if="${pagina.hasPrevious()}" th:href="@{${ruta}(pagina=${pagina.number - 1})}">‹</a>
+    <th:block th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}">
+        <span class="actual" th:if="${i == pagina.number}" th:text="${i + 1}">1</span>
+        <a th:unless="${i == pagina.number}" th:href="@{${ruta}(pagina=${i})}" th:text="${i + 1}">2</a>
+    </th:block>
+    <a th:if="${pagina.hasNext()}" th:href="@{${ruta}(pagina=${pagina.number + 1})}">›</a>
+</nav>
+
+<th:block th:fragment="mensajes">
+    <div class="alerta alerta-exito" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+    <div class="alerta alerta-error" th:if="${mensajeError}" th:text="${mensajeError}"></div>
+</th:block>
+
+<!-- Contenido de una tarjeta de programa (portada y oferta). -->
+<th:block th:fragment="tarjeta-programa(programa)">
+    <div class="programa-portada">
+        <svg th:if="${programa.esCurso()}" class="icono" style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+        <svg th:unless="${programa.esCurso()}" class="icono" style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg>
+    </div>
+    <div class="programa-cuerpo">
+        <span><span class="etiqueta-tipo" th:text="${programa.tipo()}">CURSO</span></span>
+        <h3 th:text="${programa.nombre()}">Nombre del programa</h3>
+        <span class="programa-dato">
+            <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+            <span th:text="${programa.modalidad() ?: 'Modalidad por definir'}">Virtual</span>
+        </span>
+        <span class="programa-dato">
+            <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            <span th:text="'Inicio: ' + ${@formatoPortal.fechaCorta(programa.fechaInicio())}">Inicio: 15 de Oct</span>
+        </span>
+        <div class="programa-pie">
+            <span class="precio" th:text="${@formatoPortal.dinero(programa.costo())}">$850.00</span>
+            <a class="enlace-flecha" th:href="@{${programa.ruta()}}">Ver detalles</a>
+        </div>
+    </div>
+</th:block>
+
+<footer th:fragment="pie" class="portal-pie">
+    <div class="portal-contenedor">
+        <div>
+            <img th:src="@{/iconos/logo.png}" src="/iconos/logo.png" alt="Logo UCA">
+            © Todos los derechos reservados.
+        </div>
+        <nav aria-label="Enlaces legales">
+            <a href="#">Política de privacidad</a>
+            <a href="#">Términos de servicio</a>
+            <a href="#">Política de cookies</a>
+            <a href="#">Accesibilidad</a>
+        </nav>
+    </div>
+</footer>
+
+</body>
+</html>
