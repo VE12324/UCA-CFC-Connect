@@ -4,6 +4,8 @@
  */
 package sv.edu.udb.repository;
 
+
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,18 +17,25 @@ import sv.edu.udb.model.SolicitudCatering;
  */
 @Repository
 public interface SolicitudCateringRepository  extends JpaRepository<SolicitudCatering, Integer>{
-    
-     Page<SolicitudCatering>
-            findByClienteNombreContainingIgnoreCaseOrServicioCateringNombreContainingIgnoreCaseOrLugarContainingIgnoreCase(
-                    String nombreCliente,
-                    String nombreServicio,
-                    String lugar,
-                    Pageable paginacion
-            );
 
     Page<SolicitudCatering>
-            findByCliente_Usuario_EmailIgnoreCase(
-                    String correo,
-                    Pageable paginacion
-            );
+    findByClienteNombreContainingIgnoreCaseOrServicioCateringNombreContainingIgnoreCaseOrLugarContainingIgnoreCase(
+            String nombreCliente,
+            String nombreServicio,
+            String lugar,
+            Pageable paginacion
+    );
+
+
+    Page<SolicitudCatering>
+    findByCliente_Usuario_EmailIgnoreCase(
+            String correo,
+            Pageable paginacion
+    );
+
+
+    List<SolicitudCatering> findByCliente_IdCliente(
+            Integer idCliente
+    );
 }
+

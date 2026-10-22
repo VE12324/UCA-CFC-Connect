@@ -1,5 +1,6 @@
 package sv.edu.udb.service;
 
+
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -30,13 +31,25 @@ import sv.edu.udb.repository.DiplomadoRepository;
 import sv.edu.udb.repository.EspacioRepository;
 import sv.edu.udb.repository.ModalidadRepository;
 
+
+/**
+ * Consultas de solo lectura del sitio público: oferta académica activa,
+ * espacios y servicios de catering.
+ *
+ * Usa los métodos existentes de los repositorios (findAll) y filtra en
+ * memoria, para no modificar repositorios de otros módulos. Los catálogos
+ * del centro son pequeños.
+ */
 @Service
 @RequiredArgsConstructor
 public class PortalPublicoService {
 
+
     public static final int TAMANO_PAGINA_OFERTA = 12;
 
+
     private static final String ACTIVO = "ACTIVO";
+
 
     private final CursoRepository cursoRepository;
     private final DiplomadoRepository diplomadoRepository;
@@ -46,17 +59,21 @@ public class PortalPublicoService {
     private final ModalidadRepository modalidadRepository;
     private final Clock reloj;
 
+
     /** Cursos y diplomados ACTIVO ordenados por fecha de inicio. */
     @Transactional(readOnly = true)
     public List<ProgramaPortalDTO> listarProgramasActivos() {
+
 
         Stream<ProgramaPortalDTO> cursos = cursoRepository.findAll().stream()
                 .filter(curso -> ACTIVO.equalsIgnoreCase(curso.getEstado()))
                 .map(ProgramaPortalDTO::desde);
 
+
         Stream<ProgramaPortalDTO> diplomados = diplomadoRepository.findAll().stream()
                 .filter(diplomado -> ACTIVO.equalsIgnoreCase(diplomado.getEstado()))
                 .map(ProgramaPortalDTO::desde);
+
 
         return Stream.concat(cursos, diplomados)
                 .sorted(Comparator
@@ -66,13 +83,17 @@ public class PortalPublicoService {
                 .toList();
     }
 
+
     /**
-     * Programas activos con la fecha de inicio más cercana a hoy.
+     * Programas activos con la fecha de inicio más cercana a hoy (a igual
+     * distancia, primero el que aún no empieza).
      */
     @Transactional(readOnly = true)
     public List<ProgramaPortalDTO> listarDestacados(int cantidad) {
 
+
         LocalDate hoy = LocalDate.now(reloj);
+
 
         return listarProgramasActivos().stream()
                 .filter(programa -> programa.fechaInicio() != null)
@@ -84,26 +105,33 @@ public class PortalPublicoService {
                 .toList();
     }
 
+
     @Transactional(readOnly = true)
     public Optional<ProgramaPortalDTO> buscarProximoEvento() {
         return listarDestacados(1).stream().findFirst();
     }
 
+
     /** "PRÓXIMO EVENTO", "EN CURSO" o "EVENTO RECIENTE". */
     public String etiquetaEvento(ProgramaPortalDTO programa) {
 
+
         LocalDate hoy = LocalDate.now(reloj);
+
 
         if (!programa.fechaInicio().isBefore(hoy)) {
             return "PRÓXIMO EVENTO";
         }
 
+
         if (programa.fechaFin() != null && !programa.fechaFin().isBefore(hoy)) {
             return "EN CURSO";
         }
 
+
         return "EVENTO RECIENTE";
     }
+
 
     /**
      * Oferta filtrada. tipo: "cursos", "diplomados" o vacío (todos).
@@ -116,9 +144,11 @@ public class PortalPublicoService {
             String texto,
             int pagina) {
 
+
         String busqueda = texto == null
                 ? ""
                 : texto.trim().toLowerCase(Locale.ROOT);
+
 
         List<ProgramaPortalDTO> filtrados = listarProgramasActivos().stream()
                 .filter(programa -> !"cursos".equals(tipo) || programa.esCurso())
@@ -131,13 +161,16 @@ public class PortalPublicoService {
                         || programa.nombre().toLowerCase(Locale.ROOT).contains(busqueda))
                 .toList();
 
+
         Pageable paginacion = PageRequest.of(
                 Math.max(pagina, 0),
                 TAMANO_PAGINA_OFERTA
         );
 
+
         int desde = (int) Math.min(paginacion.getOffset(), filtrados.size());
         int hasta = Math.min(desde + TAMANO_PAGINA_OFERTA, filtrados.size());
+
 
         return new PageImpl<>(
                 new ArrayList<>(filtrados.subList(desde, hasta)),
@@ -146,8 +179,10 @@ public class PortalPublicoService {
         );
     }
 
+
     @Transactional(readOnly = true)
     public ProgramaPortalDTO buscarCursoActivo(Integer id) {
+
 
         return cursoRepository.findById(id)
                 .filter(curso -> ACTIVO.equalsIgnoreCase(curso.getEstado()))
@@ -157,8 +192,10 @@ public class PortalPublicoService {
                 ));
     }
 
+
     @Transactional(readOnly = true)
     public ProgramaPortalDTO buscarDiplomadoActivo(Integer id) {
+
 
         return diplomadoRepository.findById(id)
                 .filter(diplomado -> ACTIVO.equalsIgnoreCase(diplomado.getEstado()))
@@ -168,31 +205,38 @@ public class PortalPublicoService {
                 ));
     }
 
+
     @Transactional(readOnly = true)
     public List<Espacio> listarEspacios() {
         return espacioRepository.findAll(Sort.by("nombre").ascending());
     }
+
 
     @Transactional(readOnly = true)
     public List<ServicioCatering> listarServiciosCatering() {
         return cateringRepository.findAll(Sort.by("nombre").ascending());
     }
 
+
     @Transactional(readOnly = true)
     public List<Categoria> listarCategorias() {
         return categoriaRepository.findAll(Sort.by("nombre").ascending());
     }
+
 
     @Transactional(readOnly = true)
     public List<Modalidad> listarModalidades() {
         return modalidadRepository.findAll(Sort.by("nombre").ascending());
     }
 
+
     public static boolean espacioReservable(Espacio espacio) {
         return !"MANTENIMIENTO".equalsIgnoreCase(espacio.getEstado());
     }
+
 
     public static boolean cateringDisponible(ServicioCatering servicio) {
         return "DISPONIBLE".equalsIgnoreCase(servicio.getEstado());
     }
 }
+

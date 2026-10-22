@@ -1,5 +1,6 @@
 package sv.edu.udb.repository;
 
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -10,37 +11,53 @@ import sv.edu.udb.model.Cotizacion;
 
 
 
+
+
+
 @Repository
 public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer> {
 
 
+
+
     Page<Cotizacion>
-            findByEstadoCotizacion_NombreIgnoreCaseIn(
-                    List<String> nombresEstado,
-                    Pageable paginacion
-            );
+    findByEstadoCotizacion_NombreIgnoreCaseIn(
+            List<String> nombresEstado,
+            Pageable paginacion
+    );
+
 
     long countByEstadoCotizacion_NombreIgnoreCaseIn(
             List<String> nombresEstado
     );
 
-    Page<Cotizacion>
-            findByCliente_NombreContainingIgnoreCaseOrEstadoCotizacion_NombreContainingIgnoreCase(
-                    String nombreCliente,
-                    String nombreEstado,
-                    Pageable paginacion
-            );
 
     Page<Cotizacion>
-            findByCliente_Usuario_EmailIgnoreCase(
-                    String correo,
-                    Pageable paginacion
-            );
+    findByCliente_NombreContainingIgnoreCaseOrEstadoCotizacion_NombreContainingIgnoreCase(
+            String nombreCliente,
+            String nombreEstado,
+            Pageable paginacion
+    );
+
+
+    Page<Cotizacion>
+    findByCliente_Usuario_EmailIgnoreCase(
+            String correo,
+            Pageable paginacion
+    );
+
+
+    List<Cotizacion> findByCliente_IdCliente(
+            Integer idCliente
+    );
+
 
     Optional<Cotizacion>
-            findByIdCotizacionAndCliente_Usuario_EmailIgnoreCase(
-                    Integer idCotizacion,
-                    String correo
-            );
+    findByIdCotizacionAndCliente_Usuario_EmailIgnoreCase(
+            Integer idCotizacion,
+            String correo
+    );
 }
+
+
 
