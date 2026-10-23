@@ -68,4 +68,4 @@ Proyecto completado. Se entregaron las tres fases:
 |------|---------|-------|
 | 1. Planificación y diseño | Documento de análisis y diseño, plan de trabajo y repositorio | 14 de agosto |
 | 2. Primer avance | Base de datos, CRUD, persistencia JPA, validaciones, excepciones y Swagger | 11 de septiembre |
-| 3. Proyecto funcional y defensa | Sistema completo con seguridad JWT, roles y pruebas unitarias | 17 de octubre |
+| 3. Proyecto funcional y defensa | Sistema completo con seguridad JWT, roles y pruebas unitarias | 23 de octubre |
